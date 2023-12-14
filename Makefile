@@ -10,11 +10,11 @@ tidy:
 
 # 打包
 build:
-	go build -o $(BuiltFile) -tags prod internal/cmd/main.go
+	go build -o $(BuiltFile) main/main.go
 
 # 运行
 run:
-	go run internal/cmd/main.go -c env/dev.yaml
+	go run main/main.go -c environment/config/dev.yaml
 
 # 语法检查
 lint:
