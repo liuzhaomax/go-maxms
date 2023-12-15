@@ -1,5 +1,21 @@
+app:
+  name: go-maxms-template-me
+  version: 0.1.0
+
+lib:
+  log:
+    level: debug # trace << debug << info << warn << error << fatal << panic
+    format: json # text
+    color: true
+    payload: true
+    file_name: app.log
+
 server:
   host: 127.0.0.1
   port: 9200
+  base_url: /
+  read_timeout: 5 # seconds
+  write_timeout: 10
+  idle_timeout: 15
   shutdown_timeout: 10
 

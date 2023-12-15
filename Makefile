@@ -1,6 +1,7 @@
 SHELL = /bin/bash
 
 BuiltFile=bin/main
+TestInclusion=$(shell go list ./... | grep -Ewv 'main|test')
 env=local
 scenario=all
 
@@ -22,8 +23,9 @@ lint:
 
 # 单元测试
 unit:
-	go test -v -race -timeout 1000s -covermode=atomic -coverpkg=./... -coverprofile=unit_test.out ./src/handler/... ./src/service/... ./src/utils/...
+	go test -v -timeout 1000s -covermode=atomic -coverpkg=./... -coverprofile=unit_test.out $(TestInclusion)
+	go tool cover -html=unit_test.out
 
-# API测试
+# 接口测试
 api:
 	go test -v -race -tags $(scenario) ./test/api -args -env=$(env)

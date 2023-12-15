@@ -1,14 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"github.com/liuzhaomax/go-maxms-template-me/internal/app"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
 )
 
 func main() {
-	core.GetConfig().LoadConfig()
-	fmt.Println(core.GetConfig())
+	app.Launch(
+		context.Background(),
+		app.SetConfigFile(core.LoadEnv()),
+		app.SetWWWDir("www"),
+	)
 
-	//ctx := context.Background()
+	core.InitLogger()
 
 }
