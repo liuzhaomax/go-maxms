@@ -18,10 +18,12 @@ wire
 ```shell
 # 安装
 go install github.com/google/wire/main/wire@latest
-go get github.com/google/wire/main/wire@v0.5.0
+go get -u github.com/google/wire/main/wire@v0.5.0
 # 生成
 cd internal/app
 go run github.com/google/wire/main/wire
+# 生成
+wire
 ```
 
 代码覆盖率检查：

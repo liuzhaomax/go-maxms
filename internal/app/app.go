@@ -85,12 +85,12 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	// init conf
 	cleanConfig := InitConfig(&opts)
 	// init injector
-	//injector, _ := InitInjector()
+	injector, _ := InitInjector()
 	// init server
-	//cleanServer := InitServer(ctx, injector.Engine)
+	cleanServer := InitServer(ctx, injector.Engine)
 	return func() {
 		cleanConfig()
-		//cleanServer()
+		cleanServer()
 	}
 }
 

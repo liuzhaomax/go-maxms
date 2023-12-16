@@ -1,9 +1,12 @@
 package core
 
 import (
+	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"io"
 	"os"
+	"time"
 )
 
 // 初始化系统日志
@@ -50,4 +53,68 @@ func selectLogLevel(log *Log) logrus.Level {
 	}
 }
 
-// TODO gin日志存入文件 中间件
+type LoggerFormat struct {
+	StatusCode int           `json:"code"`
+	Took       time.Duration `json:"took"`
+	ClientIP   string        `json:"client_ip"`
+	Method     string        `json:"method"`
+	URI        string        `json:"uri"`
+}
+
+func LoggerToFile() gin.HandlerFunc {
+	log := GetConfig().Lib.Log
+	src, err := os.OpenFile(log.FileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	if err != nil {
+		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
+	}
+	logger := logrus.New()
+	logger.Out = src
+	//logger.SetLevel(logrus.InfoLevel)
+	logger.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat:   "",
+		DisableTimestamp:  false,
+		DisableHTMLEscape: false,
+		DataKey:           "",
+		FieldMap:          nil,
+		CallerPrettyfier:  nil,
+		PrettyPrint:       false,
+	})
+	return func(c *gin.Context) {
+		startTime := time.Now()
+		c.Next()
+		endTime := time.Now()
+		took := endTime.Sub(startTime)
+		method := c.Request.Method
+		uri := c.Request.RequestURI
+		statusCode := c.Writer.Status()
+		clientIP := c.ClientIP()
+		// 竖线分割写法
+		//logger.Infof("| %3d | %13v | %15s | %8s | %s ",
+		//    statusCode,
+		//    took,
+		//    clientIP,
+		//    method,
+		//    uri,
+		//)
+
+		// concatenated json 写法
+		format := &LoggerFormat{
+			StatusCode: statusCode,
+			Took:       took,
+			ClientIP:   clientIP,
+			Method:     method,
+			URI:        uri,
+		}
+		formatBytes, _ := json.Marshal(format)
+		logger.Infof(string(formatBytes))
+
+		// json标准写法
+		//logger.WithFields(logrus.Fields{
+		//	"code":      statusCode,
+		//	"took":      took,
+		//	"client_ip": clientIP,
+		//	"method":    method,
+		//	"uri":       uri,
+		//}).Info("123")
+	}
+}

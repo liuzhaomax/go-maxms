@@ -9,6 +9,8 @@ lib:
     color: true
     payload: true
     file_name: app.log
+  gin:
+    run_mode: debug # debug test release
 
 server:
   host: 127.0.0.1

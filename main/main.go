@@ -12,7 +12,4 @@ func main() {
 		app.SetConfigFile(core.LoadEnv()),
 		app.SetWWWDir("www"),
 	)
-
-	core.InitLogger()
-
 }

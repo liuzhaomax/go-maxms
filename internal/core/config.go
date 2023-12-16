@@ -34,6 +34,7 @@ type App struct {
 
 type Lib struct {
 	Log
+	Gin
 }
 
 type Log struct {
@@ -42,6 +43,10 @@ type Log struct {
 	Color    bool   `mapstructure:"color"`
 	Payload  bool   `mapstructure:"payload"`
 	FileName string `mapstructure:"file_name"`
+}
+
+type Gin struct {
+	RunMode string `mapstructure:"run_mode"`
 }
 
 type Server struct {

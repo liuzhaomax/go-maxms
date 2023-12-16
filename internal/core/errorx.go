@@ -6,8 +6,7 @@ import (
 )
 
 // logger.WithField("失败方法", utils.GetFuncName()).Info(core.FormatError(core.Unknown, "错误描述", err))
-
-// logger.Info(core.FormatInfo(102))
+// logger.Info(core.FormatInfo("服务启动成功"))
 
 type Code uint32
 
