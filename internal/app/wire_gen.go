@@ -15,11 +15,11 @@ import (
 // Injectors from wire.go:
 
 func InitInjector() (*Injector, error) {
+	engine := core.InitGinEngine()
 	hData := &handler.HData{}
 	apiHandler := &api.Handler{
 		HandlerData: hData,
 	}
-	engine := core.InitGinEngine(apiHandler)
 	injector := &Injector{
 		Engine:  engine,
 		Handler: apiHandler,

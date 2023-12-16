@@ -26,6 +26,6 @@ func (handler *Handler) Register(app *gin.Engine) {
 	router.Register(handler.HandlerData, app)
 }
 
-func (handler *Handler) GetNoRoute(ctx *gin.Context) {
-	ctx.JSON(http.StatusNotFound, gin.H{"res": "404"})
+func (handler *Handler) GetNoRoute(c *gin.Context) {
+	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
 }

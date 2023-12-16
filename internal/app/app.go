@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"github.com/liuzhaomax/go-maxms-template-me/internal/api"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -43,7 +44,7 @@ func InitConfig(opts *options) func() {
 func InitServer(ctx context.Context, handler http.Handler) func() {
 	logrus.Info(core.FormatInfo("服务启动开始"))
 	cfg := core.GetConfig()
-	addr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
+	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
 	server := &http.Server{
 		Addr:         addr,
 		Handler:      handler,
@@ -52,17 +53,10 @@ func InitServer(ctx context.Context, handler http.Handler) func() {
 		IdleTimeout:  time.Duration(cfg.Server.IdleTimeout) * time.Second,
 	}
 	go func() {
+		logrus.WithContext(ctx).Infof("Service is running at %s", addr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			logrus.WithField("失败方法", core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
 		}
-		logrus.WithFields(logrus.Fields{
-			"app_name": cfg.App.Name,
-			"version":  cfg.App.Version,
-			"pid":      os.Getpid(),
-			"host":     cfg.Server.Host,
-			"port":     cfg.Server.Port,
-		}).Info(core.FormatInfo("服务启动成功"))
-		logrus.WithContext(ctx).Infof("Server is running at %s", addr)
 	}()
 	return func() {
 		logrus.Info(core.FormatInfo("服务关闭开始"))
@@ -86,11 +80,21 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	cleanConfig := InitConfig(&opts)
 	// init injector
 	injector, _ := InitInjector()
+	// register apis
+	api.API.Register(injector.Handler, injector.Engine)
 	// init server
 	cleanServer := InitServer(ctx, injector.Engine)
+	cfg := core.GetConfig()
+	logrus.WithFields(logrus.Fields{
+		"app_name": cfg.App.Name,
+		"version":  cfg.App.Version,
+		"pid":      os.Getpid(),
+		"host":     cfg.Server.Host,
+		"port":     cfg.Server.Port,
+	}).Info(core.FormatInfo("服务启动成功"))
 	return func() {
-		cleanConfig()
 		cleanServer()
+		cleanConfig()
 	}
 }
 
@@ -112,8 +116,8 @@ EXIT:
 			break EXIT
 		}
 	}
-	defer logrus.WithContext(ctx).Infof(core.FormatInfo("服务正在关闭"))
 	defer time.Sleep(time.Second)
 	defer os.Exit(state)
 	defer clean()
+	defer logrus.WithContext(ctx).Infof(core.FormatInfo("系统终止运行"))
 }
