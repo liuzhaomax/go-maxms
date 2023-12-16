@@ -97,6 +97,7 @@ func LoggerToFile() gin.HandlerFunc {
 		//    uri,
 		//)
 
+		// TODO debug级别和info级别包含内容不同，比如执行的方法等
 		// concatenated json 写法
 		format := &LoggerFormat{
 			StatusCode: statusCode,
@@ -106,7 +107,7 @@ func LoggerToFile() gin.HandlerFunc {
 			URI:        uri,
 		}
 		formatBytes, _ := json.Marshal(format)
-		logger.Infof(string(formatBytes))
+		logger.Info(string(formatBytes))
 
 		// json标准写法
 		//logger.WithFields(logrus.Fields{

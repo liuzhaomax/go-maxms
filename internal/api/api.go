@@ -3,9 +3,11 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
+	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
 	"github.com/liuzhaomax/go-maxms-template-me/src/handler"
 	"github.com/liuzhaomax/go-maxms-template-me/src/router"
+	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -27,5 +29,9 @@ func (handler *Handler) Register(app *gin.Engine) {
 }
 
 func (handler *Handler) GetNoRoute(c *gin.Context) {
+	// TODO 封装日志，级别分类（debug有执行方法）
+	logrus.WithFields(logrus.Fields{
+		"成功方法": core.GetFuncName(),
+	}).Info("123")
 	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
 }
