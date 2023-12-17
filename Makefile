@@ -15,7 +15,7 @@ build:
 
 # 依赖注入
 wire:
-	 wire ./internal/app
+	wire ./internal/app
 
 # 运行
 run:
