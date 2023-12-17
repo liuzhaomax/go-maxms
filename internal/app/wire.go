@@ -12,9 +12,11 @@ import (
 
 func InitInjector() (*Injector, error) {
 	wire.Build(
+		core.InitGinLogger,
 		core.InitGinEngine,
 		api.APISet,
 		handler.HandlerSet,
+		core.ResponseSet,
 		InjectorSet,
 	)
 	return new(Injector), nil

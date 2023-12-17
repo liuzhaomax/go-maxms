@@ -61,17 +61,16 @@ type LoggerFormat struct {
 	URI        string        `json:"uri"`
 }
 
-func LoggerToFile() gin.HandlerFunc {
+func LoggerToFile() (gin.HandlerFunc, *logrus.Logger) {
 	log := GetConfig().Lib.Log
 	src, err := os.OpenFile(log.FileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
 	}
 	logger := logrus.New()
-	logger.Out = src
-	//logger.SetLevel(logrus.InfoLevel)
+	logger.SetLevel(selectLogLevel(&log))
 	logger.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat:   "",
+		TimestampFormat:   time.RFC3339Nano,
 		DisableTimestamp:  false,
 		DisableHTMLEscape: false,
 		DataKey:           "",
@@ -79,6 +78,7 @@ func LoggerToFile() gin.HandlerFunc {
 		CallerPrettyfier:  nil,
 		PrettyPrint:       false,
 	})
+	logger.Out = src
 	return func(c *gin.Context) {
 		startTime := time.Now()
 		c.Next()
@@ -97,7 +97,6 @@ func LoggerToFile() gin.HandlerFunc {
 		//    uri,
 		//)
 
-		// TODO debug级别和info级别包含内容不同，比如执行的方法等
 		// concatenated json 写法
 		format := &LoggerFormat{
 			StatusCode: statusCode,
@@ -117,5 +116,5 @@ func LoggerToFile() gin.HandlerFunc {
 		//	"method":    method,
 		//	"uri":       uri,
 		//}).Info("123")
-	}
+	}, logger
 }

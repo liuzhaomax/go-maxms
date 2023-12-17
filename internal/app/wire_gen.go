@@ -16,13 +16,20 @@ import (
 
 func InitInjector() (*Injector, error) {
 	engine := core.InitGinEngine()
-	hData := &handler.HData{}
+	logger := core.InitGinLogger()
+	response := &core.Response{
+		Logger: logger,
+	}
+	hData := &handler.HData{
+		IRes: response,
+	}
 	apiHandler := &api.Handler{
 		HandlerData: hData,
 	}
 	injector := &Injector{
-		Engine:  engine,
-		Handler: apiHandler,
+		Engine:   engine,
+		Handler:  apiHandler,
+		Response: response,
 	}
 	return injector, nil
 }

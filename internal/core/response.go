@@ -1,0 +1,44 @@
+package core
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/google/wire"
+	"github.com/sirupsen/logrus"
+)
+
+var ResponseSet = wire.NewSet(wire.Struct(new(Response), "*"), wire.Bind(new(IResponse), new(*Response)))
+
+type IResponse interface {
+	ResSuccess(*gin.Context, string, interface{})
+	ResFailure(*gin.Context, string, int, Code, string, error)
+}
+
+type Response struct {
+	Logger *logrus.Logger
+}
+
+func (res *Response) ResSuccess(c *gin.Context, funcName string, sth interface{}) {
+	res.Logger.WithField("成功方法", funcName).Debug(FormatInfo("响应成功"))
+	res.ResJson(c, 200, gin.H{
+		"status": gin.H{
+			"code": OK,
+			"desc": "success",
+		},
+		"data": sth,
+	})
+}
+
+func (res *Response) ResFailure(c *gin.Context, funcName string, statusCode int, code Code, desc string, err error) {
+	res.Logger.WithField("失败方法", funcName).Debug(FormatError(code, desc, err))
+	res.ResJson(c, statusCode, gin.H{
+		"status": gin.H{
+			"code": code,
+			"desc": desc,
+			"err":  err,
+		},
+	})
+}
+
+func (res *Response) ResJson(c *gin.Context, statusCode int, sth interface{}) {
+	c.JSON(statusCode, sth)
+}
