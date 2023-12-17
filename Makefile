@@ -1,7 +1,7 @@
 SHELL = /bin/bash
 
 BuiltFile=bin/main
-TestInclusion=$(shell go list ./... | grep -Ewv 'main|test')
+TestInclusion=$(shell go list ./... | grep -Ewv 'main|test|internal|src/router|src/dataAPI/handler')
 env=local
 scenario=all
 
@@ -12,6 +12,10 @@ tidy:
 # 打包
 build:
 	go build -o $(BuiltFile) main/main.go
+
+# 依赖注入
+wire:
+	 wire ./internal/app
 
 # 运行
 run:

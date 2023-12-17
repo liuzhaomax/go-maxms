@@ -9,7 +9,7 @@ package app
 import (
 	"github.com/liuzhaomax/go-maxms-template-me/internal/api"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
-	"github.com/liuzhaomax/go-maxms-template-me/src/handler"
+	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
 )
 
 // Injectors from wire.go:

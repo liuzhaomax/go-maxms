@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
-	"github.com/liuzhaomax/go-maxms-template-me/src/handler"
+	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
 	"github.com/liuzhaomax/go-maxms-template-me/src/router"
 	"net/http"
 )
