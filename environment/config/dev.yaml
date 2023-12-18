@@ -21,3 +21,8 @@ server:
   idle_timeout: 15
   shutdown_timeout: 10
 
+upstream:
+  host: 127.0.0.1
+  port: 9200
+
+

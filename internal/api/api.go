@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
+	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware/cors"
 	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
 	"github.com/liuzhaomax/go-maxms-template-me/src/router"
 	"net/http"
@@ -16,14 +17,15 @@ type API interface {
 }
 
 type Handler struct {
-	HandlerData *handler.HData
+	Middleware  *middleware.Middleware
+	HandlerData *handler.HandlerData
 }
 
 func (handler *Handler) Register(app *gin.Engine) {
 	app.NoRoute(handler.GetNoRoute)
-	app.Use(middleware.Cors())
+	app.Use(cors.Cors())
 	app.StaticFS("/static", http.Dir("./static"))
-	router.Register(handler.HandlerData, app)
+	router.Register(app, handler.HandlerData, handler.Middleware)
 }
 
 func (handler *Handler) GetNoRoute(c *gin.Context) {

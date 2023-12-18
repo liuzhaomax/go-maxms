@@ -9,6 +9,8 @@ package app
 import (
 	"github.com/liuzhaomax/go-maxms-template-me/internal/api"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
+	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
+	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware/auth"
 	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
 )
 
@@ -17,19 +19,26 @@ import (
 func InitInjector() (*Injector, error) {
 	engine := core.InitGinEngine()
 	logger := core.InitGinLogger()
+	authAuth := &auth.Auth{
+		Logger: logger,
+	}
+	middlewareMiddleware := &middleware.Middleware{
+		Auth: authAuth,
+	}
 	response := &core.Response{
 		Logger: logger,
 	}
-	hData := &handler.HData{
-		IRes: response,
+	handlerData := &handler.HandlerData{
+		IRes:   response,
+		Logger: logger,
 	}
 	apiHandler := &api.Handler{
-		HandlerData: hData,
+		Middleware:  middlewareMiddleware,
+		HandlerData: handlerData,
 	}
 	injector := &Injector{
-		Engine:   engine,
-		Handler:  apiHandler,
-		Response: response,
+		Engine:  engine,
+		Handler: apiHandler,
 	}
 	return injector, nil
 }
