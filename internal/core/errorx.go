@@ -11,8 +11,9 @@ import (
 type Code uint32
 
 const (
-	OK      Code = 0
-	Unknown Code = 1
+	OK               Code = 0
+	Unknown          Code = 1
+	PermissionDenied Code = 2
 )
 
 func (c Code) String() string {
