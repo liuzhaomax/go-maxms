@@ -35,3 +35,14 @@ go test -cover -coverprofile=unit_test.out
 # 用html方式读取报告文件unit_test.out，可查看具体是哪段代码没有覆盖
 go tool cover -html=unit_test.out
 ```
+
+## 使用的需要安装的包
+github.com/anaskhan96/go-password-encoder
+github.com/google/wire/main/wire
+github.com/gin-gonic/gin
+github.com/sirupsen/logrus
+github.com/spf13/viper
+github.com/mattn/go-colorable
+github.com/golang/protobuf/protoc-gen-go
+google.golang.org/grpc
+google.golang.org/protobuf

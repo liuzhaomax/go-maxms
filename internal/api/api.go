@@ -21,13 +21,16 @@ type Handler struct {
 	HandlerData *handler.HandlerData
 }
 
-func (handler *Handler) Register(app *gin.Engine) {
-	app.NoRoute(handler.GetNoRoute)
+func (h *Handler) Register(app *gin.Engine) {
+	app.NoRoute(h.GetNoRoute)
 	app.Use(cors.Cors())
-	app.StaticFS("/static", http.Dir("./static"))
-	router.Register(app, handler.HandlerData, handler.Middleware)
+	router.Register(app, h.HandlerData, h.Middleware)
 }
 
-func (handler *Handler) GetNoRoute(c *gin.Context) {
+func (h *Handler) RegisterStaticFS(app *gin.Engine, path string) {
+	app.StaticFS("/"+path, http.Dir("./"+path))
+}
+
+func (h *Handler) GetNoRoute(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
 }

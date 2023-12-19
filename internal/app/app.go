@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/api"
 	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -81,7 +80,8 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	// init injector
 	injector, _ := InitInjector()
 	// register apis
-	api.API.Register(injector.Handler, injector.Engine)
+	injector.Handler.Register(injector.Engine)                      // dynamic
+	injector.Handler.RegisterStaticFS(injector.Engine, opts.WWWDir) // static
 	// init server
 	cleanServer := InitServer(ctx, injector.Engine)
 	cfg := core.GetConfig()

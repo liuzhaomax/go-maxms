@@ -22,7 +22,7 @@ type JWT struct {
 	SigningKey []byte
 }
 
-// TODO 存入vault，从vault读取
+// TODO 手动存入vault，从vault读取
 var JWTSecret = "123456"
 
 func NewJWT() *JWT {

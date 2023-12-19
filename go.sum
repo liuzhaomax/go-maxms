@@ -1,3 +1,5 @@
+github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72 h1:a93gW7OBt55SksMQVibqPWdu4Ly73KM4d3zoIUUX3cs=
+github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72/go.mod h1:PsJICrlruG9QcJDYuZ0dO/2KtMDALzRbony8NkxZ2nE=
 github.com/bytedance/sonic v1.5.0/go.mod h1:ED5hyg4y6t3/9Ku1R6dU/4KyJ48DZ4jPhfY1O2AihPM=
 github.com/bytedance/sonic v1.10.0-rc/go.mod h1:ElCzW+ufi8qKqNW0FY314xriJhyJhuoJ3gFZdAHF7NM=
 github.com/bytedance/sonic v1.10.2 h1:GQebETVBxYB7JGWJtLBi07OVzWwt+8dWA00gEVW2ZFE=

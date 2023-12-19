@@ -12,7 +12,7 @@ import (
 // 初始化系统日志
 func InitLogger() func() {
 	log := GetConfig().Lib.Log
-	// TODO 根据时间创建不同的日志文件，减小IO开支
+	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支
 	file, err := os.OpenFile(log.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		logrus.WithField("失败方法", GetFuncName()).Panic("日志文件创建或打开失败")

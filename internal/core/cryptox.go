@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"fmt"
+	"github.com/anaskhan96/go-password-encoder"
 	"io"
 	"os"
 )
@@ -62,7 +63,9 @@ func BASE64DecodeStr(str string) (string, error) {
 	return "", err
 }
 
-func GenRsaKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
+// RSA加密
+
+func GenRSAKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
 	projPath := GetProjectPath()
 	// private key
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
@@ -136,4 +139,34 @@ func RSAEncrypt(publicKey *rsa.PublicKey, str string) (string, error) {
 	}
 	encryptedStr := base64.StdEncoding.EncodeToString(encryptedBytes)
 	return encryptedStr, nil
+}
+
+//func GetPublicKey() *rsa.PublicKey {
+//    // TODO 从vault获取公钥
+//    return ctx.PublicKey
+//}
+//
+//func GetPrivateKey() *rsa.PrivateKey {
+//    // TODO 从vault获取私钥
+//    return ctx.PrivateKey
+//}
+
+// password加密
+
+func GetPwdEncodingOpts() *password.Options {
+	return &password.Options{
+		SaltLen:      16,
+		Iterations:   64,
+		KeyLen:       16,
+		HashFunction: md5.New,
+	}
+}
+
+func GetEncodedPwd(pwd string) (string, string) {
+	salt, encodedPwd := password.Encode(pwd, GetPwdEncodingOpts())
+	return salt, encodedPwd
+}
+
+func VerifyEncodedPwd(pwdHeldRaw string, salt string, pwdTarget string) bool {
+	return password.Verify(pwdHeldRaw, salt, pwdTarget, GetPwdEncodingOpts())
 }

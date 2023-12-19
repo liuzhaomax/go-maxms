@@ -25,11 +25,19 @@ type Config struct {
 	App
 	Lib
 	Server
+	Downstream []Downstream
 }
 
 type App struct {
-	Name    string `mapstructure:"name"`
-	Version string `mapstructure:"version"`
+	Name         string `mapstructure:"name"`
+	Version      string `mapstructure:"version"`
+	PublicKeyStr string
+	WhiteList    []WhiteList
+}
+
+type WhiteList struct {
+	Name   string `mapstructure:"name"`
+	Domain string `mapstructure:"domain"`
 }
 
 type Lib struct {
@@ -57,6 +65,12 @@ type Server struct {
 	WriteTimeout    int    `mapstructure:"write_timeout"`
 	IdleTimeout     int    `mapstructure:"idle_timeout"`
 	ShutdownTimeout int    `mapstructure:"shutdown_timeout"`
+}
+
+type Downstream struct {
+	Name string `mapstructure:"name"`
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }
 
 const configDir = "environment/config"
@@ -89,4 +103,24 @@ func (cfg *Config) LoadConfig(configFile string) {
 		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic("配置文件反序列化失败")
 		panic(err)
 	}
+	// 配置RSA密钥对
+	cfg.SetRSAKeys()
+}
+
+// TODO 将公钥str存入ctx，将私钥存入vault
+func (cfg *Config) SetRSAKeys() {
+	//prk, puk, err := GenRSAKeyPair(2048)
+	//if err != nil {
+	//    logrus.WithField("失败方法", GetFuncName()).Panic("生成RSA密钥对失败")
+	//    panic(err)
+	//}
+	//// TODO 存入vault
+	//ctx.PublicKey = puk
+	//ctx.PrivateKey = prk
+	//publicKeyStr, err := PublicKeyToString()
+	//if err != nil {
+	//    logrus.WithField("失败方法", GetFuncName()).Panic("公钥转字符串失败")
+	//    panic(err)
+	//}
+	//cfg.App.PublicKeyStr = publicKeyStr
 }
