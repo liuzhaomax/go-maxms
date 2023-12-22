@@ -1,7 +1,6 @@
 package core
 
 import (
-	"bufio"
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/rsa"
@@ -11,8 +10,6 @@ import (
 	"encoding/pem"
 	"fmt"
 	"github.com/anaskhan96/go-password-encoder"
-	"io"
-	"os"
 )
 
 func MD5(byt []byte) string {
@@ -66,61 +63,25 @@ func BASE64DecodeStr(str string) (string, error) {
 // RSA加密
 
 func GenRSAKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
-	projPath := GetProjectPath()
-	// private key
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
 	if err != nil {
 		return nil, nil, err
 	}
-	// public key
 	publicKey := &privateKey.PublicKey
-	derPkix, err := x509.MarshalPKIXPublicKey(publicKey)
-	if err != nil {
-		return nil, nil, err
-	}
-	block := &pem.Block{
-		Type:  "PUBLIC KEY",
-		Bytes: derPkix,
-	}
-	file, err := os.Create(projPath + "/bin/public.pem")
-	if err != nil {
-		return nil, nil, err
-	}
-	err = pem.Encode(file, block)
-	if err != nil {
-		return nil, nil, err
-	}
-	err = file.Close()
-	if err != nil {
-		return nil, nil, err
-	}
 	return privateKey, publicKey, err
 }
 
-func PublicKeyToString() (string, error) {
-	projPath := GetProjectPath()
-	file, err := os.Open(projPath + "/bin/public.pem")
+func PublicKeyToString(publicKey *rsa.PublicKey) (string, error) {
+	publicKeyBytes, err := x509.MarshalPKIXPublicKey(publicKey)
 	if err != nil {
 		return "", err
 	}
-	reader := bufio.NewReader(file)
-	var str string
-	for {
-		line, err := reader.ReadString('\n')
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return "", err
-		}
-		str = str + line
-	}
-	err = file.Close()
-	if err != nil {
-		return "", err
-	}
-	//str = strings.Replace(str, "\n", "", -1)
-	return str, err
+	publicKeyPem := pem.EncodeToMemory(&pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyBytes,
+	})
+	publicKeyStr := base64.StdEncoding.EncodeToString(publicKeyPem)
+	return publicKeyStr, err
 }
 
 func RSADecrypt(privateKey *rsa.PrivateKey, encryptedStr string) (string, error) {
@@ -141,15 +102,17 @@ func RSAEncrypt(publicKey *rsa.PublicKey, str string) (string, error) {
 	return encryptedStr, nil
 }
 
-//func GetPublicKey() *rsa.PublicKey {
-//    // TODO 从vault获取公钥
-//    return ctx.PublicKey
-//}
-//
-//func GetPrivateKey() *rsa.PrivateKey {
-//    // TODO 从vault获取私钥
-//    return ctx.PrivateKey
-//}
+func GetPrivateKey() *rsa.PrivateKey {
+	return GetConfig().App.PrivateKey
+}
+
+func GetPublicKey() *rsa.PublicKey {
+	return GetConfig().App.PublicKey
+}
+
+func GetPublicKeyStr() string {
+	return GetConfig().App.PublicKeyStr
+}
 
 // password加密
 

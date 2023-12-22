@@ -80,8 +80,8 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	// init injector
 	injector, _ := InitInjector()
 	// register apis
-	injector.Handler.Register(injector.Engine)                      // dynamic
 	injector.Handler.RegisterStaticFS(injector.Engine, opts.WWWDir) // static
+	injector.Handler.Register(injector.Engine)                      // dynamic
 	// init server
 	cleanServer := InitServer(ctx, injector.Engine)
 	cfg := core.GetConfig()

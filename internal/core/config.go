@@ -1,6 +1,7 @@
 package core
 
 import (
+	"crypto/rsa"
 	"flag"
 	"fmt"
 	"github.com/sirupsen/logrus"
@@ -31,6 +32,8 @@ type Config struct {
 type App struct {
 	Name         string `mapstructure:"name"`
 	Version      string `mapstructure:"version"`
+	PublicKey    *rsa.PublicKey
+	PrivateKey   *rsa.PrivateKey
 	PublicKeyStr string
 	WhiteList    []WhiteList
 }
@@ -107,20 +110,18 @@ func (cfg *Config) LoadConfig(configFile string) {
 	cfg.SetRSAKeys()
 }
 
-// TODO 将公钥str存入ctx，将私钥存入vault
 func (cfg *Config) SetRSAKeys() {
-	//prk, puk, err := GenRSAKeyPair(2048)
-	//if err != nil {
-	//    logrus.WithField("失败方法", GetFuncName()).Panic("生成RSA密钥对失败")
-	//    panic(err)
-	//}
-	//// TODO 存入vault
-	//ctx.PublicKey = puk
-	//ctx.PrivateKey = prk
-	//publicKeyStr, err := PublicKeyToString()
-	//if err != nil {
-	//    logrus.WithField("失败方法", GetFuncName()).Panic("公钥转字符串失败")
-	//    panic(err)
-	//}
-	//cfg.App.PublicKeyStr = publicKeyStr
+	prk, puk, err := GenRSAKeyPair(2048)
+	if err != nil {
+		logrus.WithField("失败方法", GetFuncName()).Panic("生成RSA密钥对失败")
+		panic(err)
+	}
+	cfg.App.PublicKey = puk
+	cfg.App.PrivateKey = prk
+	publicKeyStr, err := PublicKeyToString(puk)
+	if err != nil {
+		logrus.WithField("失败方法", GetFuncName()).Panic("公钥转字符串失败")
+		panic(err)
+	}
+	cfg.App.PublicKeyStr = publicKeyStr
 }

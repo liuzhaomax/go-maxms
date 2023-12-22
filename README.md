@@ -46,3 +46,8 @@ github.com/mattn/go-colorable
 github.com/golang/protobuf/protoc-gen-go
 google.golang.org/grpc
 google.golang.org/protobuf
+github.com/hashicorp/vault/api
+
+## TODO
+1. vault与k8s集成，在登录后读取jwtsecret
+2. 
