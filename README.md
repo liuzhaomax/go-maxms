@@ -48,6 +48,11 @@ google.golang.org/grpc
 google.golang.org/protobuf
 github.com/hashicorp/vault/api
 
-## TODO
+## TODO 
+1. 根据contract生成代码，包括type，不含集成其他工具的代码
+2. 采用第二种鉴权方式，先做user，修改auth中间件
+
+## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
-2. 
+2. vault与k8s集成，动态数据库账号密码  https://www.youtube.com/watch?v=otNkDHFNWt0
+3. vault使用production模式启动，链接换为https
