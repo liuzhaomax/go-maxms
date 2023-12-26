@@ -54,7 +54,6 @@ gorm.io/gorm
 1. 根据contract生成代码，包括type，不含集成其他工具的代码，必填的非指针，可选的是指针
 2. 采用第一种鉴权方式，先做SWG -> main -> user，修改auth中间件
 3. 动态数据库账号密码
-4. tracing
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
