@@ -1,82 +1,11 @@
 package core
 
 import (
-	"crypto/rsa"
 	"flag"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"sync"
 )
-
-var cfg *Config
-var once sync.Once
-
-func init() {
-	once.Do(func() {
-		cfg = &Config{}
-	})
-}
-
-func GetConfig() *Config {
-	return cfg
-}
-
-type Config struct {
-	App
-	Lib
-	Server
-	Downstream []Downstream
-}
-
-type App struct {
-	Name         string `mapstructure:"name"`
-	Version      string `mapstructure:"version"`
-	PublicKey    *rsa.PublicKey
-	PrivateKey   *rsa.PrivateKey
-	PublicKeyStr string
-	WhiteList    []WhiteList
-}
-
-type WhiteList struct {
-	Name   string `mapstructure:"name"`
-	Domain string `mapstructure:"domain"`
-}
-
-type Lib struct {
-	Log
-	Gin
-}
-
-type Log struct {
-	Level    string `mapstructure:"level"`
-	Format   string `mapstructure:"format"`
-	Color    bool   `mapstructure:"color"`
-	Payload  bool   `mapstructure:"payload"`
-	FileName string `mapstructure:"file_name"`
-}
-
-type Gin struct {
-	RunMode string `mapstructure:"run_mode"`
-}
-
-type Server struct {
-	Host            string `mapstructure:"host"`
-	Port            string `mapstructure:"port"`
-	BaseUrl         string `mapstructure:"base_url"`
-	ReadTimeout     int    `mapstructure:"read_timeout"`
-	WriteTimeout    int    `mapstructure:"write_timeout"`
-	IdleTimeout     int    `mapstructure:"idle_timeout"`
-	ShutdownTimeout int    `mapstructure:"shutdown_timeout"`
-}
-
-type Downstream struct {
-	Name string `mapstructure:"name"`
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
-}
-
-const configDir = "environment/config"
 
 // 加载环境变量ENV，设置配置文件路径
 func LoadEnv() string {
@@ -87,7 +16,7 @@ func LoadEnv() string {
 	// 也可以通过添加flag “c”，执行命令行，来手动修改运行环境
 	configFile := flag.String("c", fmt.Sprintf("%s/%s.yaml", configDir, env), "配置文件")
 	flag.Parse()
-	logrus.WithField("path", *configFile).Info("配置文件已识别")
+	logrus.WithField("path", *configFile).Info(FormatInfo("配置文件已识别"))
 	return *configFile
 }
 
@@ -98,12 +27,12 @@ func (cfg *Config) LoadConfig(configFile string) {
 	v.SetConfigFile(configFile)
 	err := v.ReadInConfig()
 	if err != nil {
-		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic("配置文件读取失败")
+		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "配置文件读取失败", err))
 		panic(err)
 	}
 	err = v.Unmarshal(cfg)
 	if err != nil {
-		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic("配置文件反序列化失败")
+		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "配置文件反序列化失败", err))
 		panic(err)
 	}
 	// 配置RSA密钥对
@@ -113,14 +42,14 @@ func (cfg *Config) LoadConfig(configFile string) {
 func (cfg *Config) SetRSAKeys() {
 	prk, puk, err := GenRSAKeyPair(2048)
 	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic("生成RSA密钥对失败")
+		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "生成RSA密钥对失败", err))
 		panic(err)
 	}
 	cfg.App.PublicKey = puk
 	cfg.App.PrivateKey = prk
 	publicKeyStr, err := PublicKeyToString(puk)
 	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic("公钥转字符串失败")
+		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "公钥转字符串失败", err))
 		panic(err)
 	}
 	cfg.App.PublicKeyStr = publicKeyStr

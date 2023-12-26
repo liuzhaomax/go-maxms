@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/internal/core"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
@@ -32,17 +32,18 @@ func SetWWWDir(wwwDir string) Option {
 }
 
 func InitConfig(opts *options) func() {
-	core.GetConfig().LoadConfig(opts.ConfigFile)
+	cfg := core.GetConfig()
+	cfg.LoadConfig(opts.ConfigFile)
 	cleanLogger := core.InitLogger()
-	logrus.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
+	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
 	return func() {
 		cleanLogger()
 	}
 }
 
 func InitServer(ctx context.Context, handler http.Handler) func() {
-	logrus.Info(core.FormatInfo("服务启动开始"))
 	cfg := core.GetConfig()
+	cfg.App.Logger.Info(core.FormatInfo("服务启动开始"))
 	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
 	server := &http.Server{
 		Addr:         addr,
@@ -52,20 +53,20 @@ func InitServer(ctx context.Context, handler http.Handler) func() {
 		IdleTimeout:  time.Duration(cfg.Server.IdleTimeout) * time.Second,
 	}
 	go func() {
-		logrus.WithContext(ctx).Infof("Service is running at %s", addr)
+		cfg.App.Logger.WithContext(ctx).Infof("Service is running at %s", addr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.WithField("失败方法", core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
+			cfg.App.Logger.WithField("失败方法", core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
 		}
 	}()
 	return func() {
-		logrus.Info(core.FormatInfo("服务关闭开始"))
+		cfg.App.Logger.Info(core.FormatInfo("服务关闭开始"))
 		_ctx, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.Server.ShutdownTimeout))
 		defer cancel()
 		server.SetKeepAlivesEnabled(false)
 		if err := server.Shutdown(_ctx); err != nil {
-			logrus.WithContext(_ctx).WithField("失败方法", core.GetFuncName()).Error(core.FormatError(1, "服务关闭异常", err))
+			cfg.App.Logger.WithContext(_ctx).WithField("失败方法", core.GetFuncName()).Error(core.FormatError(1, "服务关闭异常", err))
 		}
-		logrus.Info(core.FormatInfo("服务关闭成功"))
+		cfg.App.Logger.Info(core.FormatInfo("服务关闭成功"))
 	}
 }
 
@@ -78,14 +79,14 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	// init conf
 	cleanConfig := InitConfig(&opts)
 	// init injector
-	injector, _ := InitInjector()
+	injector, cleanInjection, _ := InitInjector()
 	// register apis
 	injector.Handler.RegisterStaticFS(injector.Engine, opts.WWWDir) // static
 	injector.Handler.Register(injector.Engine)                      // dynamic
 	// init server
 	cleanServer := InitServer(ctx, injector.Engine)
 	cfg := core.GetConfig()
-	logrus.WithFields(logrus.Fields{
+	cfg.App.Logger.WithFields(logrus.Fields{
 		"app_name": cfg.App.Name,
 		"version":  cfg.App.Version,
 		"pid":      os.Getpid(),
@@ -94,11 +95,13 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	}).Info(core.FormatInfo("服务启动成功"))
 	return func() {
 		cleanServer()
+		cleanInjection()
 		cleanConfig()
 	}
 }
 
 func Launch(ctx context.Context, opts ...Option) {
+	cfg := core.GetConfig()
 	clean := Init(ctx, opts...)
 	state := 1
 	sc := make(chan os.Signal, 1)
@@ -106,7 +109,7 @@ func Launch(ctx context.Context, opts ...Option) {
 EXIT:
 	for {
 		sig := <-sc
-		logrus.WithContext(ctx).Infof("%s [%s]", core.FormatInfo("服务中断信号收到"), sig.String())
+		cfg.App.Logger.WithContext(ctx).Infof("%s [%s]", core.FormatInfo("服务中断信号收到"), sig.String())
 		switch sig {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			state = 0
@@ -119,5 +122,5 @@ EXIT:
 	defer time.Sleep(time.Second)
 	defer os.Exit(state)
 	defer clean()
-	defer logrus.WithContext(ctx).Infof(core.FormatInfo("系统终止运行"))
+	defer cfg.App.Logger.WithContext(ctx).Infof(core.FormatInfo("系统终止运行"))
 }

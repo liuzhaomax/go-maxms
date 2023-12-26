@@ -5,22 +5,26 @@ package app
 
 import (
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/api"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
-	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
+	"github.com/liuzhaomax/go-maxms-template/internal/api"
+	"github.com/liuzhaomax/go-maxms-template/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/internal/middleware"
+	"github.com/liuzhaomax/go-maxms-template/src/set"
 )
 
-func InitInjector() (*Injector, error) {
+func InitInjector() (*Injector, func(), error) {
 	wire.Build(
 		core.InitGinLogger,
 		core.InitGinEngine,
+		core.InitDB,
 		api.APISet,
-		handler.HandlerSet,
+		set.HandlerSet,
+		set.BusinessSet,
+		set.ModelSet,
 		core.ResponseSet,
+		core.TransactionSet,
 		middleware.MwsSet,
 		middleware.MiddlewareSet,
 		InjectorSet,
 	)
-	return new(Injector), nil
+	return new(Injector), nil, nil
 }

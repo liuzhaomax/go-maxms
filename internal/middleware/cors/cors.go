@@ -2,7 +2,7 @@ package cors
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/internal/core"
 	"net/http"
 )
 

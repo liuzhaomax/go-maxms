@@ -1,6 +1,6 @@
 app:
-  name: go-maxms-template-me
-  version: 0.1.0
+  name: go-maxms-template
+  version: 0.1
   white_list:
     -
       name: frontend
@@ -11,10 +11,21 @@ lib:
     level: debug # trace << debug << info << warn << error << fatal << panic
     format: json # text
     color: true
-    payload: true
     file_name: app.log
   gin:
     run_mode: debug # debug test release
+  db:
+    type: mysql
+    debug: false
+    max_life_time: 8192
+    max_open_conns: 0
+    max_idle_conns: 1000
+    host: 127.0.0.1
+    port: 3306
+    name: go-maxms-template
+    params: charset=utf8mb4&parseTime=True&loc=Local
+    username: root
+    password: 123456
 
 server:
   host: 127.0.0.1

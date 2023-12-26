@@ -3,37 +3,89 @@ package core
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
-	"io"
+	"github.com/snowzach/rotatefilehook"
 	"os"
 	"time"
 )
+
+// 初始化logrus，让在初始化日志前的log也在console中打印，但不记录在日志文件中
+func init() {
+	logrus.SetLevel(logrus.InfoLevel)
+	logrus.SetFormatter(selectFormatter("text"))
+	logrus.SetOutput(colorable.NewColorableStdout())
+}
 
 // 初始化系统日志
 func InitLogger() func() {
 	log := GetConfig().Lib.Log
 	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支
-	file, err := os.OpenFile(log.FileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile(log.FileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic("日志文件创建或打开失败")
+		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
+	}
+	logger := logrus.New()
+	logger.SetFormatter(selectFormatter("text"))
+	logger.SetOutput(colorable.NewColorableStdout())
+	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
+		Filename:   log.FileName,
+		MaxSize:    50, // megabytes
+		MaxBackups: 3,  // amouts
+		MaxAge:     28, // days
+		Level:      selectLogLevel(),
+		Formatter:  selectFormatter(),
+	})
+	if err != nil {
+		logger.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志hook生成失败", err))
 		panic(err)
 	}
-	logrus.SetLevel(selectLogLevel(&log))
-	logrus.SetFormatter(&logrus.TextFormatter{ForceColors: log.Color})
-	logrus.SetOutput(io.MultiWriter(file, os.Stdout))
+	logger.AddHook(rotateFileHook)
+	cfg.App.Logger = logger
 	return func() {
 		if file != nil {
 			err = file.Close()
 			if err != nil {
-				logrus.WithField("失败方法", GetFuncName()).Panic("日志文件关闭失败")
+				logger.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件关闭失败", err))
 				panic(err)
 			}
 		}
 	}
 }
 
-func selectLogLevel(log *Log) logrus.Level {
-	switch log.Level {
+func selectFormatter(forceFormatter ...string) logrus.Formatter {
+	log := cfg.Lib.Log
+	format := log.Format
+	if len(forceFormatter) != 0 {
+		format = forceFormatter[0]
+	}
+	switch format {
+	case "text":
+		return &logrus.TextFormatter{
+			PadLevelText:    true,
+			ForceColors:     log.Color,
+			FullTimestamp:   true,
+			TimestampFormat: time.DateTime,
+		}
+	case "json":
+		return &logrus.JSONFormatter{
+			TimestampFormat:   time.RFC3339Nano,
+			DisableTimestamp:  false,
+			DisableHTMLEscape: false,
+			DataKey:           "",
+			FieldMap:          nil,
+			CallerPrettyfier:  nil,
+			PrettyPrint:       false,
+		}
+	default:
+		return &logrus.JSONFormatter{
+			TimestampFormat: time.RFC3339Nano,
+		}
+	}
+}
+
+func selectLogLevel() logrus.Level {
+	switch cfg.Lib.Log.Level {
 	case "trace":
 		return logrus.TraceLevel
 	case "debug":
@@ -61,24 +113,8 @@ type LoggerFormat struct {
 	URI        string        `json:"uri"`
 }
 
-func LoggerToFile() (gin.HandlerFunc, *logrus.Logger) {
-	log := GetConfig().Lib.Log
-	src, err := os.OpenFile(log.FileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
-	}
-	logger := logrus.New()
-	logger.SetLevel(selectLogLevel(&log))
-	logger.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat:   time.RFC3339Nano,
-		DisableTimestamp:  false,
-		DisableHTMLEscape: false,
-		DataKey:           "",
-		FieldMap:          nil,
-		CallerPrettyfier:  nil,
-		PrettyPrint:       false,
-	})
-	logger.Out = src
+func LoggerToFile() gin.HandlerFunc {
+	logger := cfg.App.Logger
 	return func(c *gin.Context) {
 		startTime := time.Now()
 		c.Next()
@@ -116,5 +152,5 @@ func LoggerToFile() (gin.HandlerFunc, *logrus.Logger) {
 		//	"method":    method,
 		//	"uri":       uri,
 		//}).Info("123")
-	}, logger
+	}
 }

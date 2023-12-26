@@ -14,6 +14,7 @@ const (
 	OK               Code = 0
 	Unknown          Code = 1
 	PermissionDenied Code = 2
+	NotFound         Code = 3
 )
 
 func (c Code) String() string {
@@ -22,6 +23,10 @@ func (c Code) String() string {
 		return "OK"
 	case Unknown:
 		return "Unknown"
+	case PermissionDenied:
+		return "PermissionDenied"
+	case NotFound:
+		return "NotFound"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}

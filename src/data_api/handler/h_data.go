@@ -3,16 +3,17 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/src/data_api/business"
 	"github.com/sirupsen/logrus"
 )
 
 var HandlerDataSet = wire.NewSet(wire.Struct(new(HandlerData), "*"))
 
 type HandlerData struct {
-	IRes   core.IResponse
-	Logger *logrus.Logger
-	//BData *service.BData
+	Business *business.BusinessData
+	Logger   *logrus.Logger
+	IRes     core.IResponse
 }
 
 func (h *HandlerData) GetDataById(c *gin.Context) {

@@ -3,10 +3,10 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware/cors"
-	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
-	"github.com/liuzhaomax/go-maxms-template-me/src/router"
+	"github.com/liuzhaomax/go-maxms-template/internal/middleware"
+	"github.com/liuzhaomax/go-maxms-template/internal/middleware/cors"
+	"github.com/liuzhaomax/go-maxms-template/src/data_api/handler"
+	"github.com/liuzhaomax/go-maxms-template/src/router"
 	"net/http"
 )
 

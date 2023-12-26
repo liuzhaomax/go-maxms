@@ -1,13 +1,13 @@
-# Go-MaxMs 中端模板
+# Go-MaxMs 模板
 
-protobuf
+pb code gen
+> Download the protoc bin file.
+> https://github.com/protocolbuffers/protobuf/releases
 ```shell
 # protoc-gen-go
-go get -u github.com/golang/protobuf/protoc-gen-go
+go install google.golang.org/protobuf/cmd/protoc-gen-go
 # grpc
-go get -u google.golang.org/grpc
-# protobuf
-go get -u google.golang.org/protobuf
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 ```
 
 ```shell
@@ -41,16 +41,20 @@ github.com/anaskhan96/go-password-encoder
 github.com/google/wire/main/wire
 github.com/gin-gonic/gin
 github.com/sirupsen/logrus
+github.com/snowzach/rotatefilehook
 github.com/spf13/viper
 github.com/mattn/go-colorable
 github.com/golang/protobuf/protoc-gen-go
 google.golang.org/grpc
 google.golang.org/protobuf
 github.com/hashicorp/vault/api
+gorm.io/gorm
 
 ## TODO
-1. 根据contract生成代码，包括type，不含集成其他工具的代码
+1. 根据contract生成代码，包括type，不含集成其他工具的代码，必填的非指针，可选的是指针
 2. 采用第一种鉴权方式，先做SWG -> main -> user，修改auth中间件
+3. 动态数据库账号密码
+4. tracing
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret

@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/internal/core"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )

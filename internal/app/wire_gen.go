@@ -7,16 +7,18 @@
 package app
 
 import (
-	"github.com/liuzhaomax/go-maxms-template-me/internal/api"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/core"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware"
-	"github.com/liuzhaomax/go-maxms-template-me/internal/middleware/auth"
-	"github.com/liuzhaomax/go-maxms-template-me/src/dataAPI/handler"
+	"github.com/liuzhaomax/go-maxms-template/internal/api"
+	"github.com/liuzhaomax/go-maxms-template/internal/core"
+	"github.com/liuzhaomax/go-maxms-template/internal/middleware"
+	"github.com/liuzhaomax/go-maxms-template/internal/middleware/auth"
+	"github.com/liuzhaomax/go-maxms-template/src/data_api/business"
+	"github.com/liuzhaomax/go-maxms-template/src/data_api/handler"
+	"github.com/liuzhaomax/go-maxms-template/src/data_api/model"
 )
 
 // Injectors from wire.go:
 
-func InitInjector() (*Injector, error) {
+func InitInjector() (*Injector, func(), error) {
 	engine := core.InitGinEngine()
 	logger := core.InitGinLogger()
 	authAuth := &auth.Auth{
@@ -25,12 +27,28 @@ func InitInjector() (*Injector, error) {
 	middlewareMiddleware := &middleware.Middleware{
 		Auth: authAuth,
 	}
+	db, cleanup, err := core.InitDB()
+	if err != nil {
+		return nil, nil, err
+	}
+	modelData := &model.ModelData{
+		DB: db,
+	}
+	trans := &core.Trans{
+		DB: db,
+	}
+	businessData := &business.BusinessData{
+		Model:  modelData,
+		Logger: logger,
+		Tx:     trans,
+	}
 	response := &core.Response{
 		Logger: logger,
 	}
 	handlerData := &handler.HandlerData{
-		IRes:   response,
-		Logger: logger,
+		Business: businessData,
+		Logger:   logger,
+		IRes:     response,
 	}
 	apiHandler := &api.Handler{
 		Middleware:  middlewareMiddleware,
@@ -39,6 +57,9 @@ func InitInjector() (*Injector, error) {
 	injector := &Injector{
 		Engine:  engine,
 		Handler: apiHandler,
+		DB:      db,
 	}
-	return injector, nil
+	return injector, func() {
+		cleanup()
+	}, nil
 }
