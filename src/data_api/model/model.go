@@ -7,7 +7,9 @@ import (
 
 type Data struct {
 	gorm.Model
-	Mobile string `gorm:"index:idx_mobile;unique;varchar(11);not null"`
+	Mobile   string `gorm:"index:idx_mobile;unique;varchar(11);not null"`
+	Username string `gorm:"index:idx_username;unique;varchar(50);not null"`
+	Password string `gorm:"varchar(50);not null"`
 }
 
 func Model2PB(data *Data) *pb.DataRes {

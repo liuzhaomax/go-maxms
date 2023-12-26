@@ -20,10 +20,11 @@ func InitDB() (*gorm.DB, func(), error) {
 	}
 	err = cfg.AutoMigrate(db)
 	if err != nil {
-		cfg.App.Logger.WithField("失败方法", GetFuncName()).Fatal(FormatError(Unknown, "数据库自动迁移失败", err))
+		cfg.App.Logger.WithField("失败方法", GetFuncName()).Fatal(FormatError(Unknown, "数据库表创建失败", err))
 		return nil, clean, err
 	}
 	cfg.App.Logger.Info(FormatInfo("数据库连接成功"))
+	createAdmin(db) // 添加一条数据
 	return db, clean, err
 }
 
@@ -80,7 +81,6 @@ func (cfg *Config) AutoMigrate(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
-	createAdmin(db)
 	return nil
 }
 
@@ -94,9 +94,16 @@ func (db *DB) DSN() string {
 
 func createAdmin(db *gorm.DB) {
 	var data model.Data
-	db.First(&data)
-	if data.ID != 1 {
-		data.Mobile = "130123456789"
-		db.Create(&data)
+	result := db.First(&data)
+	if result.RowsAffected == 0 {
+		data.Mobile = "13012345678"
+		data.Username = "admin"
+		salt, encodedPwd := GetEncodedPwd("admin")
+		cfg.App.Salt = salt
+		data.Password = encodedPwd
+		res := db.Create(&data)
+		if res.RowsAffected == 0 {
+			cfg.App.Logger.WithField("失败方法", GetFuncName()).Error(FormatError(Unknown, "admin创建失败", res.Error))
+		}
 	}
 }

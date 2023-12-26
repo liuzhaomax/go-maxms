@@ -34,6 +34,7 @@ type App struct {
 	PublicKey    *rsa.PublicKey
 	PrivateKey   *rsa.PrivateKey
 	PublicKeyStr string
+	Salt         string
 	Logger       *logrus.Logger
 	WhiteList    []WhiteList
 }
