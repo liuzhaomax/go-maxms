@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/liuzhaomax/go-maxms-template/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"

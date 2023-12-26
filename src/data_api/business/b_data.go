@@ -3,9 +3,9 @@ package business
 import (
 	"context"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template/internal/core"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/model"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/pb"
+	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/src/data_api/model"
+	"github.com/liuzhaomax/go-maxms/src/data_api/pb"
 	"github.com/sirupsen/logrus"
 )
 

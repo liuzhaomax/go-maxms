@@ -2,7 +2,7 @@ package set
 
 import (
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/model"
+	"github.com/liuzhaomax/go-maxms/src/data_api/model"
 )
 
 var ModelSet = wire.NewSet(

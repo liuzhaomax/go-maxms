@@ -3,7 +3,7 @@ package model
 import (
 	"errors"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/pb"
+	"github.com/liuzhaomax/go-maxms/src/data_api/pb"
 	"gorm.io/gorm"
 )
 

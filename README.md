@@ -26,6 +26,11 @@ go run github.com/google/wire/main/wire
 wire
 ```
 
+mysql：
+```shell
+mysql -u root -p  -P 3306
+```
+
 代码覆盖率检查：
 ```shell
 # 查看pwd下所有go文件代码覆盖率

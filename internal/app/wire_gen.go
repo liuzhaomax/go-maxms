@@ -7,13 +7,13 @@
 package app
 
 import (
-	"github.com/liuzhaomax/go-maxms-template/internal/api"
-	"github.com/liuzhaomax/go-maxms-template/internal/core"
-	"github.com/liuzhaomax/go-maxms-template/internal/middleware"
-	"github.com/liuzhaomax/go-maxms-template/internal/middleware/auth"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/business"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/handler"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/model"
+	"github.com/liuzhaomax/go-maxms/internal/api"
+	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/middleware"
+	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
+	"github.com/liuzhaomax/go-maxms/src/data_api/business"
+	"github.com/liuzhaomax/go-maxms/src/data_api/handler"
+	"github.com/liuzhaomax/go-maxms/src/data_api/model"
 )
 
 // Injectors from wire.go:

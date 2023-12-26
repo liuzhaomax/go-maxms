@@ -3,8 +3,8 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template/internal/core"
-	"github.com/liuzhaomax/go-maxms-template/src/data_api/business"
+	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/src/data_api/business"
 	"github.com/sirupsen/logrus"
 )
 

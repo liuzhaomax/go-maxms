@@ -1,5 +1,5 @@
 app:
-  name: go-maxms-template
+  name: go-maxms
   version: 0.1
   white_list:
     -
@@ -22,7 +22,7 @@ lib:
     max_idle_conns: 1000
     host: 127.0.0.1
     port: 3306
-    name: go-maxms-template
+    name: go-maxms
     params: charset=utf8mb4&parseTime=True&loc=Local
     username: root
     password: 123456
@@ -38,6 +38,6 @@ server:
 
 downstream:
   -
-    name: go-maxms-template-be
+    name: go-maxms-be
     host: 127.0.0.1
     port: 9300

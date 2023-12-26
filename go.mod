@@ -1,4 +1,4 @@
-module github.com/liuzhaomax/go-maxms-template
+module github.com/liuzhaomax/go-maxms
 
 go 1.21.4
 

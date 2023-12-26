@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms-template/internal/api"
+	"github.com/liuzhaomax/go-maxms/internal/api"
 	"gorm.io/gorm"
 )
 
