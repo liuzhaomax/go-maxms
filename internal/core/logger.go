@@ -23,7 +23,7 @@ func InitLogger() func() {
 	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支
 	file, err := os.OpenFile(log.FileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
+		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
 	}
 	logger := logrus.New()
 	logger.SetFormatter(selectFormatter("text"))
@@ -37,7 +37,7 @@ func InitLogger() func() {
 		Formatter:  selectFormatter(),
 	})
 	if err != nil {
-		logger.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志hook生成失败", err))
+		logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "日志hook生成失败", err))
 		panic(err)
 	}
 	logger.AddHook(rotateFileHook)
@@ -46,7 +46,7 @@ func InitLogger() func() {
 		if file != nil {
 			err = file.Close()
 			if err != nil {
-				logger.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "日志文件关闭失败", err))
+				logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "日志文件关闭失败", err))
 				panic(err)
 			}
 		}

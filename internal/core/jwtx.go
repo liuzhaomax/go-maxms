@@ -13,6 +13,9 @@ const (
 	TokenInvalid     = "Token无效"
 )
 
+// JWT 从vault读取
+//const JWTSecret = "123456"
+
 type CustomClaims struct {
 	jwt.StandardClaims
 	Mobile string
@@ -22,11 +25,8 @@ type JWT struct {
 	SigningKey []byte
 }
 
-// TODO 手动存入vault，从vault读取
-var JWTSecret = "123456"
-
 func NewJWT() *JWT {
-	return &JWT{SigningKey: []byte(JWTSecret)}
+	return &JWT{SigningKey: []byte(cfg.App.JWTSecret)}
 }
 
 func (j *JWT) GenerateToken(text string, duration time.Duration) (string, error) {
@@ -39,7 +39,7 @@ func (j *JWT) GenerateToken(text string, duration time.Duration) (string, error)
 		Mobile: text,
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := at.SignedString([]byte(JWTSecret))
+	token, err := at.SignedString([]byte(cfg.App.JWTSecret))
 	if err != nil {
 		return "", err
 	}

@@ -33,8 +33,7 @@ func SetWWWDir(wwwDir string) Option {
 
 func InitConfig(opts *options) func() {
 	cfg := core.GetConfig()
-	cfg.LoadConfig(opts.ConfigFile)
-	cleanLogger := core.InitLogger()
+	cleanLogger := cfg.LoadConfig(opts.ConfigFile)
 	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
 	return func() {
 		cleanLogger()
@@ -55,7 +54,7 @@ func InitServer(ctx context.Context, handler http.Handler) func() {
 	go func() {
 		cfg.App.Logger.WithContext(ctx).Infof("Service is running at %s", addr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			cfg.App.Logger.WithField("失败方法", core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
+			cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
 		}
 	}()
 	return func() {
@@ -64,7 +63,7 @@ func InitServer(ctx context.Context, handler http.Handler) func() {
 		defer cancel()
 		server.SetKeepAlivesEnabled(false)
 		if err := server.Shutdown(_ctx); err != nil {
-			cfg.App.Logger.WithContext(_ctx).WithField("失败方法", core.GetFuncName()).Error(core.FormatError(1, "服务关闭异常", err))
+			cfg.App.Logger.WithContext(_ctx).WithField(core.FAILURE, core.GetFuncName()).Error(core.FormatError(1, "服务关闭异常", err))
 		}
 		cfg.App.Logger.Info(core.FormatInfo("服务关闭成功"))
 	}

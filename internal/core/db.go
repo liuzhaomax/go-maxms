@@ -15,12 +15,12 @@ func InitDB() (*gorm.DB, func(), error) {
 	cfg.App.Logger.Info(FormatInfo("数据库连接启动"))
 	db, clean, err := cfg.LoadDB()
 	if err != nil {
-		cfg.App.Logger.WithField("失败方法", GetFuncName()).Fatal(FormatError(Unknown, "数据库连接失败", err))
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "数据库连接失败", err))
 		return nil, clean, err
 	}
 	err = cfg.AutoMigrate(db)
 	if err != nil {
-		cfg.App.Logger.WithField("失败方法", GetFuncName()).Fatal(FormatError(Unknown, "数据库表创建失败", err))
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "数据库表创建失败", err))
 		return nil, clean, err
 	}
 	cfg.App.Logger.Info(FormatInfo("数据库连接成功"))
@@ -59,7 +59,7 @@ func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
 	clean := func() {
 		err = sqlDB.Close()
 		if err != nil {
-			cfg.App.Logger.WithField("失败方法", GetFuncName()).Error(FormatError(Unknown, "数据库断开连接失败", err))
+			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "数据库断开连接失败", err))
 		}
 	}
 	err = sqlDB.Ping()
@@ -103,7 +103,7 @@ func createAdmin(db *gorm.DB) {
 		data.Password = encodedPwd
 		res := db.Create(&data)
 		if res.RowsAffected == 0 {
-			cfg.App.Logger.WithField("失败方法", GetFuncName()).Error(FormatError(Unknown, "admin创建失败", res.Error))
+			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "admin创建失败", res.Error))
 		}
 	}
 }

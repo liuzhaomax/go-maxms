@@ -19,8 +19,6 @@ func GetConfig() *Config {
 	return cfg
 }
 
-const configDir = "environment/config"
-
 type Config struct {
 	App
 	Lib
@@ -35,6 +33,7 @@ type App struct {
 	PrivateKey   *rsa.PrivateKey
 	PublicKeyStr string
 	Salt         string
+	JWTSecret    string
 	Logger       *logrus.Logger
 	WhiteList    []WhiteList
 }

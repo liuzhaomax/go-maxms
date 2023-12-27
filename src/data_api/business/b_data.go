@@ -27,10 +27,10 @@ func (b *BusinessData) GetDataById(ctx context.Context, req *pb.IdRequest) (*pb.
 		return nil
 	})
 	if err != nil {
-		b.Logger.WithField("失败方法", core.GetFuncName()).Info(core.FormatError(core.NotFound, "事务执行失败", err))
+		b.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(core.FormatError(core.NotFound, "事务执行失败", err))
 		return nil, err
 	}
 	res := model.Model2PB(data)
-	b.Logger.WithField("成功方法", core.GetFuncName()).Info(core.FormatInfo("响应成功"))
+	b.Logger.WithField(core.SUCCESS, core.GetFuncName()).Info(core.FormatInfo("响应成功"))
 	return res, nil
 }

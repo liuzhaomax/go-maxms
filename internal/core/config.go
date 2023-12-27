@@ -21,35 +21,40 @@ func LoadEnv() string {
 }
 
 // 加载配置
-func (cfg *Config) LoadConfig(configFile string) {
+func (cfg *Config) LoadConfig(configFile string) func() {
 	v := viper.New()
 	// 读取Config
 	v.SetConfigFile(configFile)
 	err := v.ReadInConfig()
 	if err != nil {
-		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "配置文件读取失败", err))
+		logrus.WithField("path", configFile).WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "配置文件读取失败", err))
 		panic(err)
 	}
 	err = v.Unmarshal(cfg)
 	if err != nil {
-		logrus.WithField("path", configFile).WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "配置文件反序列化失败", err))
+		logrus.WithField("path", configFile).WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "配置文件反序列化失败", err))
 		panic(err)
 	}
+	// 配置日志
+	cleanLogger := InitLogger()
 	// 配置RSA密钥对
 	cfg.SetRSAKeys()
+	// 获取secret，包括JWT
+	cfg.GetSecret()
+	return cleanLogger
 }
 
 func (cfg *Config) SetRSAKeys() {
 	prk, puk, err := GenRSAKeyPair(2048)
 	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "生成RSA密钥对失败", err))
+		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "生成RSA密钥对失败", err))
 		panic(err)
 	}
 	cfg.App.PublicKey = puk
 	cfg.App.PrivateKey = prk
 	publicKeyStr, err := PublicKeyToString(puk)
 	if err != nil {
-		logrus.WithField("失败方法", GetFuncName()).Panic(FormatError(Unknown, "公钥转字符串失败", err))
+		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "公钥转字符串失败", err))
 		panic(err)
 	}
 	cfg.App.PublicKeyStr = publicKeyStr
