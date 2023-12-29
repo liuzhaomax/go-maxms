@@ -124,20 +124,23 @@ func LoggerToFile() gin.HandlerFunc {
 		userAgent := c.Request.UserAgent()
 		method := c.Request.Method
 		uri := c.Request.RequestURI
+		traceID := c.Request.Header.Get(TraceId)
+		parentID := c.Request.Header.Get(SpanId)
 		logger.WithFields(logrus.Fields{
 			"client_ip":  clientIP,
 			"user-agent": userAgent,
 			"uri":        uri,
 			"method":     method,
+			"trace_id":   traceID,
+			"parent_id":  parentID,
 		}).Info("Request Incoming")
 		startTime := time.Now()
 		c.Next()
 		endTime := time.Now()
 		took := endTime.Sub(startTime)
 		statusCode := c.Writer.Status()
-		traceID := c.Request.Header.Get(TraceId)
 		spanID := c.Request.Header.Get(SpanId)
-		parentID := c.Request.Header.Get(ParentId)
+		parentID = c.Request.Header.Get(ParentId)
 
 		// concatenated json 写法
 		format := &LoggerFormat{
