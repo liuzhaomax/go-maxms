@@ -1,0 +1,16 @@
+syntax="proto3";
+
+option go_package="/pb";
+
+service UserService {
+  rpc GetUserById(IdReq) returns (UserRes);
+}
+
+message IdReq {
+  uint32 id=1;
+}
+
+message UserRes {
+  int32 id=1;
+  string mobile=2;
+}

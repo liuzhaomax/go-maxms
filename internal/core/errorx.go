@@ -11,10 +11,16 @@ import (
 type Code uint32
 
 const (
-	OK               Code = 0
-	Unknown          Code = 1
-	PermissionDenied Code = 2
-	NotFound         Code = 3
+	OK                Code = 0
+	Unknown           Code = 1
+	ConfigError       Code = 2
+	ConnectionFailed  Code = 3
+	ParseIssue        Code = 4
+	MissingParameters Code = 400
+	Unauthorized      Code = 401
+	NotFound          Code = 404
+	DownstreamDown    Code = 5
+	IOFailure         Code = 6
 )
 
 func (c Code) String() string {
@@ -23,10 +29,22 @@ func (c Code) String() string {
 		return "OK"
 	case Unknown:
 		return "Unknown"
-	case PermissionDenied:
-		return "PermissionDenied"
+	case ConfigError:
+		return "ConfigError"
+	case ConnectionFailed:
+		return "ConnectionFailed"
+	case ParseIssue:
+		return "ParseIssue"
+	case MissingParameters:
+		return "MissingParameters"
+	case Unauthorized:
+		return "Unauthorized"
 	case NotFound:
 		return "NotFound"
+	case DownstreamDown:
+		return "DownstreamDown"
+	case IOFailure:
+		return "IOFailure"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}
@@ -49,10 +67,10 @@ func FormatInfo(desc string) string {
 	return fmt.Sprintf("%v: %s", OK, desc)
 }
 
-func FormatError(code Code, desc string, err error) string {
+func FormatError(code Code, desc string, err error) error {
 	errObj := new(Error)
 	errObj.Code = code
 	errObj.Desc = desc
 	errObj.Err = err
-	return errObj.Error()
+	return errObj
 }

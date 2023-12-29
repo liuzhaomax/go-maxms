@@ -2,7 +2,7 @@ package core
 
 import (
 	"fmt"
-	"github.com/liuzhaomax/go-maxms/src/data_api/model"
+	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,7 +15,7 @@ func InitDB() (*gorm.DB, func(), error) {
 	cfg.App.Logger.Info(FormatInfo("数据库连接启动"))
 	db, clean, err := cfg.LoadDB()
 	if err != nil {
-		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "数据库连接失败", err))
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(ConnectionFailed, "数据库连接失败", err))
 		return nil, clean, err
 	}
 	err = cfg.AutoMigrate(db)
@@ -77,7 +77,7 @@ func (cfg *Config) AutoMigrate(db *gorm.DB) error {
 	if dbType == "mysql" {
 		db = db.Set("gorm:table_options", "ENGINE=InnoDB")
 	}
-	err := db.AutoMigrate(new(model.Data))
+	err := db.AutoMigrate(new(model.User))
 	if err != nil {
 		return err
 	}
@@ -93,15 +93,17 @@ func (db *DB) DSN() string {
 }
 
 func createAdmin(db *gorm.DB) {
-	var data model.Data
-	result := db.First(&data)
+	var user model.User
+	result := db.First(&user)
 	if result.RowsAffected == 0 {
-		data.Mobile = "13012345678"
-		data.Username = "admin"
+		user.UserID = ShortUUID()
+		user.Username = "admin"
 		salt, encodedPwd := GetEncodedPwd("admin")
 		cfg.App.Salt = salt
-		data.Password = encodedPwd
-		res := db.Create(&data)
+		user.Password = encodedPwd
+		user.Mobile = "+8613012345678"
+		user.Email = "admin@maxblog.cn"
+		res := db.Create(&user)
 		if res.RowsAffected == 0 {
 			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "admin创建失败", res.Error))
 		}

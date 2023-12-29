@@ -5,7 +5,7 @@ import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/cors"
-	"github.com/liuzhaomax/go-maxms/src/data_api/handler"
+	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
 	"github.com/liuzhaomax/go-maxms/src/router"
 	"net/http"
 )
@@ -18,13 +18,13 @@ type API interface {
 
 type Handler struct {
 	Middleware  *middleware.Middleware
-	HandlerData *handler.HandlerData
+	HandlerUser *handler.HandlerUser
 }
 
 func (h *Handler) Register(app *gin.Engine) {
 	app.NoRoute(h.GetNoRoute)
 	app.Use(cors.Cors())
-	router.Register(app, h.HandlerData, h.Middleware)
+	router.Register(app, h.HandlerUser, h.Middleware)
 }
 
 func (h *Handler) RegisterStaticFS(app *gin.Engine, path string) {

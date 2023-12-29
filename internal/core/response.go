@@ -34,7 +34,7 @@ func (res *Response) ResFailure(c *gin.Context, funcName string, statusCode int,
 		"status": gin.H{
 			"code": code,
 			"desc": desc,
-			"err":  err,
+			"err":  err.Error(),
 		},
 	})
 }

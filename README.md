@@ -54,6 +54,7 @@ google.golang.org/grpc
 google.golang.org/protobuf
 github.com/hashicorp/vault/api
 gorm.io/gorm
+github.com/lithammer/shortuuid
 
 ## TODO
 1. 采用第一种鉴权方式，先做SWG -> main -> user，修改auth中间件

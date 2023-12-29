@@ -2,9 +2,9 @@ package set
 
 import (
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms/src/data_api/model"
+	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 )
 
 var ModelSet = wire.NewSet(
-	model.ModelDataSet,
+	model.ModelUserSet,
 )

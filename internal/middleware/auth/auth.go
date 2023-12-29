@@ -87,6 +87,6 @@ func (auth *Auth) VerifyToken() gin.HandlerFunc {
 	}
 }
 
-func genErrMsg(err error) string {
-	return core.FormatError(core.PermissionDenied, "权限验证失败", err)
+func genErrMsg(err error) error {
+	return core.FormatError(core.Unauthorized, "权限验证失败", err)
 }

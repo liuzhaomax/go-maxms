@@ -23,7 +23,7 @@ func InitLogger() func() {
 	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支
 	file, err := os.OpenFile(log.FileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "日志文件打开失败", err))
+		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOFailure, "日志文件打开失败", err))
 	}
 	logger := logrus.New()
 	logger.SetFormatter(selectFormatter("text"))
@@ -46,7 +46,7 @@ func InitLogger() func() {
 		if file != nil {
 			err = file.Close()
 			if err != nil {
-				logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "日志文件关闭失败", err))
+				logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOFailure, "日志文件关闭失败", err))
 				panic(err)
 			}
 		}
@@ -111,27 +111,33 @@ type LoggerFormat struct {
 	ClientIP   string        `json:"client_ip"`
 	Method     string        `json:"method"`
 	URI        string        `json:"uri"`
+	UserAgent  string        `json:"user_agent"`
+	TraceID    string        `json:"trace_id"`
+	SpanID     string        `json:"span_id"`
+	ParentID   string        `json:"parent_id"`
 }
 
 func LoggerToFile() gin.HandlerFunc {
 	logger := cfg.App.Logger
 	return func(c *gin.Context) {
+		clientIP := c.ClientIP()
+		userAgent := c.Request.UserAgent()
+		method := c.Request.Method
+		uri := c.Request.RequestURI
+		logger.WithFields(logrus.Fields{
+			"client_ip":  clientIP,
+			"user-agent": userAgent,
+			"uri":        uri,
+			"method":     method,
+		}).Info("Request Incoming")
 		startTime := time.Now()
 		c.Next()
 		endTime := time.Now()
 		took := endTime.Sub(startTime)
-		method := c.Request.Method
-		uri := c.Request.RequestURI
 		statusCode := c.Writer.Status()
-		clientIP := c.ClientIP()
-		// 竖线分割写法
-		//logger.Infof("| %3d | %13v | %15s | %8s | %s ",
-		//    statusCode,
-		//    took,
-		//    clientIP,
-		//    method,
-		//    uri,
-		//)
+		traceID := c.Request.Header.Get(TraceId)
+		spanID := c.Request.Header.Get(SpanId)
+		parentID := c.Request.Header.Get(ParentId)
 
 		// concatenated json 写法
 		format := &LoggerFormat{
@@ -140,17 +146,32 @@ func LoggerToFile() gin.HandlerFunc {
 			ClientIP:   clientIP,
 			Method:     method,
 			URI:        uri,
+			UserAgent:  userAgent,
+			TraceID:    traceID,
+			SpanID:     spanID,
+			ParentID:   parentID,
 		}
 		formatBytes, _ := json.Marshal(format)
 		logger.Info(string(formatBytes))
 
+		// 竖线分割写法
+		//logger.Infof("| %3d | %13v | %15s | %8s | %s | %20s",
+		//    statusCode,
+		//    took,
+		//    clientIP,
+		//    method,
+		//    uri,
+		//    userAgent,
+		//)
+
 		// json标准写法
 		//logger.WithFields(logrus.Fields{
-		//	"code":      statusCode,
-		//	"took":      took,
-		//	"client_ip": clientIP,
-		//	"method":    method,
-		//	"uri":       uri,
+		//	"code":       statusCode,
+		//	"took":       took,
+		//	"client_ip":  clientIP,
+		//	"method":     method,
+		//	"uri":        uri,
+		//  "user_agent": userAgent,
 		//}).Info("123")
 	}
 }

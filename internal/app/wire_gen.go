@@ -11,9 +11,10 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
-	"github.com/liuzhaomax/go-maxms/src/data_api/business"
-	"github.com/liuzhaomax/go-maxms/src/data_api/handler"
-	"github.com/liuzhaomax/go-maxms/src/data_api/model"
+	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
+	"github.com/liuzhaomax/go-maxms/src/api_user/business"
+	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
+	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 )
 
 // Injectors from wire.go:
@@ -24,35 +25,39 @@ func InitInjector() (*Injector, func(), error) {
 	authAuth := &auth.Auth{
 		Logger: logger,
 	}
+	reverseProxy := &reverse_proxy.ReverseProxy{
+		Logger: logger,
+	}
 	middlewareMiddleware := &middleware.Middleware{
-		Auth: authAuth,
+		Auth:         authAuth,
+		ReverseProxy: reverseProxy,
 	}
 	db, cleanup, err := core.InitDB()
 	if err != nil {
 		return nil, nil, err
 	}
-	modelData := &model.ModelData{
+	modelUser := &model.ModelUser{
 		DB: db,
 	}
 	trans := &core.Trans{
 		DB: db,
 	}
-	businessData := &business.BusinessData{
-		Model:  modelData,
+	businessUser := &business.BusinessUser{
+		Model:  modelUser,
 		Logger: logger,
 		Tx:     trans,
 	}
 	response := &core.Response{
 		Logger: logger,
 	}
-	handlerData := &handler.HandlerData{
-		Business: businessData,
+	handlerUser := &handler.HandlerUser{
+		Business: businessUser,
 		Logger:   logger,
 		IRes:     response,
 	}
 	apiHandler := &api.Handler{
 		Middleware:  middlewareMiddleware,
-		HandlerData: handlerData,
+		HandlerUser: handlerUser,
 	}
 	injector := &Injector{
 		Engine:  engine,

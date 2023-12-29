@@ -1,7 +1,9 @@
 #!/bin/sh
-mkdir ../src/data_api/pb
-protoc --go_out=../src/data_api/pb \
+cd spec
+mkdir ../src/api_user/pb
+protoc --go_out=../src/api_user/pb \
   --go_opt=paths=source_relative \
-  --go-grpc_out=../src/data_api/pb \
+  --go-grpc_out=../src/api_user/pb \
   --go-grpc_opt=paths=source_relative \
-  data.proto
+  user.proto
+cd ..
