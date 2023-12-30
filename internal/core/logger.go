@@ -2,10 +2,12 @@ package core
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/snowzach/rotatefilehook"
+	"net/http"
 	"os"
 	"time"
 )
@@ -124,23 +126,28 @@ func LoggerToFile() gin.HandlerFunc {
 		userAgent := c.Request.UserAgent()
 		method := c.Request.Method
 		uri := c.Request.RequestURI
+		err := SetHeaders(c)
 		traceID := c.Request.Header.Get(TraceId)
-		parentID := c.Request.Header.Get(SpanId)
+		spanID := c.Request.Header.Get(SpanId)
+		parentID := c.Request.Header.Get(ParentId)
 		logger.WithFields(logrus.Fields{
 			"client_ip":  clientIP,
 			"user-agent": userAgent,
 			"uri":        uri,
 			"method":     method,
 			"trace_id":   traceID,
+			"span_id":    spanID,
 			"parent_id":  parentID,
 		}).Info("Request Incoming")
+		if err != nil {
+			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Info(FormatError(MissingParameters, "请求头错误", err))
+			c.AbortWithStatusJSON(http.StatusBadRequest, FormatError(MissingParameters, "请求头错误", err))
+		}
 		startTime := time.Now()
 		c.Next()
 		endTime := time.Now()
 		took := endTime.Sub(startTime)
 		statusCode := c.Writer.Status()
-		spanID := c.Request.Header.Get(SpanId)
-		parentID = c.Request.Header.Get(ParentId)
 
 		// concatenated json 写法
 		format := &LoggerFormat{
@@ -177,4 +184,15 @@ func LoggerToFile() gin.HandlerFunc {
 		//  "user_agent": userAgent,
 		//}).Info("123")
 	}
+}
+
+func SetHeaders(c *gin.Context) error {
+	if c.Request.Header.Get(TraceId) == EmptyString || c.Request.Header.Get(SpanId) == EmptyString {
+		return errors.New("缺失链路信息")
+	}
+	c.Request.Header.Set(TraceId, c.Request.Header.Get(TraceId))
+	c.Request.Header.Set(ParentId, c.Request.Header.Get(SpanId))
+	c.Request.Header.Set(SpanId, SpanID())
+	c.Request.Header.Set(ClientIp, c.ClientIP())
+	return nil
 }
