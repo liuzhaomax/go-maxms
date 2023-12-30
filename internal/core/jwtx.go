@@ -18,7 +18,8 @@ const (
 
 type CustomClaims struct {
 	jwt.StandardClaims
-	Mobile string
+	UserID   string
+	ClientIP string
 }
 
 type JWT struct {
@@ -29,14 +30,15 @@ func NewJWT() *JWT {
 	return &JWT{SigningKey: []byte(cfg.App.JWTSecret)}
 }
 
-func (j *JWT) GenerateToken(text string, duration time.Duration) (string, error) {
+func (j *JWT) GenerateToken(userID string, clientIP string, duration time.Duration) (string, error) {
 	now := time.Now()
 	claims := CustomClaims{
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: now.Unix(),
 			ExpiresAt: now.Add(duration).Unix(),
 		},
-		Mobile: text,
+		UserID:   userID,
+		ClientIP: clientIP,
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := at.SignedString([]byte(cfg.App.JWTSecret))
@@ -46,28 +48,28 @@ func (j *JWT) GenerateToken(text string, duration time.Duration) (string, error)
 	return token, nil
 }
 
-func (j *JWT) ParseToken(tokenStr string) (string, error) {
+func (j *JWT) ParseToken(tokenStr string) (string, string, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(tokenStr *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil
 	})
 	if err != nil {
 		if result, ok := err.(jwt.ValidationError); ok {
 			if result.Errors&jwt.ValidationErrorMalformed != 0 {
-				return "", errors.New(TokenMalformed)
+				return EmptyString, EmptyString, errors.New(TokenMalformed)
 			} else if result.Errors&jwt.ValidationErrorExpired != 0 {
-				return "", errors.New(TokenExpired)
+				return EmptyString, EmptyString, errors.New(TokenExpired)
 			} else if result.Errors&jwt.ValidationErrorNotValidYet != 0 {
-				return "", errors.New(TokenNotValidYet)
+				return EmptyString, EmptyString, errors.New(TokenNotValidYet)
 			} else {
-				return "", errors.New(TokenInvalid)
+				return EmptyString, EmptyString, errors.New(TokenInvalid)
 			}
 		}
-		return "", err
+		return EmptyString, EmptyString, err
 	}
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-		return claims.Mobile, nil
+		return claims.UserID, claims.ClientIP, nil
 	}
-	return "", errors.New(TokenInvalid)
+	return EmptyString, EmptyString, errors.New(TokenInvalid)
 }
 
 func (j *JWT) RefreshToken(tokenStr string) (string, error) {
@@ -81,7 +83,7 @@ func (j *JWT) RefreshToken(tokenStr string) (string, error) {
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		jwt.TimeFunc = time.Now
 		claims.StandardClaims.ExpiresAt = time.Now().Add(duration).Unix()
-		return j.GenerateToken(claims.Mobile, duration)
+		return j.GenerateToken(claims.UserID, claims.ClientIP, duration)
 	}
 	return "", errors.New(TokenInvalid)
 }

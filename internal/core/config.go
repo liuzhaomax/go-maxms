@@ -38,9 +38,17 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	// 配置日志
 	cleanLogger := InitLogger()
 	// 配置RSA密钥对
-	cfg.SetRSAKeys()
+	if cfg.App.Enabled.RSA == true {
+		cfg.SetRSAKeys()
+		// 写入puk string
+		if cfg.App.Enabled.Vault == true {
+			cfg.PutSecret()
+		}
+	}
 	// 获取secret，包括JWT
-	cfg.GetSecret()
+	if cfg.App.Enabled.Vault == true {
+		cfg.GetSecret()
+	}
 	return func() {
 		cleanLogger()
 	}

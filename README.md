@@ -57,10 +57,11 @@ gorm.io/gorm
 github.com/lithammer/shortuuid
 
 ## TODO
-1. 采用第一种鉴权方式，先做SWG -> main -> user，修改auth中间件
-2. 根据contract生成代码，包括type，不含集成其他工具的代码，（必填的非指针，可选的是指针）
+1. 采用第一种鉴权方式，做SWG，修改auth中间件
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
 2. vault与k8s集成，动态数据库账号密码  https://www.youtube.com/watch?v=otNkDHFNWt0
 3. vault使用production模式启动，链接换为https
+4. 用script拉取代码生成contract文件
+5. 根据contract生成代码，包括type，不含集成其他工具的代码，（必填的非指针，可选的是指针）

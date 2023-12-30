@@ -56,25 +56,52 @@ func (cfg *Config) GetSecret() {
 	}
 	// 配置请求
 	client.SetToken(token)
-	client.SetNamespace("dev")
 	kvPath := "kv"
 	ctx := context.Background()
-
-	// 写入secret
-	//secretData := map[string]interface{}{
-	//	"jwt_secret": "987654",
-	//}
-	//_, err = client.KVv2(kvPath).Put(ctx, client.Namespace(), secretData)
-	//if err != nil {
-	//	cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(ConnectionFailed, "写入secret失败", err))
-	//}
-
-	// 读取secret
+	client.SetNamespace("dev")
+	// 读取jwt_secret
 	secret, err := client.KVv2(kvPath).Get(ctx, client.Namespace())
 	if err != nil {
 		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(ConnectionFailed, "获取secret失败", err))
 		panic(err)
 	}
 	cfg.App.JWTSecret = secret.Data["jwt_secret"].(string)
+	// 读取puk string
+	client.SetNamespace("puk")
+	pukStr, err := client.KVv2(kvPath).Get(ctx, client.Namespace())
+	if err != nil {
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(ConnectionFailed, "获取secret失败", err))
+		panic(err)
+	}
+	cfg.App.PublicKeyStr = pukStr.Data["puk"].(string)
 	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo("secret获取成功"))
+}
+
+// PutSecret 新增和修改secret
+func (cfg *Config) PutSecret() {
+	// 获取登录vault的token
+	token, err := userpassLogin()
+	if err != nil {
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(ConnectionFailed, "vault用户登录token获取失败", err))
+		panic(err)
+	}
+	// 创建vault连接客户端
+	client, err := vault.NewClient(&vault.Config{Address: VaultAddr, HttpClient: httpClient})
+	if err != nil {
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "创建vault连接失败", err))
+		panic(err)
+	}
+	// 配置请求
+	client.SetToken(token)
+	client.SetNamespace("puk")
+	kvPath := "kv"
+	ctx := context.Background()
+	// 写入secret
+	secretData := map[string]interface{}{
+		"puk": cfg.App.PublicKeyStr,
+	}
+	_, err = client.KVv2(kvPath).Put(ctx, client.Namespace(), secretData)
+	if err != nil {
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(ConnectionFailed, "写入secret失败", err))
+	}
 }

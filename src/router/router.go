@@ -7,6 +7,8 @@ import (
 )
 
 func Register(app *gin.Engine, handler *handler.HandlerUser, mw *middleware.Middleware) {
+	app.GET("/login", handler.GetPuk)
+	app.POST("/login", handler.PostLogin)
 	//app.Use(mw.Auth.VerifyToken())
 	routerUser := app.Group("/users")
 	{

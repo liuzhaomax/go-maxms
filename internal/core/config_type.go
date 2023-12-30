@@ -35,7 +35,14 @@ type App struct {
 	Salt         string
 	JWTSecret    string
 	Logger       *logrus.Logger
-	WhiteList    []WhiteList
+	Domain       string `mapstructure:"domain"`
+	Enabled
+	WhiteList []WhiteList
+}
+
+type Enabled struct {
+	Vault bool `mapstructure:"vault"`
+	RSA   bool `mapstructure:"rsa"`
 }
 
 type WhiteList struct {

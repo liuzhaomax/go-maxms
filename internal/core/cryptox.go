@@ -84,6 +84,16 @@ func PublicKeyToString(publicKey *rsa.PublicKey) (string, error) {
 	return publicKeyStr, err
 }
 
+func PrivateKeyToString(privateKey *rsa.PrivateKey) (string, error) {
+	privateKeyBytes := x509.MarshalPKCS1PrivateKey(privateKey)
+	privateKeyPem := pem.EncodeToMemory(&pem.Block{
+		Type:  "PRIVATE KEY",
+		Bytes: privateKeyBytes,
+	})
+	privateKeyStr := base64.StdEncoding.EncodeToString(privateKeyPem)
+	return privateKeyStr, nil
+}
+
 func RSADecrypt(privateKey *rsa.PrivateKey, encryptedStr string) (string, error) {
 	cipherTextB64, _ := base64.StdEncoding.DecodeString(encryptedStr)
 	decryptedBytes, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherTextB64)

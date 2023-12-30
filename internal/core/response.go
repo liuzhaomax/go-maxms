@@ -19,12 +19,21 @@ type Response struct {
 
 func (res *Response) ResSuccess(c *gin.Context, funcName string, sth interface{}) {
 	res.Logger.WithField(SUCCESS, funcName).Debug(FormatInfo("响应成功"))
+	if sth != nil {
+		res.ResJson(c, 200, gin.H{
+			"status": gin.H{
+				"code": OK,
+				"desc": "success",
+			},
+			"data": sth,
+		})
+		return
+	}
 	res.ResJson(c, 200, gin.H{
 		"status": gin.H{
 			"code": OK,
 			"desc": "success",
 		},
-		"data": sth,
 	})
 }
 

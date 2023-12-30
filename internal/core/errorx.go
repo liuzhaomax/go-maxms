@@ -21,6 +21,7 @@ const (
 	NotFound          Code = 404
 	DownstreamDown    Code = 5
 	IOFailure         Code = 6
+	PermissionDenied  Code = 7
 )
 
 func (c Code) String() string {
@@ -45,6 +46,8 @@ func (c Code) String() string {
 		return "DownstreamDown"
 	case IOFailure:
 		return "IOFailure"
+	case PermissionDenied:
+		return "PermissionDenied"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}
