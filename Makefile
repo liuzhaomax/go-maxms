@@ -1,17 +1,23 @@
 SHELL = /bin/bash
 
-BuiltFile=bin/main
-TestInclusion=$(shell go list ./... | grep -Ewv 'main|test|internal|src/router|src/dataAPI/handler')
-env=local
-scenario=all
+CONTRACT_URL=https://raw.githubusercontent.com/liuzhaomax/maxblog-devops/main/contracts/user.yaml
+CONTRACT_PATH=user.yaml
+BUILT_FILE=bin/main
+TEST_INCLUSION=$(shell go list ./... | grep -Ewv 'main|test|internal|src/router|src/dataAPI/handler')
+API_ENV=local
+SCENARIO=all
 
 # 安装依赖
 tidy:
 	go mod tidy
 
+# 读取contract
+spec:
+	go test -v ./script -run TestGetContract -url=$(CONTRACT_URL) -path=$(CONTRACT_PATH)
+
 # 打包
 build:
-	go build -o $(BuiltFile) main/main.go
+	go build -o $(BUILT_FILE) main/main.go
 
 # 依赖注入
 wire:
@@ -27,9 +33,11 @@ lint:
 
 # 单元测试
 unit:
-	go test -v -timeout 1000s -covermode=atomic -coverpkg=./... -coverprofile=unit_test.out $(TestInclusion)
+	go test -v -timeout 1000s -covermode=atomic -coverpkg=./... -coverprofile=unit_test.out $(TEST_INCLUSION)
 	go tool cover -html=unit_test.out
 
 # 接口测试
 api:
-	go test -v -race -tags $(scenario) ./test/api -args -env=$(env)
+	go test -v -race -tags $(SCENARIO) ./test/api -args -env=$(API_ENV)
+
+.PHONY: spec

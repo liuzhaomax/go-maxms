@@ -1,0 +1,332 @@
+openapi: 3.0.3
+x-stoplight:
+  id: v8e5aonsa5y6d
+info:
+  title: user
+  version: '1.0'
+  description: MaxBlog用户API
+  contact:
+    name: Max
+  license:
+    name: Apache 2.0
+servers:
+  - url: 'http://127.0.0.1:9200'
+    description: 本地
+tags:
+  - name: user
+    description: 用户操作
+  - name: login
+    description: 登录
+paths:
+  '/users/{userID}':
+    parameters:
+      - schema:
+          type: string
+        name: userID
+        in: path
+        required: true
+        description: 用户ID
+    get:
+      summary: Get User Info by User ID
+      tags:
+        - user
+      responses:
+        '200':
+          $ref: '#/components/responses/200-get-users-userID'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+      operationId: get-users-userID
+      description: Retrieve the information of the user with the matching user ID.
+      parameters:
+        - $ref: '#/components/parameters/Client_ip'
+        - $ref: '#/components/parameters/User-Agent'
+        - $ref: '#/components/parameters/Trace_id'
+        - $ref: '#/components/parameters/Span_id'
+        - $ref: '#/components/parameters/Parent_id'
+  /login:
+    get:
+      summary: Get Public Key for Login
+      tags:
+        - login
+      responses:
+        '200':
+          $ref: '#/components/responses/200-get-login'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+      operationId: get-login
+      description: 获取公钥
+      parameters:
+        - $ref: '#/components/parameters/Client_ip'
+        - $ref: '#/components/parameters/User-Agent'
+        - $ref: '#/components/parameters/Trace_id'
+        - $ref: '#/components/parameters/Span_id'
+        - $ref: '#/components/parameters/Parent_id'
+    post:
+      summary: Login with Username and Password
+      tags:
+        - login
+      operationId: post-login
+      responses:
+        '200':
+          $ref: '#/components/responses/200-post-login'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          description: Internal Server Error
+      parameters:
+        - $ref: '#/components/parameters/Client_ip'
+        - $ref: '#/components/parameters/User-Agent'
+        - $ref: '#/components/parameters/Trace_id'
+        - $ref: '#/components/parameters/Span_id'
+        - $ref: '#/components/parameters/Parent_id'
+      description: 用户登录
+      requestBody:
+        $ref: '#/components/requestBodies/Login'
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      x-examples:
+        Example 1:
+          userID: string
+          username: string
+          mobile: '+8613012345678'
+          email: user@example.com
+          emailVerified: true
+          createdAt: '2023-12-26 23:10:18.938'
+          updatedAt: '2023-12-26 23:10:18.938'
+          deletedAt: '2023-12-26 23:10:18.938'
+      properties:
+        userID:
+          type: string
+          maxLength: 50
+          description: id for user
+        username:
+          type: string
+          maxLength: 30
+        mobile:
+          type: string
+          maxLength: 14
+        email:
+          type: string
+          format: email
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createdAt:
+          type: string
+          format: date-time
+          example: '2023-12-26 23:10:18.938'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2023-12-26 23:10:18.938'
+        deletedAt:
+          type: string
+          format: date-time
+          example: '2023-12-26 23:10:18.938'
+      required:
+        - userID
+        - username
+        - mobile
+        - email
+        - emailVerified
+        - createdAt
+        - updatedAt
+    Puk:
+      title: Puk
+      x-stoplight:
+        id: jyh22u3qnyljy
+      type: object
+      description: 公钥
+      properties:
+        puk:
+          type: string
+      x-examples:
+        Example 1:
+          puk: string
+    Status:
+      title: Status
+      x-stoplight:
+        id: 9dwz18t0hmqh2
+      type: object
+      x-examples:
+        Example 1:
+          code: 0
+          desc: success
+      properties:
+        code:
+          type: integer
+        desc:
+          type: string
+  responses:
+    '400':
+      description: 缺少参数
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/Status'
+          examples:
+            Example 1:
+              value:
+                status:
+                  code: 400
+                  desc: 缺少参数
+    '401':
+      description: 未授权
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/Status'
+          examples:
+            Example 1:
+              value:
+                status:
+                  code: 401
+                  desc: 未授权
+    '500':
+      description: 内部错误
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/Status'
+          examples:
+            Example 1:
+              value:
+                status:
+                  code: 500
+                  desc: 内部错误
+    200-get-users-userID:
+      description: 成功
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/Status'
+              data:
+                $ref: '#/components/schemas/User'
+          examples:
+            Example 1:
+              value:
+                status:
+                  code: 0
+                  desc: success
+                data:
+                  userID: string
+                  username: string
+                  mobile: '+8612345678'
+                  email: user@example.com
+                  emailVerified: true
+                  createdAt: '2023-12-26 23:10:18.938'
+                  updatedAt: '2023-12-26 23:10:18.938'
+                  deletedAt: '2023-12-26 23:10:18.938'
+    200-get-login:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/Status'
+              data:
+                $ref: '#/components/schemas/Puk'
+          examples:
+            Example 1:
+              value:
+                status:
+                  code: 0
+                  desc: success
+                data:
+                  puk: string
+    200-post-login:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: '#/components/schemas/Status'
+              data:
+                type: string
+          examples:
+            Example 1:
+              value:
+                status:
+                  code: 0
+                  desc: success
+                data: token
+  parameters:
+    Client_ip:
+      name: Client_ip
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 用户IP
+    User-Agent:
+      name: User-Agent
+      in: header
+      required: true
+      schema:
+        type: string
+      description: 用户设备
+    Trace_id:
+      name: Trace_id
+      in: header
+      required: true
+      schema:
+        type: string
+      description: trace ID
+    Span_id:
+      name: Span_id
+      in: header
+      schema:
+        type: string
+      description: span ID
+      required: true
+    Parent_id:
+      name: Parent_id
+      in: header
+      required: true
+      schema:
+        type: string
+      description: Parent ID
+  requestBodies:
+    Login:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+                format: password
+          examples:
+            Example 1:
+              value:
+                username: string
+                password: pa$$word
