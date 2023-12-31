@@ -27,15 +27,16 @@ type Config struct {
 }
 
 type App struct {
-	Name         string `mapstructure:"name"`
-	Version      string `mapstructure:"version"`
-	PublicKey    *rsa.PublicKey
-	PrivateKey   *rsa.PrivateKey
-	PublicKeyStr string
-	Salt         string
-	JWTSecret    string
-	Logger       *logrus.Logger
-	Domain       string `mapstructure:"domain"`
+	Name          string `mapstructure:"name"`
+	Version       string `mapstructure:"version"`
+	PublicKey     *rsa.PublicKey
+	PrivateKey    *rsa.PrivateKey
+	PublicKeyStr  string
+	PrivateKeyStr string
+	Salt          string
+	JWTSecret     string
+	Logger        *logrus.Logger
+	Domain        string `mapstructure:"domain"`
 	Enabled
 	WhiteList []WhiteList
 }

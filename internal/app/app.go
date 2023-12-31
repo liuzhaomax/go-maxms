@@ -35,6 +35,7 @@ func InitConfig(opts *options) func() {
 	cfg := core.GetConfig()
 	cleanLogger := cfg.LoadConfig(opts.ConfigFile)
 	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
+	cfg.App.Logger.Info(core.FormatInfo("系统启动"))
 	return func() {
 		cleanLogger()
 	}
@@ -121,5 +122,5 @@ EXIT:
 	defer time.Sleep(time.Second)
 	defer os.Exit(state)
 	defer clean()
-	defer cfg.App.Logger.WithContext(ctx).Infof(core.FormatInfo("系统终止运行"))
+	defer cfg.App.Logger.WithContext(ctx).Infof(core.FormatInfo("系统停止"))
 }

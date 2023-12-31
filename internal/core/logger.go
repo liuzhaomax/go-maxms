@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/mattn/go-colorable"
 	"github.com/sirupsen/logrus"
 	"github.com/snowzach/rotatefilehook"
 	"net/http"
@@ -16,7 +15,6 @@ import (
 func init() {
 	logrus.SetLevel(logrus.InfoLevel)
 	logrus.SetFormatter(selectFormatter("text"))
-	logrus.SetOutput(colorable.NewColorableStdout())
 }
 
 // 初始化系统日志
@@ -28,8 +26,8 @@ func InitLogger() func() {
 		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOFailure, "日志文件打开失败", err))
 	}
 	logger := logrus.New()
+	logger.SetLevel(selectLogLevel())
 	logger.SetFormatter(selectFormatter("text"))
-	logger.SetOutput(colorable.NewColorableStdout())
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   log.FileName,
 		MaxSize:    50, // megabytes

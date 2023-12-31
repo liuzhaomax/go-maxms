@@ -20,16 +20,10 @@ func (auth *Auth) VerifyToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		j := core.NewJWT()
 		// token in req header
-		headerB64Token := c.Request.Header.Get(core.Authorization)
-		if headerB64Token == "" || len(headerB64Token) == 0 {
+		headerToken := c.Request.Header.Get(core.Authorization)
+		if headerToken == "" || len(headerToken) == 0 {
 			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Debug(genErrMsg(nil))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, genErrMsg(nil))
-			return
-		}
-		headerToken, err := core.BASE64DecodeStr(headerB64Token)
-		if err != nil {
-			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Debug(genErrMsg(err))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, genErrMsg(err))
 			return
 		}
 		headerDecryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), headerToken)

@@ -7,6 +7,18 @@ const configDir = "environment/config"
 const SUCCESS = "成功"
 const FAILURE = "失败"
 
+// vault
+const (
+	Kv     = "kv"
+	Pwd    = "pwd"
+	Rsa    = "rsa"
+	Jwt    = "jwt"
+	Secret = "secret"
+	Salt   = "salt"
+	Puk    = "puk"
+	Prk    = "prk"
+)
+
 const (
 	EmptyString = ""
 	// headers params

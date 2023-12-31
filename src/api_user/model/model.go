@@ -11,5 +11,5 @@ type User struct {
 	Password      string `gorm:"varchar(30);not null"`
 	Mobile        string `gorm:"index:idx_mobile;unique;varchar(14);not null"`
 	Email         string `gorm:"index:idx_email;unique;varchar(30);not null"`
-	EmailVerified bool   `gorm:"not null"`
+	EmailVerified bool   `gorm:"boolean;not null;default:false"`
 }

@@ -21,12 +21,12 @@ type BusinessUser struct {
 }
 
 func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
-	var loginReq *schema.LoginReq
+	loginReq := &schema.LoginReq{}
 	err := c.ShouldBind(loginReq)
 	if err != nil {
 		return core.EmptyString, core.FormatError(core.ParseIssue, "请求体无效", err)
 	}
-	var user *model.User
+	user := &model.User{}
 	err = b.Tx.ExecTrans(c, func(ctx context.Context) error {
 		err = b.Model.QueryUserByUsername(loginReq.Username, user)
 		if err != nil {
@@ -34,6 +34,9 @@ func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
 		}
 		return nil
 	})
+	if err != nil {
+		return core.EmptyString, core.FormatError(core.PermissionDenied, "登录失败", err)
+	}
 	// loginReq.Password是从SGW经过RSA解码后得到密码
 	result := core.VerifyEncodedPwd(loginReq.Password, core.GetConfig().App.Salt, user.Password)
 	if result == false {

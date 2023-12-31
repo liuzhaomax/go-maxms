@@ -40,14 +40,26 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	// 配置RSA密钥对
 	if cfg.App.Enabled.RSA == true {
 		cfg.SetRSAKeys()
-		// 写入puk string
+		// 写入secret
 		if cfg.App.Enabled.Vault == true {
-			cfg.PutSecret()
+			cfg.PutRSA()
 		}
 	}
-	// 获取secret，包括JWT
+	// 获取secret
 	if cfg.App.Enabled.Vault == true {
 		cfg.GetSecret()
+		publicKey, err := PublicKeyB64StrToStruct(cfg.App.PublicKeyStr)
+		if err != nil {
+			logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "RSA字符串转结构体失败", err))
+			panic(err)
+		}
+		cfg.App.PublicKey = publicKey
+		privateKey, err := PrivateKeyB64StrToStruct(cfg.App.PrivateKeyStr)
+		if err != nil {
+			logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "RSA字符串转结构体失败", err))
+			panic(err)
+		}
+		cfg.App.PrivateKey = privateKey
 	}
 	return func() {
 		cleanLogger()
@@ -68,4 +80,10 @@ func (cfg *Config) SetRSAKeys() {
 		panic(err)
 	}
 	cfg.App.PublicKeyStr = publicKeyStr
+	privateKeyStr, err := PrivateKeyToString(prk)
+	if err != nil {
+		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "私钥转字符串失败", err))
+		panic(err)
+	}
+	cfg.App.PrivateKeyStr = privateKeyStr
 }

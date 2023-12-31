@@ -93,13 +93,15 @@ func (db *DB) DSN() string {
 }
 
 func createAdmin(db *gorm.DB) {
-	var user model.User
-	result := db.First(&user)
+	user := &model.User{}
+	result := db.First(user)
 	if result.RowsAffected == 0 {
 		user.UserID = ShortUUID()
 		user.Username = "admin"
 		salt, encodedPwd := GetEncodedPwd("admin")
 		cfg.App.Salt = salt
+		// 将salt保存到vault
+		cfg.PutSalt()
 		user.Password = encodedPwd
 		user.Mobile = "+8613012345678"
 		user.Email = "admin@maxblog.cn"

@@ -94,8 +94,50 @@ func PrivateKeyToString(privateKey *rsa.PrivateKey) (string, error) {
 	return privateKeyStr, nil
 }
 
+func PublicKeyB64StrToStruct(publicKeyStr string) (*rsa.PublicKey, error) {
+	publicKeyPem, err := base64.StdEncoding.DecodeString(publicKeyStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode PEM block in base64 format containing the private key")
+	}
+	block, _ := pem.Decode(publicKeyPem)
+	if block == nil {
+		return nil, fmt.Errorf("failed to parse PEM block containing the public key")
+	}
+	key, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+	rsaPublicKey, ok := key.(*rsa.PublicKey)
+	if !ok {
+		return nil, fmt.Errorf("parsed key is not an RSA public key")
+	}
+	return rsaPublicKey, nil
+}
+
+func PrivateKeyB64StrToStruct(privateKeyStr string) (*rsa.PrivateKey, error) {
+	privateKeyPem, err := base64.StdEncoding.DecodeString(privateKeyStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decode PEM block in base64 format containing the private key")
+	}
+	block, _ := pem.Decode(privateKeyPem)
+	if block == nil {
+		return nil, fmt.Errorf("failed to parse PEM block containing the private key")
+	}
+	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, err
+	}
+	// x509.ParsePKCS1PrivateKey 返回的是 *rsa.PrivateKey 类型，
+	// 而不是一个通用的 crypto.PrivateKey，
+	// 所以在类型断言时不需要使用 .(*rsa.PrivateKey)
+	return privateKey, nil
+}
+
 func RSADecrypt(privateKey *rsa.PrivateKey, encryptedStr string) (string, error) {
-	cipherTextB64, _ := base64.StdEncoding.DecodeString(encryptedStr)
+	cipherTextB64, err := base64.StdEncoding.DecodeString(encryptedStr)
+	if err != nil {
+		return "", err
+	}
 	decryptedBytes, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherTextB64)
 	if err != nil {
 		return "", err
