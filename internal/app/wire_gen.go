@@ -42,10 +42,16 @@ func InitInjector() (*Injector, func(), error) {
 	trans := &core.Trans{
 		DB: db,
 	}
+	client, cleanup2, err := core.InitRedis()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	businessUser := &business.BusinessUser{
-		Model:  modelUser,
-		Logger: logger,
-		Tx:     trans,
+		Model:       modelUser,
+		Logger:      logger,
+		Tx:          trans,
+		RedisClient: client,
 	}
 	response := &core.Response{
 		Logger: logger,
@@ -65,6 +71,7 @@ func InitInjector() (*Injector, func(), error) {
 		DB:      db,
 	}
 	return injector, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

@@ -16,6 +16,7 @@ func InitInjector() (*Injector, func(), error) {
 		core.InitGinLogger,
 		core.InitGinEngine,
 		core.InitDB,
+		core.InitRedis,
 		api.APISet,
 		set.HandlerSet,
 		set.BusinessSet,

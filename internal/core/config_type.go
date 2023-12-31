@@ -56,6 +56,7 @@ type Lib struct {
 	Vault
 	Gin
 	DB
+	Redis
 }
 
 type Log struct {
@@ -85,6 +86,11 @@ type DB struct {
 	Params       string `mapstructure:"params"`
 	Username     string `mapstructure:"username"`
 	Password     string `mapstructure:"password"`
+}
+
+type Redis struct {
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }
 
 type Server struct {

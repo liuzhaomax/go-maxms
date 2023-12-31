@@ -32,6 +32,9 @@ lib:
     params: charset=utf8mb4&parseTime=True&loc=Local
     username: root
     password: 123456
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 server:
   host: 127.0.0.1
