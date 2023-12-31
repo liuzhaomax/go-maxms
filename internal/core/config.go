@@ -40,20 +40,23 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	// 配置Vault
 	InitVault()
 	// 配置RSA密钥对
-	if cfg.App.Enabled.RSA == true {
+	if cfg.App.Enabled.RSA {
 		// 生成密钥对，并将RSA结构体转为字符串，结构体与字符串都保存
 		cfg.SetRSAKeys()
 		// 写入secret
-		if cfg.App.Enabled.Vault == true {
+		if cfg.App.Enabled.Vault {
 			cfg.PutRSA()
 		}
 	}
 	// 获取secret
-	if cfg.App.Enabled.Vault == true {
+	if cfg.App.Enabled.Vault {
 		// 包含RSA, JWT secret, Salt
 		cfg.GetSecret()
 		// 将已保存的RSA字符串转为结构体，并保存
 		cfg.ConvertRSAKeys()
+	} else {
+		// 不适用vault需要自行设置jwt secret
+		cfg.App.JWTSecret = "liuzhaomax@163.com"
 	}
 	return func() {
 		cleanLogger()

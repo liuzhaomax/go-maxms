@@ -101,7 +101,9 @@ func createAdmin(db *gorm.DB) {
 		salt, encodedPwd := GetEncodedPwd("admin")
 		cfg.App.Salt = salt
 		// 将salt保存到vault
-		cfg.PutSalt()
+		if cfg.App.Enabled.Vault {
+			cfg.PutSalt()
+		}
 		user.Password = encodedPwd
 		user.Mobile = "+8613012345678"
 		user.Email = "admin@maxblog.cn"

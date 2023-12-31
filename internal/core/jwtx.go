@@ -13,9 +13,6 @@ const (
 	TokenInvalid     = "Token无效"
 )
 
-// JWT 从vault读取
-//const JWTSecret = "123456"
-
 type CustomClaims struct {
 	jwt.StandardClaims
 	UserID   string

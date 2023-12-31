@@ -3,8 +3,8 @@ app:
   version: 0.1
   domain: http://127.0.0.1:9001
   enabled:
-    vault: true
     rsa: false
+    vault: true
   white_list:
     -
       name: frontend
