@@ -39,16 +39,20 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	cleanLogger := InitLogger()
 	// 配置Vault
 	InitVault()
-	// 配置RSA密钥对
+	// enabled几种情况（默认是第二种）
+	// 1. 不使用RSA和vault：jwt_secret要自行设置（如下），salt会自动更新
+	// 2. 不使用RSA，使用vault：jwt_secret，salt，puk，prk都要在vault预先设置好
+	// 3. 使用RSA，不使用vault：jwt_secret要自行设置（如下），salt会自动更新，RSA自动存入内存
+	// 4. 使用RSA，使用vault：RSA自动存入内存，并更新vault，salt读取于vault，jwt_secret要提前在vault设置好
 	if cfg.App.Enabled.RSA {
 		// 生成密钥对，并将RSA结构体转为字符串，结构体与字符串都保存
+		// 注意：这个RSA密钥对，是base64序列化后的pem block格式
 		cfg.SetRSAKeys()
 		// 写入secret
 		if cfg.App.Enabled.Vault {
 			cfg.PutRSA()
 		}
 	}
-	// 获取secret
 	if cfg.App.Enabled.Vault {
 		// 包含RSA, JWT secret, Salt
 		cfg.GetSecret()

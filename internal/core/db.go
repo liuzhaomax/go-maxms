@@ -95,21 +95,28 @@ func (db *DB) DSN() string {
 func createAdmin(db *gorm.DB) {
 	user := &model.User{}
 	result := db.First(user)
+	salt, encodedPwd := GetEncodedPwd("admin")
+	cfg.App.Salt = salt
+	// 将salt更新到vault
+	if cfg.App.Enabled.Vault {
+		cfg.PutSalt()
+	}
 	if result.RowsAffected == 0 {
 		user.UserID = ShortUUID()
 		user.Username = "admin"
-		salt, encodedPwd := GetEncodedPwd("admin")
-		cfg.App.Salt = salt
-		// 将salt保存到vault
-		if cfg.App.Enabled.Vault {
-			cfg.PutSalt()
-		}
 		user.Password = encodedPwd
 		user.Mobile = "+8613012345678"
 		user.Email = "admin@maxblog.cn"
 		res := db.Create(&user)
 		if res.RowsAffected == 0 {
 			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "admin创建失败", res.Error))
+			panic(res.Error)
+		}
+	} else {
+		res := db.Model(user).Where("user_id = ?", user.UserID).Update("password", encodedPwd)
+		if res.RowsAffected == 0 {
+			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "admin更新失败", res.Error))
+			panic(res.Error)
 		}
 	}
 }
