@@ -10,9 +10,8 @@ import (
 
 // vault access
 const (
-	Username  = "liuzhao"
-	Password  = "123456"
-	VaultAddr = "http://127.0.0.1:8200"
+	Username = "liuzhao"
+	Password = "123456"
 )
 
 var httpClient = &http.Client{
@@ -21,7 +20,7 @@ var httpClient = &http.Client{
 
 var vaultClient *vault.Client
 
-func init() {
+func InitVault() {
 	// 获取登录vault的token
 	token, err := userpassLogin()
 	if err != nil {
@@ -29,7 +28,7 @@ func init() {
 		panic(err)
 	}
 	// 创建vault连接客户端
-	client, err := vault.NewClient(&vault.Config{Address: VaultAddr, HttpClient: httpClient})
+	client, err := vault.NewClient(&vault.Config{Address: cfg.Lib.Vault.Address, HttpClient: httpClient})
 	if err != nil {
 		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "创建vault连接失败", err))
 		panic(err)
@@ -42,7 +41,7 @@ func init() {
 // userpassLogin 使用用户名密码登录vault，获取token
 func userpassLogin() (string, error) {
 	// 创建vault连接客户端
-	client, err := vault.NewClient(&vault.Config{Address: VaultAddr, HttpClient: httpClient})
+	client, err := vault.NewClient(&vault.Config{Address: cfg.Lib.Vault.Address, HttpClient: httpClient})
 	if err != nil {
 		return "", err
 	}

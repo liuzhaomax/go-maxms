@@ -16,6 +16,8 @@ lib:
     format: json # text
     color: true
     file_name: app.log
+  vault:
+    address: http://127.0.0.1:8200
   gin:
     run_mode: debug # debug test release
   db:

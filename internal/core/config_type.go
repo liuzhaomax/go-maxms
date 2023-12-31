@@ -53,6 +53,7 @@ type WhiteList struct {
 
 type Lib struct {
 	Log
+	Vault
 	Gin
 	DB
 }
@@ -62,6 +63,10 @@ type Log struct {
 	Format   string `mapstructure:"format"`
 	Color    bool   `mapstructure:"color"`
 	FileName string `mapstructure:"file_name"`
+}
+
+type Vault struct {
+	Address string `mapstructure:"address"`
 }
 
 type Gin struct {
