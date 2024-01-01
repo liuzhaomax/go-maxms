@@ -1,12 +1,15 @@
 package core
 
 import (
+	"crypto/hmac"
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 	"github.com/anaskhan96/go-password-encoder"
@@ -34,6 +37,30 @@ func SHA1Str(str string) string {
 
 func SHA1MD5Str(str string) string {
 	return SHA1Str(MD5Str(str))
+}
+
+func SHA256(byt []byte) string {
+	hash := sha256.New()
+	hash.Write(byt)
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}
+
+func SHA256Str(str string) string {
+	return SHA256([]byte(str))
+}
+
+func SHA256MD5Str(str string) string {
+	return SHA256Str(MD5Str(str))
+}
+
+func HmacSHA256(byt []byte, secret string) string {
+	h := hmac.New(sha256.New, []byte(secret))
+	h.Write(byt)
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+func HmacSHA256Str(str string, secret string) string {
+	return HmacSHA256([]byte(str), secret)
 }
 
 func BASE64Encode(byt []byte) string {

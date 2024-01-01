@@ -88,12 +88,17 @@ func putSecret(ctx context.Context, secretEngineName string, namespace string, s
 func (cfg *Config) GetSecret() {
 	ctx := context.Background()
 	// 读取jwt_secret
-	cfg.App.JWTSecret = getSecret(ctx, Kv, Jwt, Secret)
+	cfg.App.JWTSecret = getSecret(ctx, KV, JWT, SECRET)
 	// 读取salt
-	cfg.App.Salt = getSecret(ctx, Kv, Pwd, Salt)
+	cfg.App.Salt = getSecret(ctx, KV, PWD, SALT)
 	// 读取rsa string
-	cfg.App.PublicKeyStr = getSecret(ctx, Kv, Rsa, Puk)
-	cfg.App.PrivateKeyStr = getSecret(ctx, Kv, Rsa, Prk)
+	cfg.App.PublicKeyStr = getSecret(ctx, KV, RSA, PUK)
+	cfg.App.PrivateKeyStr = getSecret(ctx, KV, RSA, PRK)
+	// 读取downstream app id 和 secret
+	for _, downstream := range cfg.Downstream {
+		downstream.Id = getSecret(ctx, KV, fmt.Sprintf("%s/%s", APP, downstream.Name), ID)
+		downstream.Secret = getSecret(ctx, KV, fmt.Sprintf("%s/%s", APP, downstream.Name), SECRET)
+	}
 	// 打印日志
 	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo("secret获取成功"))
 }
@@ -103,12 +108,12 @@ func (cfg *Config) PutRSA() {
 	ctx := context.Background()
 	// 写入rsa
 	secretData := map[string]interface{}{
-		Puk: cfg.App.PublicKeyStr,
-		Prk: cfg.App.PrivateKeyStr,
+		PUK: cfg.App.PublicKeyStr,
+		PRK: cfg.App.PrivateKeyStr,
 	}
-	putSecret(ctx, Kv, Rsa, secretData)
+	putSecret(ctx, KV, RSA, secretData)
 	// 打印日志
-	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo(fmt.Sprintf("%s写入成功", Rsa)))
+	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo(fmt.Sprintf("%s写入成功", RSA)))
 }
 
 // PutSalt 新增和修改salt
@@ -116,9 +121,23 @@ func (cfg *Config) PutSalt() {
 	ctx := context.Background()
 	// 写入salt
 	secretData := map[string]interface{}{
-		Salt: cfg.App.Salt,
+		SALT: cfg.App.Salt,
 	}
-	putSecret(ctx, Kv, Pwd, secretData)
+	putSecret(ctx, KV, PWD, secretData)
 	// 打印日志
-	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo(fmt.Sprintf("%s写入成功", Salt)))
+	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo(fmt.Sprintf("%s写入成功", SALT)))
+}
+
+// PutAppSecret 新增修改AppId和AppSecret
+func (cfg *Config) PutAppSecret() {
+	ctx := context.Background()
+	// 写入secret
+	secretData := map[string]interface{}{
+		ID:     cfg.App.Id,
+		SECRET: cfg.App.Secret,
+	}
+	namespace := fmt.Sprintf("%s/%s", APP, cfg.App.Name)
+	putSecret(ctx, KV, namespace, secretData)
+	// 打印日志
+	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo(fmt.Sprintf("%s写入成功", namespace)))
 }

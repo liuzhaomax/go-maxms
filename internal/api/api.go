@@ -24,6 +24,7 @@ type Handler struct {
 func (h *Handler) Register(app *gin.Engine) {
 	app.NoRoute(h.GetNoRoute)
 	app.Use(cors.Cors())
+	app.Use(h.Middleware.Auth.ValidateSignature())
 	router.Register(app, h.HandlerUser, h.Middleware)
 }
 

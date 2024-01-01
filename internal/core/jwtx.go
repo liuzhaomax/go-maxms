@@ -19,15 +19,15 @@ type CustomClaims struct {
 	ClientIP string
 }
 
-type JWT struct {
+type Jwt struct {
 	SigningKey []byte
 }
 
-func NewJWT() *JWT {
-	return &JWT{SigningKey: []byte(cfg.App.JWTSecret)}
+func NewJWT() *Jwt {
+	return &Jwt{SigningKey: []byte(cfg.App.JWTSecret)}
 }
 
-func (j *JWT) GenerateToken(userID string, clientIP string, duration time.Duration) (string, error) {
+func (j *Jwt) GenerateToken(userID string, clientIP string, duration time.Duration) (string, error) {
 	now := time.Now()
 	claims := CustomClaims{
 		StandardClaims: jwt.StandardClaims{
@@ -45,7 +45,7 @@ func (j *JWT) GenerateToken(userID string, clientIP string, duration time.Durati
 	return token, nil
 }
 
-func (j *JWT) ParseToken(tokenStr string) (string, string, error) {
+func (j *Jwt) ParseToken(tokenStr string) (string, string, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(tokenStr *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil
 	})
@@ -69,7 +69,7 @@ func (j *JWT) ParseToken(tokenStr string) (string, string, error) {
 	return EmptyString, EmptyString, errors.New(TokenInvalid)
 }
 
-func (j *JWT) RefreshToken(tokenStr string) (string, error) {
+func (j *Jwt) RefreshToken(tokenStr string) (string, error) {
 	duration := time.Hour * 24 * 7 // 一周
 	token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil

@@ -1,8 +1,6 @@
 package core
 
 import (
-	"encoding/json"
-	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/snowzach/rotatefilehook"
@@ -105,62 +103,57 @@ func selectLogLevel() logrus.Level {
 	}
 }
 
-type LoggerFormat struct {
-	StatusCode int           `json:"code"`
-	Took       time.Duration `json:"took"`
-	ClientIP   string        `json:"client_ip"`
-	Method     string        `json:"method"`
-	URI        string        `json:"uri"`
-	UserAgent  string        `json:"user_agent"`
-	TraceID    string        `json:"trace_id"`
-	SpanID     string        `json:"span_id"`
-	ParentID   string        `json:"parent_id"`
-}
-
 func LoggerToFile() gin.HandlerFunc {
 	logger := cfg.App.Logger
 	return func(c *gin.Context) {
-		clientIP := c.ClientIP()
-		userAgent := c.Request.UserAgent()
-		method := c.Request.Method
-		uri := c.Request.RequestURI
-		err := SetHeaders(c)
-		traceID := c.Request.Header.Get(TraceId)
-		spanID := c.Request.Header.Get(SpanId)
-		parentID := c.Request.Header.Get(ParentId)
-		logger.WithFields(logrus.Fields{
-			"client_ip":  clientIP,
-			"user-agent": userAgent,
-			"uri":        uri,
-			"method":     method,
-			"trace_id":   traceID,
-			"span_id":    spanID,
-			"parent_id":  parentID,
-		}).Info("Request Incoming")
+		clientIP := GetClientIP(c)
+		userAgent := GetUserAgent(c)
+		err := ValidateHeaders(c)
 		if err != nil {
 			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Info(FormatError(MissingParameters, "请求头错误", err))
 			c.AbortWithStatusJSON(http.StatusBadRequest, FormatError(MissingParameters, "请求头错误", err))
 		}
+		LoggerFormat := logrus.Fields{
+			"method":     c.Request.Method,
+			"uri":        c.Request.RequestURI,
+			"client_ip":  clientIP,
+			"user_agent": userAgent,
+			"token":      c.Request.Header.Get(Authorization),
+			"trace_id":   c.Request.Header.Get(TraceId),
+			"span_id":    c.Request.Header.Get(SpanId),
+			"parent_id":  c.Request.Header.Get(ParentId),
+			"app_id":     c.Request.Header.Get(AppId),
+		}
+		// Incoming日志是来的什么就是什么，只有traceID应一致
+		logger.WithFields(LoggerFormat).Info(FormatInfo("请求开始"))
 		startTime := time.Now()
 		c.Next()
 		endTime := time.Now()
 		took := endTime.Sub(startTime)
 		statusCode := c.Writer.Status()
 
+		// json标准写法
+		logger.WithFields(LoggerFormat).WithFields(logrus.Fields{
+			"took":   took,
+			"status": statusCode,
+		}).Info(FormatInfo("请求结束"))
+
 		// concatenated json 写法
-		format := &LoggerFormat{
-			StatusCode: statusCode,
-			Took:       took,
-			ClientIP:   clientIP,
-			Method:     method,
-			URI:        uri,
-			UserAgent:  userAgent,
-			TraceID:    traceID,
-			SpanID:     spanID,
-			ParentID:   parentID,
-		}
-		formatBytes, _ := json.Marshal(format)
-		logger.Info(string(formatBytes))
+		//format := &LoggerFormat{
+		//    StatusCode: statusCode,
+		//    Took:       took,
+		//    Method:     c.Request.Method,
+		//    URI:        c.Request.RequestURI,
+		//    ClientIP:   clientIP,
+		//    UserAgent:  userAgent,
+		//    Token:      c.Request.Header.Get(Authorization),
+		//    TraceId:    c.Request.Header.Get(TraceId),
+		//    SpanID:     c.Request.Header.Get(SpanId),
+		//    ParentID:   c.Request.Header.Get(ParentId),
+		//    AppID:      c.Request.Header.Get(AppId),
+		//}
+		//formatBytes, _ := json.Marshal(format)
+		//logger.Info(string(formatBytes))
 
 		// 竖线分割写法
 		//logger.Infof("| %3d | %13v | %15s | %8s | %s | %20s",
@@ -171,26 +164,20 @@ func LoggerToFile() gin.HandlerFunc {
 		//    uri,
 		//    userAgent,
 		//)
-
-		// json标准写法
-		//logger.WithFields(logrus.Fields{
-		//	"code":       statusCode,
-		//	"took":       took,
-		//	"client_ip":  clientIP,
-		//	"method":     method,
-		//	"uri":        uri,
-		//  "user_agent": userAgent,
-		//}).Info("123")
 	}
 }
 
-func SetHeaders(c *gin.Context) error {
-	if c.Request.Header.Get(TraceId) == EmptyString || c.Request.Header.Get(SpanId) == EmptyString {
-		return errors.New("缺失链路信息")
-	}
-	c.Request.Header.Set(TraceId, c.Request.Header.Get(TraceId))
-	c.Request.Header.Set(ParentId, c.Request.Header.Get(SpanId))
-	c.Request.Header.Set(SpanId, SpanID())
-	c.Request.Header.Set(ClientIp, c.ClientIP())
-	return nil
-}
+//type LoggerFormat struct {
+//    StatusCode int           `json:"code"`
+//    Took       time.Duration `json:"took"`
+//    Method     string        `json:"method"`
+//    URI        string        `json:"uri"`
+//    ClientIP   string        `json:"client_ip"`
+//    UserAgent  string        `json:"user_agent"`
+//    Token      string        `json:"token"`
+//    TraceId    string        `json:"trace_id"`
+//    SpanID     string        `json:"span_id"`
+//    ParentID   string        `json:"parent_id"`
+//    UpstreamID string        `json:"upstream_id"`
+//    AppID      string        `json:"app_id"`
+//}

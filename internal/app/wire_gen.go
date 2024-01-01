@@ -22,8 +22,13 @@ import (
 func InitInjector() (*Injector, func(), error) {
 	engine := core.InitGinEngine()
 	logger := core.InitGinLogger()
+	client, cleanup, err := core.InitRedis()
+	if err != nil {
+		return nil, nil, err
+	}
 	authAuth := &auth.Auth{
-		Logger: logger,
+		Logger:      logger,
+		RedisClient: client,
 	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
 		Logger: logger,
@@ -32,8 +37,9 @@ func InitInjector() (*Injector, func(), error) {
 		Auth:         authAuth,
 		ReverseProxy: reverseProxy,
 	}
-	db, cleanup, err := core.InitDB()
+	db, cleanup2, err := core.InitDB()
 	if err != nil {
+		cleanup()
 		return nil, nil, err
 	}
 	modelUser := &model.ModelUser{
@@ -41,11 +47,6 @@ func InitInjector() (*Injector, func(), error) {
 	}
 	trans := &core.Trans{
 		DB: db,
-	}
-	client, cleanup2, err := core.InitRedis()
-	if err != nil {
-		cleanup()
-		return nil, nil, err
 	}
 	businessUser := &business.BusinessUser{
 		Model:       modelUser,

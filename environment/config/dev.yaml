@@ -1,10 +1,11 @@
 app:
   name: go-maxms
   version: 0.1
-  domain: http://127.0.0.1:9001
+  domain: abc.com
   enabled:
-    rsa: false
+    rsa: false # rsa和vault有关联关系
     vault: true
+    signature: true # signature默认依赖于redis
   white_list:
     -
       name: frontend

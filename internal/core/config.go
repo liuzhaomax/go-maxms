@@ -44,6 +44,12 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	// 2. 不使用RSA，使用vault：jwt_secret，salt，puk，prk都要在vault预先设置好
 	// 3. 使用RSA，不使用vault：jwt_secret要自行设置（如下），salt会自动更新，RSA自动存入内存
 	// 4. 使用RSA，使用vault：RSA自动存入内存，并更新vault，salt读取于vault，jwt_secret要提前在vault设置好
+	// AppId and AppSecret
+	cfg.App.Id = ShortUUID()
+	cfg.App.Secret = MD5Str(ShortUUID())
+	if cfg.App.Enabled.Vault {
+		cfg.PutAppSecret()
+	}
 	if cfg.App.Enabled.RSA {
 		// 生成密钥对，并将RSA结构体转为字符串，结构体与字符串都保存
 		// 注意：这个RSA密钥对，是base64序列化后的pem block格式
@@ -54,7 +60,7 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 		}
 	}
 	if cfg.App.Enabled.Vault {
-		// 包含RSA, JWT secret, Salt
+		// 包含RSA, JWT secret, Salt, DownstreamID和Secret
 		cfg.GetSecret()
 		// 将已保存的RSA字符串转为结构体，并保存
 		cfg.ConvertRSAKeys()

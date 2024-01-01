@@ -7,7 +7,6 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 	"github.com/liuzhaomax/go-maxms/src/api_user/schema"
-	"github.com/liuzhaomax/go-maxms/src/utils"
 	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -47,7 +46,7 @@ func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
 	// 生成Bearer jwt，使用userID与ip签发
 	j := core.NewJWT()
 	duration := time.Second * 60 * 60 * 24 * 7 // 一周
-	token, err := j.GenerateToken(user.UserID, c.ClientIP(), duration)
+	token, err := j.GenerateToken(user.UserID, core.GetClientIP(c), duration)
 	if err != nil {
 		return core.EmptyString, core.FormatError(core.PermissionDenied, "Token生成失败", err)
 	}
@@ -62,11 +61,11 @@ func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
 		domain,
 		true,
 		true)
-	return utils.Bearer + token, nil
+	return core.Bearer + token, nil
 }
 
 func (b *BusinessUser) GetUserByUserID(c *gin.Context) (*schema.UserRes, error) {
-	userID := c.Param(utils.UserID)
+	userID := c.Param(core.UserID)
 	user := &model.User{}
 	err := b.Tx.ExecTrans(c, func(ctx context.Context) error {
 		err := b.Model.QueryUserByUserID(userID, user)

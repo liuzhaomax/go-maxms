@@ -9,18 +9,22 @@ const FAILURE = "失败"
 
 // vault
 const (
-	Kv     = "kv"
-	Pwd    = "pwd"
-	Rsa    = "rsa"
-	Jwt    = "jwt"
-	Secret = "secret"
-	Salt   = "salt"
-	Puk    = "puk"
-	Prk    = "prk"
+	KV     = "kv"
+	PWD    = "pwd"
+	RSA    = "rsa"
+	JWT    = "jwt"
+	SECRET = "secret"
+	SALT   = "salt"
+	PUK    = "puk"
+	PRK    = "prk"
+	ID     = "id"
+	APP    = "app"
 )
 
 const (
 	EmptyString = ""
+	Bearer      = "Bearer "
+	UserID      = "userID"
 	// headers params
 	ClientIp      = "Client_ip"
 	UserAgent     = "User-Agent"
@@ -28,4 +32,7 @@ const (
 	SpanId        = "Span_id"
 	ParentId      = "Parent_id"
 	Authorization = "Authorization"
+	AppId         = "App_id"
+	// redis
+	Signature = "signature"
 )

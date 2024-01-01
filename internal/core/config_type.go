@@ -27,6 +27,8 @@ type Config struct {
 }
 
 type App struct {
+	Id            string
+	Secret        string
 	Name          string `mapstructure:"name"`
 	Version       string `mapstructure:"version"`
 	PublicKey     *rsa.PublicKey
@@ -42,8 +44,9 @@ type App struct {
 }
 
 type Enabled struct {
-	Vault bool `mapstructure:"vault"`
-	RSA   bool `mapstructure:"rsa"`
+	Vault     bool `mapstructure:"vault"`
+	RSA       bool `mapstructure:"rsa"`
+	Signature bool `mapstructure:"signature"`
 }
 
 type WhiteList struct {
@@ -104,7 +107,9 @@ type Server struct {
 }
 
 type Downstream struct {
-	Name string `mapstructure:"name"`
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Id     string
+	Secret string
+	Name   string `mapstructure:"name"`
+	Host   string `mapstructure:"host"`
+	Port   string `mapstructure:"port"`
 }

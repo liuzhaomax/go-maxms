@@ -2,16 +2,19 @@ package core
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/redis/go-redis/v9"
+)
+
+const (
+	redisPassword = "123456"
 )
 
 func InitRedis() (*redis.Client, func(), error) {
 	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo("Redis连接启动"))
 	client, clean, err := cfg.LoadRedis()
 	if err != nil {
-		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Info(FormatError(Unknown, "Redis连接失败", err))
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "Redis连接失败", err))
 		return nil, clean, err
 	}
 	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo("Redis连接成功"))
@@ -28,7 +31,7 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 		OnConnect:             nil,
 		Protocol:              0,
 		Username:              "",
-		Password:              "",
+		Password:              redisPassword,
 		CredentialsProvider:   nil,
 		DB:                    0,
 		MaxRetries:            0,
@@ -51,14 +54,14 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 		DisableIndentity:      false,
 	}
 	client := redis.NewClient(opts)
-	ping := client.Ping(context.Background())
-	if ping == nil {
-		return nil, nil, errors.New("无法ping通")
+	err := client.Ping(context.Background()).Err()
+	if err != nil {
+		return nil, nil, err
 	}
 	clean := func() {
 		err := client.Close()
 		if err != nil {
-			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Info(FormatError(Unknown, "Redis断开连接失败", err))
+			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "Redis断开连接失败", err))
 		}
 	}
 	return client, clean, nil
@@ -66,3 +69,4 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 
 // client.Set(...)
 // client.Get(...)
+// client.SAdd(...)
