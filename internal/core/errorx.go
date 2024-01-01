@@ -22,6 +22,7 @@ const (
 	DownstreamDown    Code = 5
 	IOFailure         Code = 6
 	PermissionDenied  Code = 7
+	CacheDenied       Code = 8
 )
 
 func (c Code) String() string {
@@ -48,6 +49,8 @@ func (c Code) String() string {
 		return "IOFailure"
 	case PermissionDenied:
 		return "PermissionDenied"
+	case CacheDenied:
+		return "CacheDenied"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}

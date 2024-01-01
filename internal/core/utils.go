@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -28,6 +29,21 @@ func GetFuncName() string {
 	runtime.Callers(2, pc)
 	function := runtime.FuncForPC(pc[0])
 	return function.Name()
+}
+
+func GetCallerFileAndLine() string {
+	file, _, line := GetCallerInfo()
+	return fmt.Sprintf("%s:%d", file, line)
+}
+
+func GetCallerInfo() (string, string, int) {
+	pc, file, line, ok := runtime.Caller(2)
+	if !ok {
+		return "", "", 0
+	}
+	// 通过函数的PC获取函数名
+	functionName := runtime.FuncForPC(pc).Name()
+	return file, functionName, line
 }
 
 func GetProjectPath() string {

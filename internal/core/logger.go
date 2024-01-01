@@ -1,11 +1,13 @@
 package core
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/snowzach/rotatefilehook"
 	"net/http"
 	"os"
+	"runtime"
 	"time"
 )
 
@@ -26,6 +28,7 @@ func InitLogger() func() {
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
 	logger.SetFormatter(selectFormatter("text"))
+	//logger.SetReportCaller(true) // 输出caller
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   log.FileName,
 		MaxSize:    50, // megabytes
@@ -64,6 +67,10 @@ func selectFormatter(forceFormatter ...string) logrus.Formatter {
 			ForceColors:     log.Color,
 			FullTimestamp:   true,
 			TimestampFormat: time.DateTime,
+			CallerPrettyfier: func(f *runtime.Frame) (string, string) {
+				file := fmt.Sprintf("%s:%d", f.File, f.Line)
+				return "", fmt.Sprintf("\033[1;34m%s\033[0m", file)
+			},
 		}
 	case "json":
 		return &logrus.JSONFormatter{

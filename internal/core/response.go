@@ -18,7 +18,7 @@ type Response struct {
 }
 
 func (res *Response) ResSuccess(c *gin.Context, funcName string, sth interface{}) {
-	res.Logger.WithField(SUCCESS, funcName).Debug(FormatInfo("响应成功"))
+	res.Logger.WithField(SUCCESS, funcName).WithField("trace_id", c.Request.Header.Get(TraceId)).Debug(FormatInfo("响应成功"))
 	if sth != nil {
 		res.ResJson(c, 200, gin.H{
 			"status": gin.H{
@@ -38,7 +38,7 @@ func (res *Response) ResSuccess(c *gin.Context, funcName string, sth interface{}
 }
 
 func (res *Response) ResFailure(c *gin.Context, funcName string, statusCode int, code Code, desc string, err error) {
-	res.Logger.WithField(FAILURE, funcName).Debug(FormatError(code, desc, err))
+	res.Logger.WithField(FAILURE, funcName).WithField("trace_id", c.Request.Header.Get(TraceId)).Debug(FormatError(code, desc, err))
 	res.ResJson(c, statusCode, gin.H{
 		"status": gin.H{
 			"code": code,

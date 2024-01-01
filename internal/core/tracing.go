@@ -59,7 +59,7 @@ func ValidateHeaders(c *gin.Context) error {
 	return nil
 }
 
-func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redis.Client) {
+func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redis.Client) error {
 	c.Request.Header.Set(ClientIp, c.Request.Header.Get(ClientIp))
 	c.Request.Header.Set(UserAgent, c.Request.Header.Get(UserAgent))
 	c.Request.Header.Set(TraceId, c.Request.Header.Get(TraceId))
@@ -79,5 +79,13 @@ func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redi
 	}
 	// 生成签名并写入redis
 	signature := GenAppSignature(downstreamAppId, downstreamAppSecret, userId, nonce)
-	client.SAdd(context.Background(), Signature, signature)
+	result, err := client.SAdd(context.Background(), Signature, signature).Result()
+	if err != nil {
+		return FormatError(CacheDenied, "缓存写入失败", err)
+	}
+	if result == 0 {
+		return FormatError(CacheDenied, "缓存写入失败", errors.New("set已有该值"))
+	}
+	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).WithField("trace_id", c.Request.Header.Get(TraceId)).Info(FormatInfo("签名已写入缓存"))
+	return nil
 }

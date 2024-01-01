@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
+	"log"
 )
 
 const (
@@ -70,3 +71,19 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 // client.Set(...)
 // client.Get(...)
 // client.SAdd(...)
+
+func logAndExec(cmd func(context.Context, *redis.Client, ...interface{}) *redis.Cmd,
+	ctx context.Context, client *redis.Client, args []interface{}) (string, error) {
+
+	// 在执行前记录日志
+	log.Printf("Executing command: %v", args)
+
+	// 执行 Redis 命令
+	cmdResult := cmd(ctx, client, args...)
+
+	// 在执行后记录日志
+	log.Printf("Command result: %v", cmdResult)
+
+	// 返回结果或错误
+	return cmdResult.String(), cmdResult.Err()
+}

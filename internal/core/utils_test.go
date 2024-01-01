@@ -61,3 +61,22 @@ func TestGetFuncName(t *testing.T) {
 		})
 	}
 }
+
+func TestGetCallerFileAndLine(t *testing.T) {
+	cases := []struct {
+		name string
+		want string
+	}{
+		{
+			name: "测试返回函数位置",
+			want: "D:/workspace/Github/go-maxms/internal/core/utils_test.go:75",
+		},
+	}
+	got := GetCallerFileAndLine()
+	fmt.Printf("\033[1;34m%s\033[0m\n", got)
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
+		})
+	}
+}
