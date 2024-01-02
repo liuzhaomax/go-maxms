@@ -31,6 +31,11 @@ func GetFuncName() string {
 	return function.Name()
 }
 
+func GetCallerName(level int) string {
+	_, funcName, _ := GetCallerInfo(level)
+	return funcName
+}
+
 func GetCallerFileAndLine(level int) string {
 	file, _, line := GetCallerInfo(level)
 	return fmt.Sprintf("\033[1;34m%s:%d\033[0m\n", file, line)

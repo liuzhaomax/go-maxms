@@ -76,20 +76,20 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 func (cfg *Config) SetRSAKeys() {
 	prk, puk, err := GenRSAKeyPair(2048)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "生成RSA密钥对失败", err))
+		LogFailure(Unknown, "生成RSA密钥对失败", err)
 		panic(err)
 	}
 	cfg.App.PublicKey = puk
 	cfg.App.PrivateKey = prk
 	publicKeyStr, err := PublicKeyToString(puk)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "公钥转字符串失败", err))
+		LogFailure(ParseIssue, "公钥转字符串失败", err)
 		panic(err)
 	}
 	cfg.App.PublicKeyStr = publicKeyStr
 	privateKeyStr, err := PrivateKeyToString(prk)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "私钥转字符串失败", err))
+		LogFailure(ParseIssue, "私钥转字符串失败", err)
 		panic(err)
 	}
 	cfg.App.PrivateKeyStr = privateKeyStr
@@ -98,13 +98,13 @@ func (cfg *Config) SetRSAKeys() {
 func (cfg *Config) ConvertRSAKeys() {
 	publicKey, err := PublicKeyB64StrToStruct(cfg.App.PublicKeyStr)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "公钥字符串转结构体失败", err))
+		LogFailure(ParseIssue, "公钥字符串转结构体失败", err)
 		panic(err)
 	}
 	cfg.App.PublicKey = publicKey
 	privateKey, err := PrivateKeyB64StrToStruct(cfg.App.PrivateKeyStr)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "私钥字符串转结构体失败", err))
+		LogFailure(ParseIssue, "私钥字符串转结构体失败", err)
 		panic(err)
 	}
 	cfg.App.PrivateKey = privateKey

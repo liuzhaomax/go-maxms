@@ -15,15 +15,15 @@ func InitDB() (*gorm.DB, func(), error) {
 	cfg.App.Logger.Info(FormatInfo("数据库连接启动"))
 	db, clean, err := cfg.LoadDB()
 	if err != nil {
-		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(ConnectionFailed, "数据库连接失败", err))
+		LogFailure(ConnectionFailed, "数据库连接失败", err)
 		return nil, clean, err
 	}
 	err = cfg.AutoMigrate(db)
 	if err != nil {
-		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "数据库表创建失败", err))
+		LogFailure(Unknown, "数据库表创建失败", err)
 		return nil, clean, err
 	}
-	cfg.App.Logger.Info(FormatInfo("数据库连接成功"))
+	LogSuccess("数据库连接成功")
 	createAdmin(db) // 添加一条数据
 	return db, clean, err
 }
@@ -39,7 +39,7 @@ func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
 			Colorful:                  false,
 		},
 	)
-	cfg.App.Logger.Info(FormatInfo(fmt.Sprintf("数据库品种: %s", cfg.DB.Type)))
+	LogSuccess(fmt.Sprintf("数据库品种: %s", cfg.DB.Type))
 	db, err := gorm.Open(mysql.Open(cfg.DB.DSN()), &gorm.Config{
 		Logger: gormLogger,
 		NamingStrategy: schema.NamingStrategy{
@@ -59,7 +59,7 @@ func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
 	clean := func() {
 		err = sqlDB.Close()
 		if err != nil {
-			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "数据库断开连接失败", err))
+			LogFailure(ConnectionFailed, "数据库断开连接失败", err)
 		}
 	}
 	err = sqlDB.Ping()
@@ -109,13 +109,13 @@ func createAdmin(db *gorm.DB) {
 		user.Email = "admin@maxblog.cn"
 		res := db.Create(&user)
 		if res.RowsAffected == 0 {
-			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "admin创建失败", res.Error))
+			LogFailure(DBDenied, "admin创建失败", res.Error)
 			panic(res.Error)
 		}
 	} else {
 		res := db.Model(user).Where("user_id = ?", user.UserID).Update("password", encodedPwd)
 		if res.RowsAffected == 0 {
-			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Error(FormatError(Unknown, "admin更新失败", res.Error))
+			LogFailure(DBDenied, "admin更新失败", res.Error)
 			panic(res.Error)
 		}
 	}

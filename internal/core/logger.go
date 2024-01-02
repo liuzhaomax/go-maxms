@@ -120,11 +120,6 @@ func LoggerToFile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		clientIP := GetClientIP(c)
 		userAgent := GetUserAgent(c)
-		err := ValidateHeaders(c)
-		if err != nil {
-			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Info(FormatError(MissingParameters, "请求头错误", err))
-			c.AbortWithStatusJSON(http.StatusBadRequest, FormatError(MissingParameters, "请求头错误", err))
-		}
 		LoggerFormat := logrus.Fields{
 			"method":     c.Request.Method,
 			"uri":        c.Request.RequestURI,
@@ -137,7 +132,12 @@ func LoggerToFile() gin.HandlerFunc {
 			"app_id":     c.Request.Header.Get(AppId),
 		}
 		// Incoming日志是来的什么就是什么，只有traceID应一致
-		logger.WithFields(LoggerFormat).Info(FormatInfo("请求开始"))
+		logger.WithFields(LoggerFormat).Info("请求开始")
+		err := ValidateHeaders(c)
+		if err != nil {
+			LogFailure(MissingParameters, "请求头错误", err)
+			c.AbortWithStatusJSON(http.StatusBadRequest, FormatError(MissingParameters, "请求头错误", err))
+		}
 		startTime := time.Now()
 		c.Next()
 		endTime := time.Now()
@@ -148,7 +148,7 @@ func LoggerToFile() gin.HandlerFunc {
 		logger.WithFields(LoggerFormat).WithFields(logrus.Fields{
 			"took":   took,
 			"status": statusCode,
-		}).Info(FormatInfo("请求结束"))
+		}).Info("请求结束")
 
 		// concatenated json 写法
 		//format := &LoggerFormat{

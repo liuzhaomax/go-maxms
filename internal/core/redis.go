@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
-	"log"
 	"time"
 )
 
@@ -13,13 +12,13 @@ const (
 )
 
 func InitRedis() (*redis.Client, func(), error) {
-	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo("Redis连接启动"))
+	LogSuccess("Redis连接启动")
 	client, clean, err := cfg.LoadRedis()
 	if err != nil {
-		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "Redis连接失败", err))
+		LogFailure(ConnectionFailed, "Redis连接失败", err)
 		return nil, clean, err
 	}
-	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).Info(FormatInfo("Redis连接成功"))
+	LogSuccess("Redis连接成功")
 	return client, clean, nil
 }
 
@@ -64,13 +63,13 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 	// 设置必备键的过期时间
 	err = client.Expire(ctx, Signature, 24*time.Hour).Err()
 	if err != nil {
-		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(CacheDenied, "过期时间设置失败", err))
+		LogFailure(CacheDenied, "过期时间设置失败", err)
 		return nil, nil, err
 	}
 	clean := func() {
 		err := client.Close()
 		if err != nil {
-			cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(Unknown, "Redis断开连接失败", err))
+			LogFailure(Unknown, "Redis断开连接失败", err)
 		}
 	}
 	return client, clean, nil
@@ -80,18 +79,18 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 // client.Get(...)
 // client.SAdd(...)
 
-func logAndExec(cmd func(context.Context, *redis.Client, ...interface{}) *redis.Cmd,
-	ctx context.Context, client *redis.Client, args []interface{}) (string, error) {
-
-	// 在执行前记录日志
-	log.Printf("Executing command: %v", args)
-
-	// 执行 Redis 命令
-	cmdResult := cmd(ctx, client, args...)
-
-	// 在执行后记录日志
-	log.Printf("Command result: %v", cmdResult)
-
-	// 返回结果或错误
-	return cmdResult.String(), cmdResult.Err()
-}
+//func logAndExec(cmd func(context.Context, *redis.Client, ...interface{}) *redis.Cmd,
+//    ctx context.Context, client *redis.Client, args []interface{}) (string, error) {
+//
+//    // 在执行前记录日志
+//    log.Printf("Executing command: %v", args)
+//
+//    // 执行 Redis 命令
+//    cmdResult := cmd(ctx, client, args...)
+//
+//    // 在执行后记录日志
+//    log.Printf("Command result: %v", cmdResult)
+//
+//    // 返回结果或错误
+//    return cmdResult.String(), cmdResult.Err()
+//}

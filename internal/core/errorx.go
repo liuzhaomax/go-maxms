@@ -22,7 +22,9 @@ const (
 	DownstreamDown    Code = 5
 	IOException       Code = 6
 	PermissionDenied  Code = 7
-	CacheDenied       Code = 8
+	DBDenied          Code = 8
+	CacheDenied       Code = 9
+	VaultDenied       Code = 10
 )
 
 func (c Code) String() string {
@@ -49,8 +51,12 @@ func (c Code) String() string {
 		return "IO异常"
 	case PermissionDenied:
 		return "无权限"
+	case DBDenied:
+		return "数据库拒绝"
 	case CacheDenied:
 		return "缓存拒绝"
+	case VaultDenied:
+		return "Vault拒绝"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}
