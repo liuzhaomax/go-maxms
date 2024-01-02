@@ -39,7 +39,7 @@ func (l *Logger) SucceedWithField(c *gin.Context, desc string) {
 }
 
 func (l *Logger) FailWithField(c *gin.Context, code Code, desc string, err error) {
-	l.Logger.WithField(strings.ToLower(TraceId), c.Request.Header.Get(TraceId)).Info(FormatCaller(false, GetCallerFileAndLine(callerLevel)))
+	l.Logger.WithField(strings.ToLower(TraceId), c.Request.Header.Get(TraceId)).Debug(FormatCaller(false, GetCallerFileAndLine(callerLevel)))
 	l.Logger.WithField(strings.ToLower(TraceId), c.Request.Header.Get(TraceId)).Info(FormatError(code, desc, err))
 }
 
@@ -49,6 +49,6 @@ func LogSuccess(desc string) {
 }
 
 func LogFailure(code Code, desc string, err error) {
-	cfg.App.Logger.WithField(FAILURE, GetCallerName(3)).Error(FormatCaller(false, GetCallerFileAndLine(3)))
+	cfg.App.Logger.WithField(FAILURE, GetCallerName(3)).Debug(FormatCaller(false, GetCallerFileAndLine(3)))
 	cfg.App.Logger.Error(FormatError(code, desc, err))
 }
