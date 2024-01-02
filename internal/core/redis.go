@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"log"
+	"time"
 )
 
 const (
@@ -23,6 +24,7 @@ func InitRedis() (*redis.Client, func(), error) {
 }
 
 func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
+	ctx := context.Background()
 	addr := fmt.Sprintf("%s:%s", cfg.Lib.Redis.Host, cfg.Lib.Redis.Port)
 	opts := &redis.Options{
 		Network:               "",
@@ -55,8 +57,14 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 		DisableIndentity:      false,
 	}
 	client := redis.NewClient(opts)
-	err := client.Ping(context.Background()).Err()
+	err := client.Ping(ctx).Err()
 	if err != nil {
+		return nil, nil, err
+	}
+	// 设置必备键的过期时间
+	err = client.Expire(ctx, Signature, 24*time.Hour).Err()
+	if err != nil {
+		cfg.App.Logger.WithField(FAILURE, GetFuncName()).Fatal(FormatError(CacheDenied, "过期时间设置失败", err))
 		return nil, nil, err
 	}
 	clean := func() {

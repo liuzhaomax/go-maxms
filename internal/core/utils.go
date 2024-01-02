@@ -31,13 +31,13 @@ func GetFuncName() string {
 	return function.Name()
 }
 
-func GetCallerFileAndLine() string {
-	file, _, line := GetCallerInfo()
-	return fmt.Sprintf("%s:%d", file, line)
+func GetCallerFileAndLine(level int) string {
+	file, _, line := GetCallerInfo(level)
+	return fmt.Sprintf("\033[1;34m%s:%d\033[0m\n", file, line)
 }
 
-func GetCallerInfo() (string, string, int) {
-	pc, file, line, ok := runtime.Caller(2)
+func GetCallerInfo(level int) (string, string, int) {
+	pc, file, line, ok := runtime.Caller(level) // 读取第N层调用堆栈
 	if !ok {
 		return "", "", 0
 	}

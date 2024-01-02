@@ -1,24 +1,24 @@
 package core
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/sirupsen/logrus"
 )
 
 var ResponseSet = wire.NewSet(wire.Struct(new(Response), "*"), wire.Bind(new(IResponse), new(*Response)))
 
 type IResponse interface {
-	ResSuccess(*gin.Context, string, interface{})
-	ResFailure(*gin.Context, string, int, Code, string, error)
+	ResSuccess(*gin.Context, interface{})
+	ResFailure(*gin.Context, int, Code, string, error)
 }
 
 type Response struct {
-	Logger *logrus.Logger
+	Logger ILogger
 }
 
-func (res *Response) ResSuccess(c *gin.Context, funcName string, sth interface{}) {
-	res.Logger.WithField(SUCCESS, funcName).WithField("trace_id", c.Request.Header.Get(TraceId)).Debug(FormatInfo("响应成功"))
+func (res *Response) ResSuccess(c *gin.Context, sth interface{}) {
+	res.Logger.SucceedWithField(c, "响应正常")
 	if sth != nil {
 		res.ResJson(c, 200, gin.H{
 			"status": gin.H{
@@ -37,8 +37,8 @@ func (res *Response) ResSuccess(c *gin.Context, funcName string, sth interface{}
 	})
 }
 
-func (res *Response) ResFailure(c *gin.Context, funcName string, statusCode int, code Code, desc string, err error) {
-	res.Logger.WithField(FAILURE, funcName).WithField("trace_id", c.Request.Header.Get(TraceId)).Debug(FormatError(code, desc, err))
+func (res *Response) ResFailure(c *gin.Context, statusCode int, code Code, desc string, err error) {
+	res.Logger.FailWithField(c, code, fmt.Sprintf("响应异常: %s", desc), err)
 	res.ResJson(c, statusCode, gin.H{
 		"status": gin.H{
 			"code": code,

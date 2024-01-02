@@ -21,17 +21,20 @@ import (
 
 func InitInjector() (*Injector, func(), error) {
 	engine := core.InitGinEngine()
-	logger := core.InitGinLogger()
+	logger := core.InitLogrus()
+	coreLogger := &core.Logger{
+		Logger: logger,
+	}
 	client, cleanup, err := core.InitRedis()
 	if err != nil {
 		return nil, nil, err
 	}
 	authAuth := &auth.Auth{
-		Logger:      logger,
+		Logger:      coreLogger,
 		RedisClient: client,
 	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
-		Logger: logger,
+		Logger: coreLogger,
 	}
 	middlewareMiddleware := &middleware.Middleware{
 		Auth:         authAuth,
@@ -50,16 +53,15 @@ func InitInjector() (*Injector, func(), error) {
 	}
 	businessUser := &business.BusinessUser{
 		Model:       modelUser,
-		Logger:      logger,
 		Tx:          trans,
 		RedisClient: client,
 	}
 	response := &core.Response{
-		Logger: logger,
+		Logger: coreLogger,
 	}
 	handlerUser := &handler.HandlerUser{
 		Business: businessUser,
-		Logger:   logger,
+		Logger:   coreLogger,
 		IRes:     response,
 	}
 	apiHandler := &api.Handler{

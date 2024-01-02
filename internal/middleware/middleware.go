@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
@@ -17,3 +18,8 @@ var MwsSet = wire.NewSet(
 	auth.AuthSet,
 	reverse_proxy.ReverseProxySet,
 )
+
+type IMiddleware interface {
+	GenOkMsg(*gin.Context, string) string
+	GenErrMsg(*gin.Context, string, error) error
+}

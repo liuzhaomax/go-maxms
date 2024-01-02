@@ -17,13 +17,18 @@ func init() {
 	logrus.SetFormatter(selectFormatter("text"))
 }
 
+// 日志扩展loggerx的Provider
+func InitLogrus() *logrus.Logger {
+	return cfg.App.Logger
+}
+
 // 初始化系统日志
 func InitLogger() func() {
 	log := GetConfig().Lib.Log
 	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支
 	file, err := os.OpenFile(log.FileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOFailure, "日志文件打开失败", err))
+		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志文件打开失败", err))
 	}
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
@@ -47,7 +52,7 @@ func InitLogger() func() {
 		if file != nil {
 			err = file.Close()
 			if err != nil {
-				logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOFailure, "日志文件关闭失败", err))
+				logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志文件关闭失败", err))
 				panic(err)
 			}
 		}

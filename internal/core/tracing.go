@@ -86,6 +86,5 @@ func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redi
 	if result == 0 {
 		return FormatError(CacheDenied, "缓存写入失败", errors.New("set已有该值"))
 	}
-	cfg.App.Logger.WithField(SUCCESS, GetFuncName()).WithField("trace_id", c.Request.Header.Get(TraceId)).Info(FormatInfo("签名已写入缓存"))
 	return nil
 }

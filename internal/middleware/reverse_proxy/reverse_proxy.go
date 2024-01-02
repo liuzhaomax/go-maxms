@@ -3,7 +3,7 @@ package reverse_proxy
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/sirupsen/logrus"
+	"github.com/liuzhaomax/go-maxms/internal/core"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -13,7 +13,7 @@ import (
 var ReverseProxySet = wire.NewSet(wire.Struct(new(ReverseProxy), "*"))
 
 type ReverseProxy struct {
-	Logger *logrus.Logger
+	Logger core.ILogger
 }
 
 func ReverseProxyRedirect(target *url.URL) gin.HandlerFunc {

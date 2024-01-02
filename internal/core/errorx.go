@@ -20,7 +20,7 @@ const (
 	Unauthorized      Code = 401
 	NotFound          Code = 404
 	DownstreamDown    Code = 5
-	IOFailure         Code = 6
+	IOException       Code = 6
 	PermissionDenied  Code = 7
 	CacheDenied       Code = 8
 )
@@ -32,25 +32,25 @@ func (c Code) String() string {
 	case Unknown:
 		return "Unknown"
 	case ConfigError:
-		return "ConfigError"
+		return "配置错误"
 	case ConnectionFailed:
-		return "ConnectionFailed"
+		return "连接失败"
 	case ParseIssue:
-		return "ParseIssue"
+		return "解析问题"
 	case MissingParameters:
-		return "MissingParameters"
+		return "缺少参数"
 	case Unauthorized:
-		return "Unauthorized"
+		return "未授权"
 	case NotFound:
-		return "NotFound"
+		return "没找到"
 	case DownstreamDown:
-		return "DownstreamDown"
-	case IOFailure:
-		return "IOFailure"
+		return "下游宕机"
+	case IOException:
+		return "IO异常"
 	case PermissionDenied:
-		return "PermissionDenied"
+		return "无权限"
 	case CacheDenied:
-		return "CacheDenied"
+		return "缓存拒绝"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}
@@ -79,4 +79,11 @@ func FormatError(code Code, desc string, err error) error {
 	errObj.Desc = desc
 	errObj.Err = err
 	return errObj
+}
+
+func FormatCaller(ok bool, desc string) string {
+	if ok {
+		return fmt.Sprintf("%s: Caller: %s", SUCCESS, desc)
+	}
+	return fmt.Sprintf("%s: Caller: %s", FAILURE, desc)
 }

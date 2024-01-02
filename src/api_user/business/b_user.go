@@ -8,7 +8,6 @@ import (
 	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 	"github.com/liuzhaomax/go-maxms/src/api_user/schema"
 	"github.com/redis/go-redis/v9"
-	"github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -16,7 +15,6 @@ var BusinessUserSet = wire.NewSet(wire.Struct(new(BusinessUser), "*"))
 
 type BusinessUser struct {
 	Model       *model.ModelUser
-	Logger      *logrus.Logger
 	Tx          *core.Trans
 	RedisClient *redis.Client
 }

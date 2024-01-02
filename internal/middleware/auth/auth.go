@@ -1,11 +1,11 @@
 package auth
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/redis/go-redis/v9"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -13,7 +13,7 @@ import (
 var AuthSet = wire.NewSet(wire.Struct(new(Auth), "*"))
 
 type Auth struct {
-	Logger      *logrus.Logger
+	Logger      core.ILogger
 	RedisClient *redis.Client
 }
 
@@ -23,41 +23,35 @@ func (auth *Auth) ValidateToken() gin.HandlerFunc {
 		// token in req header
 		headerToken := c.Request.Header.Get(core.Authorization)
 		if headerToken == core.EmptyString || len(headerToken) == 0 {
-			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(nil))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(nil))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", errors.New("没找到token")))
 			return
 		}
 		headerDecryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), headerToken)
 		if err != nil {
-			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(err))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 			return
 		}
 		headerDecryptedTokenRemoveBearer := (strings.Split(headerDecryptedToken, " "))[1]
 		userID, clientIP, err := j.ParseToken(headerDecryptedTokenRemoveBearer)
 		if err != nil {
 			if err.Error() != core.TokenExpired {
-				auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(err))
-				c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(err))
+				c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 				return
 			}
 			refreshedToken, err := j.RefreshToken(headerDecryptedTokenRemoveBearer)
 			if err != nil {
-				auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(err))
-				c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(err))
+				c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 				return
 			}
 			userID, clientIP, err = j.ParseToken(refreshedToken)
 			if err != nil {
-				auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(err))
-				c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(err))
+				c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 				return
 			}
 			// 验证refreshedToken
 			result := auth.CompareCombination(c, userID, clientIP)
 			if result == false {
-				auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(err))
-				c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(err))
+				c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 				return
 			}
 			c.Next()
@@ -66,8 +60,7 @@ func (auth *Auth) ValidateToken() gin.HandlerFunc {
 		// 验证headerParsedToken
 		result := auth.CompareCombination(c, userID, clientIP)
 		if result == false {
-			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Info(genTokenErrMsg(err))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, genTokenErrMsg(err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 			return
 		}
 		c.Next()
@@ -86,6 +79,12 @@ func (auth *Auth) CompareCombination(c *gin.Context, userID string, clientIP str
 	return false
 }
 
-func genTokenErrMsg(err error) error {
-	return core.FormatError(core.Unauthorized, "权限验证失败", err)
+func (auth *Auth) GenOkMsg(c *gin.Context, desc string) string {
+	auth.Logger.SucceedWithField(c, desc)
+	return core.FormatInfo(desc)
+}
+
+func (auth *Auth) GenErrMsg(c *gin.Context, desc string, err error) error {
+	auth.Logger.FailWithField(c, core.Unauthorized, desc, err)
+	return core.FormatError(core.Unauthorized, desc, err)
 }

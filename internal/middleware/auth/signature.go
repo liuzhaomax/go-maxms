@@ -18,20 +18,14 @@ func (auth *Auth) ValidateSignature() gin.HandlerFunc {
 		result, err := auth.RedisClient.SAdd(context.Background(), core.Signature, signatureGen).Result()
 		// 如果直接使用返回值，(*result).Val()，1是set里原来没有，加入成功，0是set里原来有，加入失败
 		if err != nil {
-			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Debug(genSignatureErrMsg(err))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, genSignatureErrMsg(err))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "签名验证失败", err))
 			return
 		}
 		if result == 0 {
-			auth.Logger.WithField(core.FAILURE, core.GetFuncName()).Debug(genSignatureErrMsg(errors.New("set已有该值")))
-			c.AbortWithStatusJSON(http.StatusUnauthorized, genSignatureErrMsg(errors.New("set已有该值")))
+			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "签名验证失败", errors.New("set已有该值")))
 			return
 		}
-		cfg.App.Logger.WithField(core.SUCCESS, core.GetFuncName()).WithField("trace_id", c.Request.Header.Get(core.TraceId)).Info(core.FormatInfo("签名已写入缓存"))
+		auth.GenOkMsg(c, "签名已写入缓存")
 		c.Next()
 	}
-}
-
-func genSignatureErrMsg(err error) error {
-	return core.FormatError(core.Unauthorized, "签名验证失败", err)
 }

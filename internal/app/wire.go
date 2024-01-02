@@ -13,7 +13,7 @@ import (
 
 func InitInjector() (*Injector, func(), error) {
 	wire.Build(
-		core.InitGinLogger,
+		core.InitLogrus,
 		core.InitGinEngine,
 		core.InitDB,
 		core.InitRedis,
@@ -21,6 +21,7 @@ func InitInjector() (*Injector, func(), error) {
 		set.HandlerSet,
 		set.BusinessSet,
 		set.ModelSet,
+		core.LoggerSet,
 		core.ResponseSet,
 		core.TransactionSet,
 		middleware.MwsSet,
