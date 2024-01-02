@@ -16,7 +16,7 @@ type ReverseProxy struct {
 	Logger core.ILogger
 }
 
-func ReverseProxyRedirect(target *url.URL) gin.HandlerFunc {
+func (rp *ReverseProxy) Redirect(target *url.URL) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		director := func(req *http.Request) {
 			req.URL.Scheme = target.Scheme
@@ -26,7 +26,6 @@ func ReverseProxyRedirect(target *url.URL) gin.HandlerFunc {
 		proxy := &httputil.ReverseProxy{
 			Director: director,
 		}
-		// TODO 加入authorisation SGW
 		proxy.ServeHTTP(c.Writer, c.Request)
 	}
 }
@@ -34,3 +33,13 @@ func ReverseProxyRedirect(target *url.URL) gin.HandlerFunc {
 // 使用
 //proxyUrl, _ := url.Parse("http://127.0.0.1:8080")
 //r.GET("/api/:action", ReverseProxyRedirect(proxyUrl))
+
+func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) string {
+	rp.Logger.SucceedWithField(c, desc)
+	return core.FormatInfo(desc)
+}
+
+func (rp *ReverseProxy) GenErrMsg(c *gin.Context, desc string, err error) error {
+	rp.Logger.FailWithField(c, core.Unauthorized, desc, err)
+	return core.FormatError(core.Unauthorized, desc, err)
+}
