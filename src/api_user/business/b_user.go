@@ -14,9 +14,9 @@ import (
 var BusinessUserSet = wire.NewSet(wire.Struct(new(BusinessUser), "*"))
 
 type BusinessUser struct {
-	Model       *model.ModelUser
-	Tx          *core.Trans
-	RedisClient *redis.Client
+	Model *model.ModelUser
+	Tx    *core.Trans
+	Redis *redis.Client
 }
 
 func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
@@ -27,7 +27,7 @@ func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
 	}
 	user := &model.User{}
 	err = b.Tx.ExecTrans(c, func(ctx context.Context) error {
-		err = b.Model.QueryUserByUsername(loginReq.Username, user)
+		err = b.Model.QueryUserByUsername(c, loginReq.Username, user)
 		if err != nil {
 			return err
 		}
@@ -66,7 +66,7 @@ func (b *BusinessUser) GetUserByUserID(c *gin.Context) (*schema.UserRes, error) 
 	userID := c.Param(core.UserID)
 	user := &model.User{}
 	err := b.Tx.ExecTrans(c, func(ctx context.Context) error {
-		err := b.Model.QueryUserByUserID(userID, user)
+		err := b.Model.QueryUserByUserID(c, userID, user)
 		if err != nil {
 			return err
 		}

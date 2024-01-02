@@ -30,8 +30,8 @@ func InitInjector() (*Injector, func(), error) {
 		return nil, nil, err
 	}
 	authAuth := &auth.Auth{
-		Logger:      coreLogger,
-		RedisClient: client,
+		Logger: coreLogger,
+		Redis:  client,
 	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
 		Logger: coreLogger,
@@ -52,9 +52,9 @@ func InitInjector() (*Injector, func(), error) {
 		DB: db,
 	}
 	businessUser := &business.BusinessUser{
-		Model:       modelUser,
-		Tx:          trans,
-		RedisClient: client,
+		Model: modelUser,
+		Tx:    trans,
+		Redis: client,
 	}
 	response := &core.Response{
 		Logger: coreLogger,
@@ -72,6 +72,7 @@ func InitInjector() (*Injector, func(), error) {
 		Engine:  engine,
 		Handler: apiHandler,
 		DB:      db,
+		Redis:   client,
 	}
 	return injector, func() {
 		cleanup2()

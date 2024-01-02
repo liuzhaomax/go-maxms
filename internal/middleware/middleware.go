@@ -23,3 +23,6 @@ type IMiddleware interface {
 	GenOkMsg(*gin.Context, string) string
 	GenErrMsg(*gin.Context, string, error) error
 }
+
+var _ IMiddleware = (*auth.Auth)(nil)
+var _ IMiddleware = (*reverse_proxy.ReverseProxy)(nil)

@@ -15,7 +15,7 @@ func (auth *Auth) ValidateSignature() gin.HandlerFunc {
 		nonce := c.Request.Header.Get(core.SpanId) // 在core.SetHeadersForDownstream之前，所以是spanId
 		// 根据headers里给定的信息，生成签名并比对
 		signatureGen := core.GenAppSignature(cfg.App.Id, cfg.App.Secret, userId, nonce)
-		result, err := auth.RedisClient.SAdd(context.Background(), core.Signature, signatureGen).Result()
+		result, err := auth.Redis.SAdd(context.Background(), core.Signature, signatureGen).Result()
 		// 如果直接使用返回值，(*result).Val()，1是set里原来没有，加入成功，0是set里原来有，加入失败
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "签名验证失败", err))

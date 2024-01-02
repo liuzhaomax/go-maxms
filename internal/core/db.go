@@ -5,7 +5,6 @@ import (
 	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"strings"
 	"time"
@@ -18,7 +17,7 @@ func InitDB() (*gorm.DB, func(), error) {
 		LogFailure(ConnectionFailed, "数据库连接失败", err)
 		return nil, clean, err
 	}
-	err = cfg.AutoMigrate(db)
+	err = cfg.Lib.DB.AutoMigrate(db)
 	if err != nil {
 		LogFailure(Unknown, "数据库表创建失败", err)
 		return nil, clean, err
@@ -29,19 +28,9 @@ func InitDB() (*gorm.DB, func(), error) {
 }
 
 func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
-	gormLogger := logger.New(
-		cfg.App.Logger,
-		logger.Config{
-			SlowThreshold:             time.Second,
-			LogLevel:                  logger.Info,
-			ParameterizedQueries:      true,
-			IgnoreRecordNotFoundError: true,
-			Colorful:                  false,
-		},
-	)
 	LogSuccess(fmt.Sprintf("数据库品种: %s", cfg.DB.Type))
 	db, err := gorm.Open(mysql.Open(cfg.DB.DSN()), &gorm.Config{
-		Logger: gormLogger,
+		Logger: InitGormLogger(),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -72,8 +61,8 @@ func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
 	return db, clean, err
 }
 
-func (cfg *Config) AutoMigrate(db *gorm.DB) error {
-	dbType := strings.ToLower(cfg.DB.Type)
+func (d *DB) AutoMigrate(db *gorm.DB) error {
+	dbType := strings.ToLower(d.Type)
 	if dbType == "mysql" {
 		db = db.Set("gorm:table_options", "ENGINE=InnoDB")
 	}

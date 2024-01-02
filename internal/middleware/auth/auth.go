@@ -13,8 +13,8 @@ import (
 var AuthSet = wire.NewSet(wire.Struct(new(Auth), "*"))
 
 type Auth struct {
-	Logger      core.ILogger
-	RedisClient *redis.Client
+	Logger core.ILogger
+	Redis  *redis.Client
 }
 
 func (auth *Auth) ValidateToken() gin.HandlerFunc {
