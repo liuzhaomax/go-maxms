@@ -62,7 +62,7 @@ func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
 	return core.Bearer + token, nil
 }
 
-func (b *BusinessUser) DeleteLogout(c *gin.Context) error {
+func (b *BusinessUser) DeleteLogin(c *gin.Context) error {
 	maxAge := int(time.Millisecond)
 	domain := core.GetConfig().App.Domain
 	c.SetCookie(

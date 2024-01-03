@@ -10,9 +10,9 @@ func Register(app *gin.Engine, handler *handler.HandlerUser, mw *middleware.Midd
 	app.GET("/login", handler.GetPuk)
 	app.POST("/login", handler.PostLogin)
 	app.Use(mw.Auth.ValidateToken())
+	app.DELETE("/login", handler.DeleteLogin)
 	routerUser := app.Group("/users")
 	{
-		routerUser.DELETE("/logout", handler.DeleteLogout)
 		routerUser.GET("/:userID", handler.GetUserByUserID)
 	}
 }
