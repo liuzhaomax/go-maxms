@@ -12,6 +12,7 @@ func Register(app *gin.Engine, handler *handler.HandlerUser, mw *middleware.Midd
 	app.Use(mw.Auth.ValidateToken())
 	routerUser := app.Group("/users")
 	{
+		routerUser.DELETE("/logout", handler.DeleteLogout)
 		routerUser.GET("/:userID", handler.GetUserByUserID)
 	}
 }

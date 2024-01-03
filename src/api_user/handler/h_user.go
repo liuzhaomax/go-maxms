@@ -28,6 +28,15 @@ func (h *HandlerUser) PostLogin(c *gin.Context) {
 	h.IRes.ResSuccess(c, token)
 }
 
+func (h *HandlerUser) DeleteLogout(c *gin.Context) {
+	err := h.Business.DeleteLogout(c)
+	if err != nil {
+		h.IRes.ResFailure(c, 500, core.Unknown, "登出失败", err)
+		return
+	}
+	h.IRes.ResSuccess(c, nil)
+}
+
 func (h *HandlerUser) GetUserByUserID(c *gin.Context) {
 	user, err := h.Business.GetUserByUserID(c)
 	if err != nil {

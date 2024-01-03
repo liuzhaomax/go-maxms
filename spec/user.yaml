@@ -93,6 +93,22 @@ paths:
       description: 用户登录
       requestBody:
         $ref: '#/components/requestBodies/Login'
+    delete:
+      tags:
+        - login
+      summary: Logout
+      operationId: delete-login
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+      description: 登出
+      parameters:
+        - $ref: '#/components/parameters/Client_ip'
+        - $ref: '#/components/parameters/User-Agent'
+        - $ref: '#/components/parameters/Trace_id'
+        - $ref: '#/components/parameters/Span_id'
+        - $ref: '#/components/parameters/Parent_id'
+        - $ref: '#/components/parameters/App_id'
 components:
   schemas:
     User:
@@ -172,6 +188,17 @@ components:
         desc:
           type: string
   responses:
+    '200':
+      description: Example response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Status'
+          examples:
+            Example 1:
+              value:
+                code: 0
+                desc: success
     '400':
       description: 缺少参数
       content:
