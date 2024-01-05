@@ -13,6 +13,8 @@ pipeline {
     }
     // 声明全局变量
     environment {
+        projectName = "go-maxms"
+        branchName = "main"
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "10.192.0.5:9002"
@@ -74,7 +76,7 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m ./...
+                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m ${projectName}_&{branchName}
                         """
                     }
                 }
