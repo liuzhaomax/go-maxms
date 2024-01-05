@@ -9,7 +9,7 @@ pipeline {
         skipDefaultCheckout() //删除隐式checkout scm语句
         disableConcurrentBuilds() //禁止并行
         timeout(time: 1, unit: "HOURS") //流水线超市设置1h
-        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5')) //保留build数量
+        buildDiscarder(logRotator(numToKeepStr: '5')) //保留build数量
     }
     // 声明全局变量
     environment {
@@ -152,12 +152,18 @@ pipeline {
         }
 
         success {
-            echo "SUCCESS 成功"
+            script {
+                echo "SUCCESS 成功"
+                keepBuilds()
+            }
             sh "docker image prune -f"
         }
 
         failure {
-            echo "FAILURE 失败"
+            script {
+                echo "FAILURE 失败"
+                keepBuilds()
+            }
             error "错误发生，流水线失败"
         }
 
@@ -166,4 +172,25 @@ pipeline {
             error "流水线被终止"
         }
     }
+}
+
+// 保留最近5个构建，其中必须包含至少一次成功构建
+def keepBuilds() {
+    def buildsToKeep = []
+
+    for (int i = currentBuild.number - 1; i >= 1 && buildsToKeep.size() < 5; i--) {
+        def build = Jenkins.instance.getItemByFullName(env.JOB_NAME).getBuildByNumber(i)
+
+        if (build.result == 'SUCCESS') {
+            buildsToKeep << build
+        } else if (build.result == 'FAILURE') {
+            // 如果前一次构建成功，则保留这一次构建
+            if (buildsToKeep.any { it.result == 'SUCCESS' }) {
+                buildsToKeep << build
+            }
+        }
+    }
+
+    // 设置保留的构建
+    currentBuild.rawBuild.getAction(hudson.tasks.LogRotator.class).setBuildKeepDependencies(buildsToKeep)
 }
