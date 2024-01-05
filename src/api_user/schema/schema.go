@@ -18,7 +18,7 @@ type UserRes struct {
 
 func MapUser2UserRes(user *model.User) *UserRes {
 	deletedAt := core.EmptyString
-	if user.DeletedAt.Valid == true {
+	if user.DeletedAt.Valid {
 		deletedAt = user.DeletedAt.Time.String()
 	}
 	return &UserRes{

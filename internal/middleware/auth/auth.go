@@ -50,7 +50,7 @@ func (auth *Auth) ValidateToken() gin.HandlerFunc {
 			}
 			// 验证refreshedToken
 			result := auth.CompareCombination(c, userID, clientIP)
-			if result == false {
+			if !result {
 				c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 				return
 			}
@@ -59,7 +59,7 @@ func (auth *Auth) ValidateToken() gin.HandlerFunc {
 		}
 		// 验证headerParsedToken
 		result := auth.CompareCombination(c, userID, clientIP)
-		if result == false {
+		if !result {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "权限验证失败", err))
 			return
 		}

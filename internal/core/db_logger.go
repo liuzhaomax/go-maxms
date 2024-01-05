@@ -31,13 +31,13 @@ func (l *GormLogger) LogMode(lev logger.LogLevel) logger.Interface {
 	return &GormLogger{}
 }
 func (l *GormLogger) Info(ctx context.Context, msg string, data ...interface{}) {
-	cfg.App.Logger.WithContext(ctx).Infof(msg, data)
+	cfg.App.Logger.WithContext(ctx).Infof(msg, data...)
 }
 func (l *GormLogger) Warn(ctx context.Context, msg string, data ...interface{}) {
-	cfg.App.Logger.WithContext(ctx).Errorf(msg, data)
+	cfg.App.Logger.WithContext(ctx).Errorf(msg, data...)
 }
 func (l *GormLogger) Error(ctx context.Context, msg string, data ...interface{}) {
-	cfg.App.Logger.WithContext(ctx).Errorf(msg, data)
+	cfg.App.Logger.WithContext(ctx).Errorf(msg, data...)
 }
 func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
 	// 获取运行时间
@@ -66,7 +66,7 @@ func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql 
 		cfg.App.Logger.WithContext(ctx).WithFields(logFields).Info(FormatInfo("数据库 Slow Log"))
 	}
 	// Debug模式下，且存在trace id，则记录所有 SQL 请求
-	if cfg.Lib.DB.Debug == true && traceId != nil {
+	if cfg.Lib.DB.Debug && traceId != nil {
 		cfg.App.Logger.WithContext(ctx).Debug(FormatCaller(true, GetCallerFileAndLine(5)))
 		cfg.App.Logger.WithContext(ctx).WithFields(logFields).Info(FormatInfo("数据库 Query"))
 	}

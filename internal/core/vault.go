@@ -2,7 +2,6 @@ package core
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	vault "github.com/hashicorp/vault/api"
 	"net/http"
@@ -69,7 +68,7 @@ func getSecret(ctx context.Context, secretEngineName string, namespace string, k
 	}
 	value, ok := secret.Data[key].(string)
 	if !ok {
-		return EmptyString, errors.New(fmt.Sprintf("获取的%s不是字符串", key))
+		return EmptyString, fmt.Errorf("获取的%s不是字符串", key)
 	}
 	return value, nil
 }
@@ -116,11 +115,15 @@ func (cfg *Config) GetSecret() {
 	// 读取downstream app id 和 secret
 	for _, downstream := range cfg.Downstream {
 		downstream.Id, err = getSecret(ctx, KV, fmt.Sprintf("%s/%s", APP, downstream.Name), ID)
+		if err != nil {
+			LogFailure(VaultDenied, "Vault: downstream信息获取失败", err)
+			panic(err)
+		}
 		downstream.Secret, err = getSecret(ctx, KV, fmt.Sprintf("%s/%s", APP, downstream.Name), SECRET)
-	}
-	if err != nil {
-		LogFailure(VaultDenied, "Vault: downstream信息获取失败", err)
-		panic(err)
+		if err != nil {
+			LogFailure(VaultDenied, "Vault: downstream信息获取失败", err)
+			panic(err)
+		}
 	}
 	// 打印日志
 	LogSuccess("Vault: secret获取成功")

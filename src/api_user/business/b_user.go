@@ -38,7 +38,7 @@ func (b *BusinessUser) PostLogin(c *gin.Context) (string, error) {
 	}
 	// loginReq.Password是从SGW经过RSA解码后得到密码
 	result := core.VerifyEncodedPwd(loginReq.Password, core.GetConfig().App.Salt, user.Password)
-	if result == false {
+	if !result {
 		return core.EmptyString, core.FormatError(core.PermissionDenied, "登录验证失败", err)
 	}
 	// 生成Bearer jwt，使用userID与ip签发
