@@ -9,7 +9,7 @@ pipeline {
         skipDefaultCheckout() //删除隐式checkout scm语句
         disableConcurrentBuilds() //禁止并行
         timeout(time: 1, unit: "HOURS") //流水线超市设置1h
-        buildDiscarder(logRotator(numToKeepStr: '5')) //保留build数量
+        buildDiscarder(logRotator(numToKeepStr: '20')) //保留build数量
     }
     // 声明全局变量
     environment {
