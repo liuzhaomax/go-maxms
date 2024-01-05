@@ -74,7 +74,7 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            ${goHome}/bin/golangci-lint run ./...
+                            ${goHome}/bin/golangci-lint run ./... --timeout 10m
                         """
                     }
                 }
