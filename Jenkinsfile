@@ -15,7 +15,7 @@ pipeline {
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "10.192.0.5:9002"
-        harborRepo = "maxblog-me-template"
+        harborRepo = "go-maxms"
     }
     // 流水线阶段
     stages {
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 echo "--------------------- Checkout Start ---------------------"
                 timeout(time: 5, unit: "MINUTES"){
-                    checkout([$class: "GitSCM", branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/maxblog-me-template.git"]]])
+                    checkout([$class: "GitSCM", branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
                 }
                 echo "--------------------- Checkout End ---------------------"
             }
@@ -90,7 +90,7 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            ${goHome}/bin/go build -o bin/main -tags prod internal/cmd/main.go
+                            ${goHome}/bin/go build -o bin/main -tags prod main/main.go
                         """
                     }
                 }
@@ -145,7 +145,7 @@ pipeline {
         always {
             echo "********************************************************************"
             echo "********************************************************************"
-            echo "****************** CD Pipeline about to Finish *********************"
+            echo "****************** CI Pipeline about to Finish *********************"
             echo "********************************************************************"
             echo "********************************************************************"
         }
