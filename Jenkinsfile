@@ -69,17 +69,13 @@ pipeline {
             steps {
                 echo "--------------------- Lint Start ---------------------"
                 script {
-                    try {
-                        timeout(time: 15, unit: "MINUTES") {
-                            goHome = tool "go"
-                            sh """
-                                export GO_HOME=${goHome}
-                                export PATH=\$GO_HOME/bin:\$PATH
-                                ${goHome}/bin/golangci-lint run -v --fast --timeout 5m /var/jenkins_home/workspace/${rewriteJobNameInSnake()}
-                            """
-                        }
-                    } catch (Exception e) {
-                        echo "Linting failed. Allowing the build to continue."
+                    timeout(time: 15, unit: "MINUTES") {
+                        goHome = tool "go"
+                        sh """
+                            export GO_HOME=${goHome}
+                            export PATH=\$GO_HOME/bin:\$PATH
+                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m /var/jenkins_home/workspace/${rewriteJobNameInSnake()}
+                        """
                     }
                 }
                 echo "--------------------- Lint End ---------------------"
@@ -182,15 +178,17 @@ pipeline {
 // 保留最近5个构建，其中必须包含至少一次成功构建
 def keepBuilds() {
     def buildsToKeep = []
+    def successFound = false
 
     for (int i = currentBuild.number - 1; i >= 1 && buildsToKeep.size() < 5; i--) {
         def build = Jenkins.instance.getItemByFullName(env.JOB_NAME).getBuildByNumber(i)
 
         if (build.result == 'SUCCESS') {
             buildsToKeep << build
-        } else if (build.result == 'FAILURE') {
+            successFound = true
+        } else if (build.result == 'FAILURE' || build.result == 'ABORTED') {
             // 如果前一次构建成功，则保留这一次构建
-            if (buildsToKeep.any { it.result == 'SUCCESS' }) {
+            if (successFound) {
                 buildsToKeep << build
             }
         }
