@@ -75,7 +75,7 @@ pipeline {
                             sh """
                                 export GO_HOME=${goHome}
                                 export PATH=\$GO_HOME/bin:\$PATH
-                                ${goHome}/bin/golangci-lint run -v --fast --timeout 5m ${rewriteJobNameInSnake()}
+                                ${goHome}/bin/golangci-lint run -v --fast --timeout 5m /var/jenkins_home/workspace/${rewriteJobNameInSnake()}
                             """
                         }
                     } catch (Exception e) {
@@ -202,6 +202,6 @@ def keepBuilds() {
 // 组合job name为蛇形
 def rewriteJobNameInSnake() {
     String[] strArr = JOB_NAME.split("/")
-    String projectName = strArr[0] + strArr[1..-1].join("_")
+    String projectName = strArr[0] + "_" + strArr[1..-1].join("_")
     return projectName
 }
