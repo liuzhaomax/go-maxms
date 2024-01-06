@@ -203,6 +203,6 @@ def keepBuilds() {
 // 组合job name为蛇形
 def rewriteJobNameInSnake() {
     String[] strArr = JOB_NAME.split("/")
-    String projectName = strArr[0] + "_" + strArr[1..-1].join("_")
+    String projectName = strArr[0..-1].join("_")
     return projectName
 }
