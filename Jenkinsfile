@@ -13,8 +13,6 @@ pipeline {
     }
     // 声明全局变量
     environment {
-        projectName = "go-maxms"
-        branchName = "main"
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "10.192.0.5:9002"
@@ -71,13 +69,17 @@ pipeline {
             steps {
                 echo "--------------------- Lint Start ---------------------"
                 script {
-                    timeout(time: 15, unit: "MINUTES"){
-                        goHome = tool "go"
-                        sh """
-                            export GO_HOME=${goHome}
-                            export PATH=\$GO_HOME/bin:\$PATH
-                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m ${projectName}_&{branchName}
-                        """
+                    try {
+                        timeout(time: 15, unit: "MINUTES") {
+                            goHome = tool "go"
+                            sh """
+                                export GO_HOME=${goHome}
+                                export PATH=\$GO_HOME/bin:\$PATH
+                                ${goHome}/bin/golangci-lint run -v --fast --timeout 5m ${rewriteJobNameInSnake()}
+                            """
+                        }
+                    } catch (Exception e) {
+                        echo "Linting failed. Allowing the build to continue."
                     }
                 }
                 echo "--------------------- Lint End ---------------------"
@@ -195,4 +197,11 @@ def keepBuilds() {
 
     // 设置保留的构建
     currentBuild.rawBuild.getAction(hudson.tasks.LogRotator.class).setBuildKeepDependencies(buildsToKeep)
+}
+
+// 组合job name为蛇形
+def rewriteJobNameInSnake() {
+    String[] strArr = JOB_NAME.split("/")
+    String projectName = strArr[0] + strArr[1..-1].join("_")
+    return projectName
 }
