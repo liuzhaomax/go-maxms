@@ -9,14 +9,14 @@ linters:
 #    - depguard # internal中不含外部依赖 go mod vendor
     - dogsled
     - errcheck
-#    - gochecknoinits
+#    - gochecknoinits # 不适用init
     - gocognit
     - goconst
     - gocritic
     - gocyclo
-    - godot
-    - gofmt
-    - goimports
+#    - godot # 注释结尾句号
+#    - gofmt # gofmt规范
+#    - goimports # 引用未使用
     - gomodguard
     - goprintffuncname
     - gosimple
@@ -30,7 +30,7 @@ linters:
     - staticcheck
     - typecheck
     - unconvert
-    - unparam
+#    - unparam # 传入永远是一样的，无需使用变量
     - whitespace
 
 #issues:

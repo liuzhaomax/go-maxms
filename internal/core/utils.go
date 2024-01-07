@@ -56,5 +56,5 @@ func GetProjectPath() string {
 	path, _ := filepath.Abs(file)
 	indexWithoutFileName := strings.LastIndex(path, string(os.PathSeparator))
 	indexWithoutLastPath := strings.LastIndex(path[:indexWithoutFileName], string(os.PathSeparator))
-	return strings.Replace(path[:indexWithoutLastPath], "\\", "/", -1)
+	return strings.ReplaceAll(path[:indexWithoutLastPath], "\\", "/")
 }

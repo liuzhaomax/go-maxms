@@ -28,7 +28,9 @@ run:
 	go run main/main.go -c environment/config/dev.yaml
 
 # 语法检查
+# vendor确保lint不会启用下载，不然在ci过程中会timeout
 lint:
+	go mod vendor
 	golangci-lint run -v -c ./.golangci.yml ./...
 
 # 单元测试

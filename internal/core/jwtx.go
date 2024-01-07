@@ -51,13 +51,14 @@ func (j *Jwt) ParseToken(tokenStr string) (string, string, error) {
 	})
 	if err != nil {
 		if result, ok := err.(jwt.ValidationError); ok {
-			if result.Errors&jwt.ValidationErrorMalformed != 0 {
+			switch {
+			case result.Errors&jwt.ValidationErrorMalformed != 0:
 				return EmptyString, EmptyString, errors.New(TokenMalformed)
-			} else if result.Errors&jwt.ValidationErrorExpired != 0 {
+			case result.Errors&jwt.ValidationErrorExpired != 0:
 				return EmptyString, EmptyString, errors.New(TokenExpired)
-			} else if result.Errors&jwt.ValidationErrorNotValidYet != 0 {
+			case result.Errors&jwt.ValidationErrorNotValidYet != 0:
 				return EmptyString, EmptyString, errors.New(TokenNotValidYet)
-			} else {
+			default:
 				return EmptyString, EmptyString, errors.New(TokenInvalid)
 			}
 		}

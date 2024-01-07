@@ -79,7 +79,7 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 // client.Get(...)
 // client.SAdd(...)
 
-//func logAndExec(cmd func(context.Context, *redis.Client, ...interface{}) *redis.Cmd,
+// func logAndExec(cmd func(context.Context, *redis.Client, ...interface{}) *redis.Cmd,
 //    ctx context.Context, client *redis.Client, args []interface{}) (string, error) {
 //
 //    // 在执行前记录日志
@@ -93,4 +93,4 @@ func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
 //
 //    // 返回结果或错误
 //    return cmdResult.String(), cmdResult.Err()
-//}
+// }
