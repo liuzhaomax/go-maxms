@@ -13,7 +13,6 @@ pipeline {
     }
     // 声明全局变量
     environment {
-        workspace = "/var/jenkins_home/workspace"
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "10.192.0.5:9002"
