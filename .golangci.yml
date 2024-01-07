@@ -46,3 +46,4 @@ run:
   skip-dirs:
     - vendor
     - main
+  allow-parallel-runners: true
