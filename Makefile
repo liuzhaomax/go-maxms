@@ -29,7 +29,7 @@ run:
 
 # 语法检查
 lint:
-	golangci-lint run -v ./...
+	golangci-lint run -v -c ./.golangci.yml ./...
 
 # 单元测试
 unit:

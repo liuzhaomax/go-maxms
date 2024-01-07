@@ -74,7 +74,7 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m /var/jenkins_home/workspace/${rewriteJobNameInSnake()}
+                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m -c ./.golangci.yml ./...
                         """
                     }
                 }
