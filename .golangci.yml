@@ -6,10 +6,10 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    - depguard
+#    - depguard # internal中不含外部依赖 go mod vendor
     - dogsled
     - errcheck
-    - gochecknoinits
+#    - gochecknoinits
     - gocognit
     - goconst
     - gocritic

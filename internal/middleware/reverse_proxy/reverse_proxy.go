@@ -31,8 +31,8 @@ func (rp *ReverseProxy) Redirect(target *url.URL) gin.HandlerFunc {
 }
 
 // 使用
-//proxyUrl, _ := url.Parse("http://127.0.0.1:8080")
-//r.GET("/api/:action", ReverseProxyRedirect(proxyUrl))
+// proxyUrl, _ := url.Parse("http://127.0.0.1:8080")
+// r.GET("/api/:action", ReverseProxyRedirect(proxyUrl))
 
 func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) string {
 	rp.Logger.SucceedWithField(c, desc)

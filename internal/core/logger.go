@@ -33,7 +33,7 @@ func InitLogger() func() {
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
 	logger.SetFormatter(selectFormatter("text"))
-	//logger.SetReportCaller(true) // 输出caller
+	// logger.SetReportCaller(true) // 输出caller
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   log.FileName,
 		MaxSize:    50, // megabytes
@@ -153,7 +153,7 @@ func LoggerToFile() gin.HandlerFunc {
 		}).Info("请求结束")
 
 		// concatenated json 写法
-		//format := &LoggerFormat{
+		// format := &LoggerFormat{
 		//    StatusCode: statusCode,
 		//    Took:       took,
 		//    Method:     c.Request.Method,
@@ -165,23 +165,23 @@ func LoggerToFile() gin.HandlerFunc {
 		//    SpanID:     c.Request.Header.Get(SpanId),
 		//    ParentID:   c.Request.Header.Get(ParentId),
 		//    AppID:      c.Request.Header.Get(AppId),
-		//}
-		//formatBytes, _ := json.Marshal(format)
-		//logger.Info(string(formatBytes))
+		// }
+		// formatBytes, _ := json.Marshal(format)
+		// logger.Info(string(formatBytes))
 
 		// 竖线分割写法
-		//logger.Infof("| %3d | %13v | %15s | %8s | %s | %20s",
+		// logger.Infof("| %3d | %13v | %15s | %8s | %s | %20s",
 		//    statusCode,
 		//    took,
 		//    clientIP,
 		//    method,
 		//    uri,
 		//    userAgent,
-		//)
+		// )
 	}
 }
 
-//type LoggerFormat struct {
+// type LoggerFormat struct {
 //    StatusCode int           `json:"code"`
 //    Took       time.Duration `json:"took"`
 //    Method     string        `json:"method"`
@@ -194,4 +194,4 @@ func LoggerToFile() gin.HandlerFunc {
 //    ParentID   string        `json:"parent_id"`
 //    UpstreamID string        `json:"upstream_id"`
 //    AppID      string        `json:"app_id"`
-//}
+// }
