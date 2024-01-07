@@ -13,6 +13,7 @@ pipeline {
     }
     // 声明全局变量
     environment {
+        workspace = "/var/jenkins_home/workspace"
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "10.192.0.5:9002"
@@ -74,7 +75,7 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m -c ./.golangci.yml ./...
+                            ${goHome}/bin/golangci-lint run -v --fast --timeout 5m -c ${workspace}/${rewriteJobNameInSnake()/.golangci.yml ${workspace}/${rewriteJobNameInSnake()}
                         """
                     }
                 }
