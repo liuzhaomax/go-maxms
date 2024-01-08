@@ -24,7 +24,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 echo "--------------------- Checkout Start ---------------------"
-                timeout(time: 5, unit: "MINUTES"){
+                timeout(time: 2, unit: "MINUTES"){
                     checkout([$class: "GitSCM", branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
                 }
                 echo "--------------------- Checkout End ---------------------"
@@ -107,7 +107,7 @@ pipeline {
                     timeout(time: 20, unit: "MINUTES"){
                         projectKey = genSonarProjectKey()
                         echo "SonarQube Project Key: ${projectKey}"
-                        sonarScannerHome = tool "sonar-scanner"
+                        sonarScannerHome = tool "sq1"
                         sh """
                             export PROJECT_KEY=${projectKey}
                             ${sonarScannerHome}/bin/sonar-scanner
@@ -225,6 +225,7 @@ def rewriteJobNameInSnake() {
     return projectName
 }
 
+// 生成sonar的project key
 def genSonarProjectKey() {
     String[] strArr = JOB_NAME.split("/")
     String projectKey = strArr[0]
