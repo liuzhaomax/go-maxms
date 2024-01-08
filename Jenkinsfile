@@ -115,7 +115,9 @@ pipeline {
                         echo "SonarQube Project Key: ${projectKey}"
                         sh """
                             export PROJECT_KEY=${projectKey}
-                            ${sonarScannerHome}/bin/sonar-scanner
+                            export SONAR_SCANNER_HOME=${sonarScannerHome}
+                            export PATH=\$SONAR_SCANNER_HOME/bin:\$PATH
+                            sonar-scanner
                         """
                     }
                 }
