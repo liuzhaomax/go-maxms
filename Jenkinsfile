@@ -110,7 +110,7 @@ pipeline {
                         sonarScannerHome = tool "sonar-scanner"
                         sh """
                             export PROJECT_KEY=${projectKey}
-                            ${sonarScannerHome}/bin/sonar-scanner -Dsonar.config.file=./sonar-scanner.properties
+                            ${sonarScannerHome}/bin/sonar-scanner
                         """
                     }
                 }
