@@ -105,7 +105,7 @@ pipeline {
                 echo "--------------------- SonarQube Start ---------------------"
                 script {
                     timeout(time: 20, unit: "MINUTES"){
-                        sonarScannerHome = "/var/jenkins_home/sonar-scanner"
+                        sonarScannerHome = tool "sonar-scanner"
                         String[] strArr = JOB_NAME.split("/")
                         String projectKey = strArr[0]
                         for (int i = 1; i < strArr.size(); i++) {
@@ -115,9 +115,7 @@ pipeline {
                         echo "SonarQube Project Key: ${projectKey}"
                         sh """
                             export PROJECT_KEY=${projectKey}
-                            export SONAR_SCANNER_HOME=${sonarScannerHome}
-                            export PATH=\$SONAR_SCANNER_HOME/bin:\$PATH
-                            sonar-scanner
+                            ${sonarScannerHome}/bin/sonar-scanner
                         """
                     }
                 }
