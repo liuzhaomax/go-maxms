@@ -112,6 +112,7 @@ pipeline {
                             projectKey += "_" + strArr[i]
                         }
                         projectKey = projectKey.replaceAll("%2F", "_")
+                        echo "SonarQube Project Key: ${projectKey}"
                         sh """
                             ${sonarScannerHome}/bin/sonar-scanner \
                                 -Dsonar.projectKey=${projectKey}
