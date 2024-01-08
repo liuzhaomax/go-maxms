@@ -118,14 +118,15 @@ pipeline {
                             projectKey = projectKey + "_" + strArr[i]
                         }
                         sh """
+                            pwd
                             ${sonarScannerHome}/bin/sonar-scanner \
                                 -Dsonar.sources=./ \
                                 -Dsonar.projectname=${JOB_NAME} \
-                                -Dsonar.login=5cbe5f7092c9a2b8168d610c8efee1dfe938a6ad \
+                                -Dsonar.login=squ_d106b36ec221b6b317880e261792e131a6e3200a \
                                 -Dsonar.projectKey=${projectKey} \
-                                -Dsonar.nodejs.executable=/usr/bin/go \
+                                -Dsonar.go.executable=/usr/bin/go \
                                 -Dsonar.inclusions=src/**/*.go \
-                                -Dsonar.coverage.exclusions=internal/**/*,env/**/*,specs/**/*,src/pb/**/* \
+                                -Dsonar.coverage.exclusions=internal/**/*,environment/**/*,spec/**/*,src/pb/**/*,script/**/* \
                                 -Dsonar.qualitygate.wait=true
                         """
                     }
@@ -141,6 +142,42 @@ pipeline {
 //                 echo "--------------------- Checkmarx End ---------------------"
 //             }
 //         }
+        // 构建镜像
+        stage("Build Image") {
+            steps {
+                echo "--------------------- Build Image Start ---------------------"
+                timeout(time: 10, unit: "MINUTES"){
+                    sh """
+                        docker build -t ${JOB_NAME}:${tag} .
+                    """
+                }
+                echo "--------------------- Build Image End ---------------------"
+            }
+        }
+        // 推送镜像到Harbor
+        stage("Harbor") {
+            steps {
+                echo "--------------------- Push to Harbor Start ---------------------"
+                timeout(time: 10, unit: "MINUTES"){
+                    sh """
+                        docker login -u ${harborUsername} -p ${harborPassword} ${harborAddress}
+                        docker tag ${JOB_NAME}:${tag} ${harborAddress}/${harborRepo}/${JOB_NAME}:${tag}
+                        docker push ${harborAddress}/${harborRepo}/${JOB_NAME}:${tag}
+                    """
+                }
+                echo "--------------------- Push to Harbor End ---------------------"
+            }
+        }
+        // 部署容器
+        stage("Deploy") {
+            steps {
+                echo "--------------------- Deploy Start ---------------------"
+                timeout(time: 10, unit: "MINUTES"){
+                    sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $tag $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                }
+                echo "--------------------- Deploy End ---------------------"
+            }
+        }
     }
     // 构建后的操作
     post {
