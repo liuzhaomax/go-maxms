@@ -113,9 +113,9 @@ pipeline {
                         }
                         projectKey = projectKey.replaceAll("%2F", "_")
                         echo "SonarQube Project Key: ${projectKey}"
+                        export PROJECT_KEY=${projectKey}
                         sh """
-                            ${sonarScannerHome}/bin/sonar-scanner \
-                                -Dsonar.projectKey=${projectKey}
+                            ${sonarScannerHome}/bin/sonar-scanner
                         """
                     }
                 }
