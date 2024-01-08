@@ -105,7 +105,7 @@ pipeline {
                 echo "--------------------- SonarQube Start ---------------------"
                 script {
                     timeout(time: 20, unit: "MINUTES"){
-                        sonarScannerHome = "/root/docker/jenkins_docker/data/sonar-scanner"
+                        sonarScannerHome = "/var/jenkins_home/sonar-scanner"
                         String[] strArr = JOB_NAME.split("/")
                         String projectKey = strArr[0]
                         for (int i = 1; i < strArr.size(); i++) {
