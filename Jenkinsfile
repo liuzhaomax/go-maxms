@@ -108,9 +108,10 @@ pipeline {
                         projectKey = genSonarProjectKey()
                         echo "SonarQube Project Key: ${projectKey}"
                         sonarScannerHome = tool "sonar-scanner"
+                        SONAR_SCANNER_CONFIG = "./sonar-scanner.properties"
                         sh """
                             export PROJECT_KEY=${projectKey}
-                            ${sonarScannerHome}/bin/sonar-scanner
+                            ${sonarScannerHome}/bin/sonar-scanner -Dsonar.config.file=${SONAR_SCANNER_CONFIG}
                         """
                     }
                 }
