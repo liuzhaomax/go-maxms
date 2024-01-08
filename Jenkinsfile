@@ -103,7 +103,6 @@ pipeline {
         stage("SonarQube") {
             steps {
                 echo "--------------------- SonarQube Start ---------------------"
-                sh "pwd"
                 script {
                     timeout(time: 20, unit: "MINUTES"){
                         sonarScannerHome = tool "sonar-scanner"
@@ -120,14 +119,7 @@ pipeline {
                         }
                         sh """
                             ${sonarScannerHome}/bin/sonar-scanner \
-                                -Dsonar.sources=./ \
-                                -Dsonar.projectname=${JOB_NAME} \
-                                -Dsonar.login=squ_d106b36ec221b6b317880e261792e131a6e3200a \
-                                -Dsonar.projectKey=${projectKey} \
-                                -Dsonar.go.executable=/usr/bin/go \
-                                -Dsonar.inclusions=src/**/*.go \
-                                -Dsonar.coverage.exclusions=internal/**/*,environment/**/*,spec/**/*,src/pb/**/*,script/**/* \
-                                -Dsonar.qualitygate.wait=true
+                                -Dsonar.projectKey=${projectKey}
                         """
                     }
                 }
