@@ -105,14 +105,9 @@ pipeline {
                 echo "--------------------- SonarQube Start ---------------------"
                 script {
                     timeout(time: 20, unit: "MINUTES"){
-                        sonarScannerHome = tool "sonar-scanner"
-                        String[] strArr = JOB_NAME.split("/")
-                        String projectKey = strArr[0]
-                        for (int i = 1; i < strArr.size(); i++) {
-                            projectKey += "_" + strArr[i]
-                        }
-                        projectKey = projectKey.replaceAll("%2F", "_")
+                        projectKey = genSonarProjectKey()
                         echo "SonarQube Project Key: ${projectKey}"
+                        sonarScannerHome = tool "sonar-scanner"
                         sh """
                             export PROJECT_KEY=${projectKey}
                             ${sonarScannerHome}/bin/sonar-scanner
@@ -228,4 +223,14 @@ def rewriteJobNameInSnake() {
     String[] strArr = JOB_NAME.split("/")
     String projectName = strArr[0..-1].join("_")
     return projectName
+}
+
+def genSonarProjectKey() {
+    String[] strArr = JOB_NAME.split("/")
+    String projectKey = strArr[0]
+    for (int i = 1; i < strArr.size(); i++) {
+        projectKey += "_" + strArr[i]
+    }
+    projectKey = projectKey.replaceAll("%2F", "_")
+    return projectKey
 }
