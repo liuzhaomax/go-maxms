@@ -107,7 +107,7 @@ pipeline {
                     timeout(time: 20, unit: "MINUTES"){
                         projectKey = genSonarProjectKey()
                         echo "SonarQube Project Key: ${projectKey}"
-                        sonarScannerHome = tool "sq1"
+                        sonarScannerHome = tool "sonar-scanner"
                         sh """
                             export PROJECT_KEY=${projectKey}
                             ${sonarScannerHome}/bin/sonar-scanner
