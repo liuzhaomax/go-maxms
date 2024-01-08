@@ -52,6 +52,7 @@ pipeline {
             steps {
                 echo "--------------------- Version Start ---------------------"
                 echo "Branch: ${JOB_NAME}"
+                echo "App Version: ${tag}"
                 script {
                     goHome = tool "go"
                     sh """
