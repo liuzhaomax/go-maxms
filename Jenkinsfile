@@ -103,6 +103,7 @@ pipeline {
         stage("SonarQube") {
             steps {
                 echo "--------------------- SonarQube Start ---------------------"
+                sh "pwd"
                 script {
                     timeout(time: 20, unit: "MINUTES"){
                         sonarScannerHome = tool "sonar-scanner"
@@ -118,7 +119,6 @@ pipeline {
                             projectKey = projectKey + "_" + strArr[i]
                         }
                         sh """
-                            pwd
                             ${sonarScannerHome}/bin/sonar-scanner \
                                 -Dsonar.sources=./ \
                                 -Dsonar.projectname=${JOB_NAME} \
