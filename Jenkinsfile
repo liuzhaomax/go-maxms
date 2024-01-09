@@ -160,8 +160,8 @@ pipeline {
         stage("Build Image") {
             steps {
                 echo "--------------------- Build Image Start ---------------------"
+                echo "ENV: ${ENV}"
                 timeout(time: 10, unit: "MINUTES"){
-                    echo "ENV: ${ENV}"
                     sh """
                         docker build -t ${JOB_NAME}:${TAG} .
                     """
