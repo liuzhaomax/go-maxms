@@ -53,7 +53,6 @@ pipeline {
             steps {
                 script {
                     def userInput
-                    def defaultEnvironment = 'st'
                     def tags = getGitHubTags()
                     try {
                         timeout(time: 1, unit: 'MINUTES') {
@@ -71,7 +70,7 @@ pipeline {
                         echo "Using default env and tag values due to no operation in 1 min, or Exception caught: ${e}"
                     }
                     // 如果用户没有选择，使用默认值
-                    ENV = userInput ? userInput.ENVIRONMENT : defaultEnvironment
+                    ENV = userInput ? userInput.ENVIRONMENT : "st"
                     echo "Selected Environment: ${env.ENV}"
                     TAG = userInput ? userInput.TAG : tags.first()
                     echo "Selected Tag: ${env.TAG}"
@@ -84,6 +83,7 @@ pipeline {
                 echo "--------------------- Version Start ---------------------"
                 echo "Branch: ${JOB_NAME}"
                 echo "App Tag: ${TAG}"
+                echo "ENV: ${ENV}"
                 script {
                     goHome = tool "go"
                     sh """
@@ -175,7 +175,7 @@ pipeline {
                 echo "--------------------- Push to Harbor Start ---------------------"
                 timeout(time: 10, unit: "MINUTES"){
                     sh """
-                        docker login -u ${harborUsername} -p ${harborPassword} ${harborAddress}
+                        docker login -u ${harborUsername} --password-stdin ${harborAddress} <<< ${harborPassword}
                         docker tag ${JOB_NAME}:${TAG} ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
                         docker push ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
                     """
