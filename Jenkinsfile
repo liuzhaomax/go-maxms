@@ -13,12 +13,14 @@ pipeline {
     }
     // 声明全局变量
     environment {
-        ENV = "dev"
-        TAG = ""
+        ENV = "dev" // 根据Config Selection步骤的input而定
+        TAG = "" // 根据Config Selection步骤的input而定
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "172.16.96.97:9002"
         harborRepo = "go-maxms"
+        Container_port = "9200"
+        Host_port = "9200"
     }
     // 流水线阶段
     stages {
@@ -49,7 +51,7 @@ pipeline {
 //                 echo "--------------------- Update GitHub End ---------------------"
 //             }
 //         }
-        stage("User Input") {
+        stage("Config Selection") {
             steps {
                 script {
                     def userInput
@@ -191,7 +193,7 @@ pipeline {
                     timeout(time: 10, unit: "MINUTES") {
                         try {
                             sh "pwd"
-                            sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                            sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $Container_port $Host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                         } catch (e) {
                             echo "Exception: ${e}"
                         }

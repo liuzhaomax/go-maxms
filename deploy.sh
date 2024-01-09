@@ -42,8 +42,8 @@ if [[ $tag == $version ]]; then
 fi
 
 docker run --name=${project} -d --restart=always --privileged=true -p ${host_port}:${container_port} \
-  -v /home/opc/static:/usr/src/app/static \
-  /home/opc/logs/${project}/golog.txt:/usr/src/app/golog.txt \
+  -v /root/www:/usr/src/app/www \
+  /root/logs/${project}/golog.txt:/usr/src/app/golog.txt \
   ${imageName}
 
 echo "SUCCESS: Container Created"
