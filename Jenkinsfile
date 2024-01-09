@@ -15,7 +15,7 @@ pipeline {
     environment {
         harborUsername = "admin"
         harborPassword = "Harbor12345"
-        harborAddress = "10.192.0.5:9002"
+        harborAddress = "172.16.96.97:9002"
         harborRepo = "go-maxms"
     }
     // 流水线阶段
@@ -52,7 +52,6 @@ pipeline {
             steps {
                 echo "--------------------- Version Start ---------------------"
                 echo "Branch: ${JOB_NAME}"
-                echo "App Version: ${tag}"
                 script {
                     goHome = tool "go"
                     sh """
