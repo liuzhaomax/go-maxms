@@ -11,7 +11,7 @@ COPY . .
 
 RUN #go mod tidy
 
-RUN go build -o bin/ main/main.go
+RUN go build -o bin main/main.go
 
 CMD ["sudo", "chmod", "+x", "bin/main"]
 
