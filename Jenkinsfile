@@ -70,8 +70,10 @@ pipeline {
                         echo "Using default env and tag values due to no operation in 1 min, or Exception caught: ${e}"
                     }
                     // 如果用户没有选择，使用默认值
+                    echo "Environment: $ENV"
                     ENV = userInput ? userInput.ENVIRONMENT : "st"
                     echo "Selected Environment: ${env.ENV}"
+                    echo "Environment: $ENV"
                     TAG = userInput ? userInput.TAG : tags.first()
                     echo "Selected Tag: ${env.TAG}"
                 }
