@@ -278,11 +278,11 @@ def genSonarProjectKey() {
 // 获取github tags
 def getGitHubTags() {
     // 获取GitHub仓库的标签列表
-    def tagsCommand = "git ls-remote --tags origin"
+    def tagsCommand = 'git ls-remote --tags origin'
     def tagsOutput = sh(script: tagsCommand, returnStdout: true).trim()
     // 处理输出，提取标签的名称
-    def tagList = tagsOutput.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, "$1").tokenize("\n")
-    // 在 tagList 的 0 号索引位置增加 "SNAPSHOT-$timestamp"
+    def tagList = tagsOutput.readLines().collect { it.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, '$1') }
+    // 在 tagList 的 0 号索引位置，添加一个快照标签
     def timestamp = new Date().format("yyyyMMddHHmmss")
     tagList.add(0, "SNAPSHOT-$timestamp")
     return tagList
