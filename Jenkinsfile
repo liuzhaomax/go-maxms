@@ -83,7 +83,6 @@ pipeline {
                 echo "--------------------- Version Start ---------------------"
                 echo "Branch: ${JOB_NAME}"
                 echo "App Tag: ${TAG}"
-                echo "ENV: ${ENV}"
                 script {
                     goHome = tool "go"
                     sh """
@@ -162,6 +161,7 @@ pipeline {
             steps {
                 echo "--------------------- Build Image Start ---------------------"
                 timeout(time: 10, unit: "MINUTES"){
+                    echo "ENV: ${ENV}"
                     sh """
                         docker build -t ${JOB_NAME}:${TAG} .
                     """
