@@ -9,7 +9,7 @@ app:
   white_list:
     -
       name: frontend
-      domain: http://127.0.0.1:9100
+      domain: http://172.16.96.97:9100
 
 lib:
   log:
@@ -18,7 +18,7 @@ lib:
     color: true
     file_name: app.log
   vault:
-    address: http://127.0.0.1:8200
+    address: https://172.16.96.97:8200
   gin:
     run_mode: debug # debug test release
   db:
@@ -27,14 +27,14 @@ lib:
     max_life_time: 8192
     max_open_conns: 100000
     max_idle_conns: 1000
-    host: 127.0.0.1
+    host: 172.16.96.97
     port: 3306
     name: go_maxms
     params: charset=utf8mb4&parseTime=True&loc=Local
     username: root
     password: 123456
   redis:
-    host: 127.0.0.1
+    host: 172.16.96.97
     port: 6379
 
 server:
@@ -49,5 +49,5 @@ server:
 downstream:
   -
     name: go-maxms-be
-    host: 127.0.0.1
+    host: 172.16.96.97
     port: 9300
