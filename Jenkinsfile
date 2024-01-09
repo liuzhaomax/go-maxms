@@ -13,6 +13,8 @@ pipeline {
     }
     // 声明全局变量
     environment {
+        ENV = "dev"
+        TAG = ""
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "172.16.96.97:9002"
@@ -20,11 +22,6 @@ pipeline {
     }
     // 流水线阶段
     stages {
-        stage('User Input') {
-            steps {
-                input message: 'Please enter the value for MY_PARAMETER', parameters: [string(name: 'MY_PARAMETER', defaultValue: '123')]
-            }
-        }
         // 拉取代码
         stage("Checkout") {
             steps {
@@ -52,11 +49,30 @@ pipeline {
 //                 echo "--------------------- Update GitHub End ---------------------"
 //             }
 //         }
+        stage('User Input') {
+            steps {
+                script {
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Please select environment and tag:',
+                        parameters: [
+                            [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment'],
+                            [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: getGitHubTags(), description: 'Select tag']
+                        ]
+                    )
+                    ENV = userInput.ENVIRONMENT
+                    echo "Selected Environment: ${env.ENV}"
+                    TAG = userInput.TAG
+                    echo "Selected Tag: ${env.TAG}"
+                }
+            }
+        }
         // 检查App版本
         stage("Version") {
             steps {
                 echo "--------------------- Version Start ---------------------"
                 echo "Branch: ${JOB_NAME}"
+                echo "App Tag: ${TAG}"
                 script {
                     goHome = tool "go"
                     sh """
@@ -136,7 +152,7 @@ pipeline {
                 echo "--------------------- Build Image Start ---------------------"
                 timeout(time: 10, unit: "MINUTES"){
                     sh """
-                        docker build -t ${JOB_NAME}:${tag} .
+                        docker build -t ${JOB_NAME}:${TAG} .
                     """
                 }
                 echo "--------------------- Build Image End ---------------------"
@@ -149,8 +165,8 @@ pipeline {
                 timeout(time: 10, unit: "MINUTES"){
                     sh """
                         docker login -u ${harborUsername} -p ${harborPassword} ${harborAddress}
-                        docker tag ${JOB_NAME}:${tag} ${harborAddress}/${harborRepo}/${JOB_NAME}:${tag}
-                        docker push ${harborAddress}/${harborRepo}/${JOB_NAME}:${tag}
+                        docker tag ${JOB_NAME}:${TAG} ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
+                        docker push ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
                     """
                 }
                 echo "--------------------- Push to Harbor End ---------------------"
@@ -239,4 +255,19 @@ def genSonarProjectKey() {
     }
     projectKey = projectKey.replaceAll("%2F", "_")
     return projectKey
+}
+
+// 获取github tags
+def getGitHubTags() {
+    // 获取GitHub仓库的标签列表
+    def tagsCommand = 'git ls-remote --tags origin'
+    def tagsOutput = sh(script: tagsCommand, returnStdout: true).trim()
+    // 处理输出，提取标签的名称
+    def tagList = tagsOutput.readLines().collect { it.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, '$1') }
+    // 如果标签列表为空，添加一个快照标签
+    if (tagList.isEmpty()) {
+        def timestamp = new Date().format('yyyyMMddHHmmss')
+        tagList.add("SNAPSHOT-$timestamp")
+    }
+    return tagList
 }
