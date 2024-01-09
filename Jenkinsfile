@@ -187,8 +187,12 @@ pipeline {
         stage("Deploy") {
             steps {
                 echo "--------------------- Deploy Start ---------------------"
-                timeout(time: 10, unit: "MINUTES"){
-                    sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                timeout(time: 10, unit: "MINUTES") {
+                    try {
+                        sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                    } catch (e) {
+                        echo "Exception: ${e}"
+                    }
                 }
                 echo "--------------------- Deploy End ---------------------"
             }
@@ -276,11 +280,9 @@ def getGitHubTags() {
     def tagsCommand = 'git ls-remote --tags origin'
     def tagsOutput = sh(script: tagsCommand, returnStdout: true).trim()
     // 处理输出，提取标签的名称
-    def tagList = tagsOutput.readLines().collect { it.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, '$1') }
-    // 如果标签列表为空，添加一个快照标签
-    if (tagList.isEmpty()) {
-        def timestamp = new Date().format('yyyyMMddHHmmss')
-        tagList.add("SNAPSHOT-$timestamp")
-    }
+    def tagList = tagsOutput.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, '$1').tokenize('\n')
+    // 在 tagList 的 0 号索引位置增加 "SNAPSHOT-$timestamp"
+    def timestamp = new Date().format('yyyyMMddHHmmss')
+    tagList.add(0, "SNAPSHOT-$timestamp")
     return tagList
 }
