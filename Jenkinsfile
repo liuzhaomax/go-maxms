@@ -172,7 +172,7 @@ pipeline {
                 echo "--------------------- Push to Harbor Start ---------------------"
                 timeout(time: 10, unit: "MINUTES"){
                     sh """
-                        docker login -u ${harborUsername} --password-stdin ${harborPassword} ${harborAddress}
+                        docker login -u ${harborUsername} -p ${harborPassword} ${harborAddress}
                         docker tag ${JOB_NAME}:${TAG} ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
                         docker push ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
                     """
