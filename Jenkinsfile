@@ -52,20 +52,26 @@ pipeline {
         stage('User Input') {
             steps {
                 script {
-                    timeout(time: 2, unit: "MINUTES"){
-                        def userInput = input(
+                    def userInput
+                    timeout(time: 1, unit: 'MINUTES') {
+                        // 设置默认值
+                        def defaultEnvironment = 'st'
+                        def tags = getGitHubTags().first()
+                        // 用户输入选择参数
+                        userInput = input(
                             id: 'userInput',
                             message: 'Please select environment and tag:',
                             parameters: [
-                                [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment'],
-                                [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: getGitHubTags(), description: 'Select tag']
+                                [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment', defaultValue: defaultEnvironment],
+                                [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: tags, description: 'Select tag', defaultValue: tags.first()]
                             ]
                         )
-                        ENV = userInput.ENVIRONMENT
-                        echo "Selected Environment: ${env.ENV}"
-                        TAG = userInput.TAG
-                        echo "Selected Tag: ${env.TAG}"
                     }
+                    // 如果用户没有选择，使用默认值
+                    ENV = userInput ? userInput.ENVIRONMENT : defaultEnvironment
+                    echo "Selected Environment: ${env.ENV}"
+                    TAG = userInput ? userInput.TAG : tags.first()
+                    echo "Selected Tag: ${env.TAG}"
                 }
             }
         }
