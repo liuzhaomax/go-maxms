@@ -20,6 +20,11 @@ pipeline {
     }
     // 流水线阶段
     stages {
+        stage('User Input') {
+            steps {
+                input message: 'Please enter the value for MY_PARAMETER', parameters: [string(name: 'MY_PARAMETER', defaultValue: '123')]
+            }
+        }
         // 拉取代码
         stage("Checkout") {
             steps {
