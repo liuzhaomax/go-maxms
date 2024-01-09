@@ -187,12 +187,14 @@ pipeline {
         stage("Deploy") {
             steps {
                 echo "--------------------- Deploy Start ---------------------"
-                timeout(time: 10, unit: "MINUTES") {
-                    try {
-                        sh "pwd"
-                        sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
-                    } catch (e) {
-                        echo "Exception: ${e}"
+                script {
+                    timeout(time: 10, unit: "MINUTES") {
+                        try {
+                            sh "pwd"
+                            sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+                        } catch (e) {
+                            echo "Exception: ${e}"
+                        }
                     }
                 }
                 echo "--------------------- Deploy End ---------------------"
