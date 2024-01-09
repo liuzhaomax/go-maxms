@@ -55,15 +55,20 @@ pipeline {
                     def userInput
                     def defaultEnvironment = 'st'
                     def tags = getGitHubTags()
-                    timeout(time: 1, unit: 'MINUTES') {
-                        userInput = input(
-                            id: 'userInput',
-                            message: 'Please select environment and tag:',
-                            parameters: [
-                                [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment', defaultValue: defaultEnvironment],
-                                [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: tags, description: 'Select tag', defaultValue: tags.first()]
-                            ]
-                        )
+                    try {
+                        timeout(time: 1, unit: 'MINUTES') {
+                            userInput = input(
+                                id: 'userInput',
+                                message: 'Please select environment and tag:',
+                                parameters: [
+                                    [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment'],
+                                    [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: tags, description: 'Select tag']
+                                ]
+                            )
+                        }
+                    }
+                    catch (e) {
+                        echo "Using default env and tag values due to no operation in 1 min, or Exception caught: ${e}"
                     }
                     // 如果用户没有选择，使用默认值
                     ENV = userInput ? userInput.ENVIRONMENT : defaultEnvironment
