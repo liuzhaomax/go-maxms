@@ -54,8 +54,9 @@ pipeline {
         stage("Config Selection") {
             steps {
                 script {
-                    def userInput
+                    echo "Getting GitHub Tags..."
                     def tags = getGitHubTags()
+                    def userInput
                     try {
                         timeout(time: 1, unit: "MINUTES") {
                             userInput = input(
