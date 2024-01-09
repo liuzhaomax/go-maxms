@@ -9,7 +9,7 @@ pipeline {
         skipDefaultCheckout() //删除隐式checkout scm语句
         disableConcurrentBuilds() //禁止并行
         timeout(time: 1, unit: "HOURS") //流水线超市设置1h
-        buildDiscarder(logRotator(numToKeepStr: '20')) //保留build数量
+        buildDiscarder(logRotator(numToKeepStr: "20")) //保留build数量
     }
     // 声明全局变量
     environment {
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 echo "--------------------- Checkout Start ---------------------"
                 timeout(time: 2, unit: "MINUTES"){
-                    checkout([$class: "GitSCM", branches: [[name: '**']], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
+                    checkout([$class: "GitSCM", branches: [[name: "**"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
                 }
                 echo "--------------------- Checkout End ---------------------"
             }
@@ -49,19 +49,19 @@ pipeline {
 //                 echo "--------------------- Update GitHub End ---------------------"
 //             }
 //         }
-        stage('User Input') {
+        stage("User Input") {
             steps {
                 script {
                     def userInput
                     def tags = getGitHubTags()
                     try {
-                        timeout(time: 1, unit: 'MINUTES') {
+                        timeout(time: 1, unit: "MINUTES") {
                             userInput = input(
-                                id: 'userInput',
-                                message: 'Please select environment and tag:',
+                                id: "userInput",
+                                message: "Please select environment and tag:",
                                 parameters: [
-                                    [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment'],
-                                    [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: tags, description: 'Select tag']
+                                    [$class: "ChoiceParameterDefinition", name: "ENVIRONMENT", choices: "st\nsit\npnv\nqa\nprod", description: "Select environment"],
+                                    [$class: "ChoiceParameterDefinition", name: "TAG", choices: tags, description: "Select tag"]
                                 ]
                             )
                         }
@@ -189,6 +189,7 @@ pipeline {
                 echo "--------------------- Deploy Start ---------------------"
                 timeout(time: 10, unit: "MINUTES") {
                     try {
+                        sh "pwd"
                         sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "sudo deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $container_port $host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                     } catch (e) {
                         echo "Exception: ${e}"
@@ -241,10 +242,10 @@ def keepBuilds() {
     for (int i = currentBuild.number - 1; i >= 1 && buildsToKeep.size() < 5; i--) {
         def build = Jenkins.instance.getItemByFullName(env.JOB_NAME).getBuildByNumber(i)
 
-        if (build.result == 'SUCCESS') {
+        if (build.result == "SUCCESS") {
             buildsToKeep << build
             successFound = true
-        } else if (build.result == 'FAILURE' || build.result == 'ABORTED') {
+        } else if (build.result == "FAILURE" || build.result == "ABORTED") {
             // 如果前一次构建成功，则保留这一次构建
             if (successFound) {
                 buildsToKeep << build
@@ -277,12 +278,12 @@ def genSonarProjectKey() {
 // 获取github tags
 def getGitHubTags() {
     // 获取GitHub仓库的标签列表
-    def tagsCommand = 'git ls-remote --tags origin'
+    def tagsCommand = "git ls-remote --tags origin"
     def tagsOutput = sh(script: tagsCommand, returnStdout: true).trim()
     // 处理输出，提取标签的名称
-    def tagList = tagsOutput.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, '$1').tokenize('\n')
+    def tagList = tagsOutput.replaceAll(/.*refs\/tags\/(.*)(\^\{\})?/, "$1").tokenize("\n")
     // 在 tagList 的 0 号索引位置增加 "SNAPSHOT-$timestamp"
-    def timestamp = new Date().format('yyyyMMddHHmmss')
+    def timestamp = new Date().format("yyyyMMddHHmmss")
     tagList.add(0, "SNAPSHOT-$timestamp")
     return tagList
 }
