@@ -52,18 +52,20 @@ pipeline {
         stage('User Input') {
             steps {
                 script {
-                    def userInput = input(
-                        id: 'userInput',
-                        message: 'Please select environment and tag:',
-                        parameters: [
-                            [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment'],
-                            [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: getGitHubTags(), description: 'Select tag']
-                        ]
-                    )
-                    ENV = userInput.ENVIRONMENT
-                    echo "Selected Environment: ${env.ENV}"
-                    TAG = userInput.TAG
-                    echo "Selected Tag: ${env.TAG}"
+                    timeout(time: 2, unit: "MINUTES"){
+                        def userInput = input(
+                            id: 'userInput',
+                            message: 'Please select environment and tag:',
+                            parameters: [
+                                [$class: 'ChoiceParameterDefinition', name: 'ENVIRONMENT', choices: 'st\nsit\npnv\nqa\nprod', description: 'Select environment'],
+                                [$class: 'ChoiceParameterDefinition', name: 'TAG', choices: getGitHubTags(), description: 'Select tag']
+                            ]
+                        )
+                        ENV = userInput.ENVIRONMENT
+                        echo "Selected Environment: ${env.ENV}"
+                        TAG = userInput.TAG
+                        echo "Selected Tag: ${env.TAG}"
+                    }
                 }
             }
         }
