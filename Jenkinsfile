@@ -71,8 +71,10 @@ pipeline {
                     }
                     // 如果用户没有选择，使用默认值
                     ENV = userInput ? userInput.ENVIRONMENT : "st"
+                    echo "userInput Environment: ${userInput.ENVIRONMENT}"
                     echo "Selected Environment: ${env.ENV}"
                     TAG = userInput ? userInput.TAG : tags.first()
+                    echo "userInput Tag: {$userInput.Tag}"
                     echo "Selected Tag: ${env.TAG}"
                 }
             }
