@@ -53,11 +53,9 @@ pipeline {
             steps {
                 script {
                     def userInput
+                    def defaultEnvironment = 'st'
+                    def tags = getGitHubTags()
                     timeout(time: 1, unit: 'MINUTES') {
-                        // 设置默认值
-                        def defaultEnvironment = 'st'
-                        def tags = getGitHubTags().first()
-                        // 用户输入选择参数
                         userInput = input(
                             id: 'userInput',
                             message: 'Please select environment and tag:',
