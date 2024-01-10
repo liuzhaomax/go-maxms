@@ -41,7 +41,12 @@ if [[ $tag == $version ]]; then
   docker rm project
 fi
 
-docker run --name=${project} -d --restart=always --privileged=true -p ${host_port}:${container_port} \
+docker run \
+  --name=${project} \
+  -d \
+  --restart=always \
+  --privileged=true \
+  -p ${host_port}:${container_port} \
   -v /root/www:/usr/src/app/www \
   /root/logs/${project}/golog.txt:/usr/src/app/golog.txt \
   ${imageName}
