@@ -43,7 +43,7 @@ docker run \
   --privileged=true \
   -p "${host_port}:${container_port}" \
   -v /root/www:/usr/src/app/www \
-  -v /root/logs/"${project}"/golog.txt:/usr/src/app/golog.txt \
+  -v /root/logs/"${project}":/usr/src/app/logs \
   "$imageName"
 
 echo "SUCCESS: Container Created"
