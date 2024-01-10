@@ -212,14 +212,8 @@ pipeline {
             ********************************************************************
             """
         }
-        success {
-            script {
-                echo "SUCCESS 成功"
-                keepBuilds()
-            }
-            sh "docker image prune -f"
-        }
         cleanup {
+            sh "docker image prune -f"
             sh "rm -rf ${WORKSPACE}/*"
         }
     }
