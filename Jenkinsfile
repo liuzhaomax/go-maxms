@@ -193,6 +193,7 @@ pipeline {
                 script {
                     timeout(time: 10, unit: "MINUTES") {
                         sh "chmod +x ./deploy.sh"
+                        sh "ls -l"
                         sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "/var/jenkins_home/workspace/${JOB_NAME}/deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $Container_port $Host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                     }
                 }
