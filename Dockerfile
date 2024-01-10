@@ -17,4 +17,6 @@ RUN ls -l /usr/src/app/bin
 
 CMD ["sudo", "chmod", "+x", "bin/main"]
 
+RUN ls -l /usr/src/app/bin
+
 CMD ["bin/main"]
