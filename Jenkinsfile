@@ -218,17 +218,6 @@ pipeline {
             }
             sh "docker image prune -f"
         }
-        failure {
-            script {
-                echo "FAILURE 失败"
-                keepBuilds()
-            }
-            error "错误发生，流水线失败"
-        }
-        aborted {
-            echo "ABORTED 取消"
-            error "流水线被终止"
-        }
         cleanup {
             sh "rm -rf ${WORKSPACE}/*"
         }
