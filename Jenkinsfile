@@ -15,6 +15,7 @@ pipeline {
     environment {
         ENV = "dev" // 根据Config Selection步骤的input而定
         TAG = "" // 根据Config Selection步骤的input而定
+        ProjectKey = "" // 根据SonarQube步骤的input而定
         harborUsername = "admin"
         harborPassword = "Harbor12345"
         harborAddress = "172.16.96.97:9002"
@@ -139,11 +140,11 @@ pipeline {
                 echo "--------------------- SonarQube Start ---------------------"
                 script {
                     timeout(time: 20, unit: "MINUTES"){
-                        projectKey = genSonarProjectKey()
-                        echo "SonarQube Project Key: ${projectKey}"
+                        ProjectKey = genSonarProjectKey()
+                        echo "SonarQube Project Key: ${ProjectKey}"
                         sonarScannerHome = tool "sonar-scanner"
                         sh """
-                            export PROJECT_KEY=${projectKey}
+                            export PROJECT_KEY=${ProjectKey}
                             ${sonarScannerHome}/bin/sonar-scanner
                         """
                     }
@@ -166,7 +167,7 @@ pipeline {
                 echo "ENV: ${ENV}"
                 timeout(time: 10, unit: "MINUTES"){
                     sh """
-                        docker build -t ${JOB_NAME}:${TAG} .
+                        docker build -t ${ProjectKey}:${TAG} .
                     """
                 }
                 echo "--------------------- Build Image End ---------------------"
@@ -179,8 +180,8 @@ pipeline {
                 timeout(time: 10, unit: "MINUTES"){
                     sh """
                         docker login -u ${harborUsername} -p ${harborPassword} ${harborAddress}
-                        docker tag ${JOB_NAME}:${TAG} ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
-                        docker push ${harborAddress}/${harborRepo}/${JOB_NAME}:${TAG}
+                        docker tag ${ProjectKey}:${TAG} ${harborAddress}/${harborRepo}/${ProjectKey}:${TAG}
+                        docker push ${harborAddress}/${harborRepo}/${ProjectKey}:${TAG}
                     """
                 }
                 echo "--------------------- Push to Harbor End ---------------------"
@@ -193,7 +194,7 @@ pipeline {
                 script {
                     timeout(time: 10, unit: "MINUTES") {
                         sh "chmod +x ./deploy.sh"
-                        sh "./deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $Container_port $Host_port"
+                        sh "./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port"
                     }
                 }
                 echo "--------------------- Deploy End ---------------------"
@@ -257,12 +258,12 @@ def rewriteJobNameInSnake() {
 // 生成sonar的project key
 def genSonarProjectKey() {
     String[] strArr = JOB_NAME.split("/")
-    String projectKey = strArr[0]
+    String pk = strArr[0]
     for (int i = 1; i < strArr.size(); i++) {
-        projectKey += "_" + strArr[i]
+        pk += "_" + strArr[i]
     }
-    projectKey = projectKey.replaceAll("%2F", "_")
-    return projectKey
+    pk = pk.replaceAll("%2F", "_")
+    return pk
 }
 
 // 获取github tags
