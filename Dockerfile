@@ -13,6 +13,6 @@ RUN #go mod tidy
 
 RUN go build -o bin main/main.go
 
-RUN sudo chmod +x bin/main
+CMD ["sudo", "chmod", "+x", "bin/main"]
 
 CMD ["bin/main"]
