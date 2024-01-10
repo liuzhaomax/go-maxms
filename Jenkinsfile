@@ -192,7 +192,7 @@ pipeline {
                 echo "--------------------- Deploy Start ---------------------"
                 script {
                     timeout(time: 10, unit: "MINUTES") {
-                        sh "sudo chmod +x ./deploy.sh"
+                        sh "chmod +x ./deploy.sh"
                         sshPublisher(publishers: [sshPublisherDesc(configName: "test", transfers: [sshTransfer(cleanRemote: false, excludes: "", execCommand: "./deploy.sh $harborAddress $harborRepo $JOB_NAME $TAG $Container_port $Host_port", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: "[, ]+", remoteDirectory: "", remoteDirectorySDF: false, removePrefix: "", sourceFiles: "")], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
                     }
                 }
