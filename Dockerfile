@@ -13,10 +13,6 @@ RUN #go mod tidy
 
 RUN go build -o bin main/main.go
 
-RUN ls -l /usr/src/app/bin
-
-CMD ["sudo", "chmod", "+x", "bin/main"]
-
-RUN ls -l /usr/src/app/bin
+RUN sudo chmod +x bin/main
 
 CMD ["bin/main"]
