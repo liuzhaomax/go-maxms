@@ -13,6 +13,6 @@ COPY . .
 
 RUN go build -o bin main/main.go
 
-CMD ["sudo", "chmod", "+x", "bin/main"]
+# CMD ["sudo", "chmod", "+x", "bin/main"]
 
 CMD ["bin/main"]
