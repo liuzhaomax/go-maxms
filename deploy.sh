@@ -7,22 +7,22 @@ version=$4
 container_port=$5
 host_port=$6
 
-imageName=$harbor_addr/$harbor_repo/$project:$version
-
-echo $imageName
-
 containerID=`docker ps -a | grep ${project} | awk "{print $1}"`
 
-echo $containerID
+echo "Container ID: $containerID"
 
 if [ "$containerID" != "" ]; then
   docker stop $containerID
   docker rm $containerID
 fi
 
+imageName=$harbor_addr/$harbor_repo/$project:$version
+
+echo "Image Name: $imageName"
+
 tag=`docker images | grep ${project} | awk "{print $2}"`
 
-echo $tag
+echo "Image Tag: $tag"
 
 # shellcheck disable=SC2039
 if [[ $tag =~ $version ]]; then
