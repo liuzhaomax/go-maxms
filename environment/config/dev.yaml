@@ -1,7 +1,7 @@
 app:
   name: go-maxms
   version: 0.1
-  domain: abc.com
+  domain: liuzhaomax.cn
   enabled:
     rsa: false # rsa和vault有关联关系
     vault: true
