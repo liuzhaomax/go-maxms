@@ -257,7 +257,7 @@ def genSonarProjectKey() {
         pk += "_" + strArr[i]
     }
     pk = pk.replaceAll("%2F", "_")
-    return pk
+    return pk.toLowerCase()
 }
 
 // 获取github tags
