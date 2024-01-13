@@ -38,7 +38,7 @@ lib:
     port: 6379
 
 server:
-  host: 172.16.96.97
+  host: 106.15.185.10
   port: 9200
   base_url: /
   read_timeout: 5 # seconds
