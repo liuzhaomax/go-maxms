@@ -22,6 +22,7 @@ pipeline {
         harborRepo = "go-maxms"
         Container_port = "9200"
         Host_port = "9200"
+        JobName = "go-maxms/main"
     }
     // 流水线阶段
     stages {
@@ -175,6 +176,9 @@ pipeline {
         }
         // 推送镜像到Harbor
         stage("Harbor") {
+            when {
+                expression { return JOB_NAME == JobName }
+            }
             steps {
                 echo "--------------------- Push to Harbor Start ---------------------"
                 timeout(time: 10, unit: "MINUTES"){
@@ -189,6 +193,9 @@ pipeline {
         }
         // 部署容器
         stage("Deploy") {
+            when {
+                expression { return JOB_NAME == JobName }
+            }
             steps {
                 echo "--------------------- Deploy Start ---------------------"
                 script {
