@@ -163,6 +163,9 @@ pipeline {
 //         }
         // 构建镜像
         stage("Build Image") {
+            when {
+                expression { return JOB_NAME == JobName }
+            }
             steps {
                 echo "--------------------- Build Image Start ---------------------"
                 echo "ENV: ${ENV}"
