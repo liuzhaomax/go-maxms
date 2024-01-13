@@ -58,7 +58,7 @@ github.com/lithammer/shortuuid
 github.com/redis/go-redis/v9
 
 ## TODO
-1. 防抖与节流
+1. 防抖与节流(完成-redis签名方式)
 2. etcd注册中心，服务注册与服务发现，心跳检查
 3. etcd配置中心
 4. Prometheus，grafana，jaeger，dtm，日志组件，消息队列，OCP4，熔断限流降级
