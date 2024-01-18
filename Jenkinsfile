@@ -105,7 +105,7 @@ pipeline {
             steps {
                 echo "--------------------- Lint Start ---------------------"
                 script {
-                    timeout(time: 15, unit: "MINUTES") {
+                    timeout(time: 5, unit: "MINUTES") {
                         goHome = tool "go"
                         sh """
                             export GO_HOME=${goHome}
@@ -122,7 +122,7 @@ pipeline {
             steps {
                 echo "--------------------- Build Start ---------------------"
                 script {
-                    timeout(time: 15, unit: "MINUTES"){
+                    timeout(time: 5, unit: "MINUTES"){
                         goHome = tool "go" //变量名go在jenkins全局工具里定义的
                         sh """
                             export GO_HOME=${goHome}
@@ -140,7 +140,7 @@ pipeline {
             steps {
                 echo "--------------------- SonarQube Start ---------------------"
                 script {
-                    timeout(time: 20, unit: "MINUTES"){
+                    timeout(time: 5, unit: "MINUTES"){
                         ProjectKey = genSonarProjectKey()
                         echo "SonarQube Project Key: ${ProjectKey}"
                         sonarScannerHome = tool "sonar-scanner"
@@ -169,7 +169,7 @@ pipeline {
             steps {
                 echo "--------------------- Build Image Start ---------------------"
                 echo "ENV: ${ENV}"
-                timeout(time: 10, unit: "MINUTES"){
+                timeout(time: 5, unit: "MINUTES"){
                     sh """
                         docker build -t ${ProjectKey}:${TAG} .
                     """
@@ -184,7 +184,7 @@ pipeline {
             }
             steps {
                 echo "--------------------- Push to Harbor Start ---------------------"
-                timeout(time: 10, unit: "MINUTES"){
+                timeout(time: 5, unit: "MINUTES"){
                     sh """
                         docker login -u ${harborUsername} -p ${harborPassword} ${harborAddress}
                         docker tag ${ProjectKey}:${TAG} ${harborAddress}/${harborRepo}/${ProjectKey}:${TAG}
@@ -202,7 +202,7 @@ pipeline {
             steps {
                 echo "--------------------- Deploy Start ---------------------"
                 script {
-                    timeout(time: 10, unit: "MINUTES") {
+                    timeout(time: 2, unit: "MINUTES") {
                         sh "chmod +x ./deploy.sh"
                         sh "./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port"
                     }
