@@ -203,8 +203,11 @@ pipeline {
                 echo "--------------------- Deploy Start ---------------------"
                 script {
                     timeout(time: 2, unit: "MINUTES") {
-                        sh "chmod +x ./deploy.sh"
-                        sh "./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port"
+                        sh """
+                            export ENV=$ENV
+                            chmod +x ./deploy.sh
+                            ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port
+                        """
                     }
                 }
                 echo "--------------------- Deploy End ---------------------"
