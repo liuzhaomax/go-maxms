@@ -6,6 +6,7 @@ project=$3
 version=$4
 container_port=$5
 host_port=$6
+environment=&7
 
 # 确保没有container在运行
 containerID=$(docker ps -a | grep "${project}" | awk '{print $1}')
@@ -42,6 +43,7 @@ docker run \
   --restart=always \
   --privileged=true \
   -p "${host_port}:${container_port}" \
+  -e ENV="${environment}" \
   -v /root/www:/usr/src/app/www \
   -v /root/logs/"${project}":/usr/src/app/logs \
   "$imageName"

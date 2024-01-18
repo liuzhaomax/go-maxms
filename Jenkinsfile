@@ -127,7 +127,6 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            export ENV=$ENV
                             ${goHome}/bin/go build -o bin/main main/main.go
                         """
                     }
@@ -168,7 +167,6 @@ pipeline {
             }
             steps {
                 echo "--------------------- Build Image Start ---------------------"
-                echo "ENV: ${ENV}"
                 timeout(time: 5, unit: "MINUTES"){
                     sh """
                         docker build -t ${ProjectKey}:${TAG} .
@@ -203,9 +201,10 @@ pipeline {
                 echo "--------------------- Deploy Start ---------------------"
                 script {
                     timeout(time: 2, unit: "MINUTES") {
+                        echo "ENV: ${ENV}"
                         sh """
                             chmod +x ./deploy.sh
-                            ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port
+                            ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV
                         """
                     }
                 }
