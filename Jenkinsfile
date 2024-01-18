@@ -127,7 +127,7 @@ pipeline {
                         sh """
                             export GO_HOME=${goHome}
                             export PATH=\$GO_HOME/bin:\$PATH
-                            export ENV=dev
+                            export ENV=$ENV
                             ${goHome}/bin/go build -o bin/main main/main.go
                         """
                     }
