@@ -6,7 +6,7 @@ project=$3
 version=$4
 container_port=$5
 host_port=$6
-environment=&7
+environment=$7
 
 # 确保没有container在运行
 containerID=$(docker ps -a | grep "${project}" | awk '{print $1}')
