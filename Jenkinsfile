@@ -30,7 +30,7 @@ pipeline {
         stage("Checkout") {
             steps {
                 echo "--------------------- Checkout Start ---------------------"
-                timeout(time: 2, unit: "MINUTES"){
+                timeout(time: 1, unit: "MINUTES"){
                     checkout([$class: "GitSCM", branches: [[name: "**"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
                 }
                 echo "--------------------- Checkout End ---------------------"
@@ -41,7 +41,7 @@ pipeline {
 //             steps {
 //                 echo "--------------------- Update GitHub Start ---------------------"
 //                 script {
-//                     timeout(time: 20, unit: "MINUTES"){
+//                     timeout(time: 5, unit: "MINUTES"){
 //                         sh """
 //                             git config --get remote.origin.url
 //                             tr -d
