@@ -18,7 +18,7 @@ lib:
     color: true
     file_name: app.log
   vault:
-    address: https://172.16.96.97:8200
+    address: https://vault.liuzhaomax.cn
   gin:
     run_mode: debug # debug test release
   db:
