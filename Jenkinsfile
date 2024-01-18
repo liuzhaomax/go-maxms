@@ -204,7 +204,6 @@ pipeline {
                 script {
                     timeout(time: 2, unit: "MINUTES") {
                         sh """
-                            export ENV=$ENV
                             chmod +x ./deploy.sh
                             ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port
                         """
