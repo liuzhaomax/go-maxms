@@ -31,10 +31,6 @@ pipeline {
             steps {
                 echo "--------------------- Checkout Start ---------------------"
                 timeout(time: 15, unit: "MINUTES"){
-                    sh """
-                        git config --global url."https://hub.fastgit.org".insteadOf https://github.com
-                        git config --global --list
-                    """
                     checkout([$class: "GitSCM", branches: [[name: "**"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
                 }
                 echo "--------------------- Checkout End ---------------------"
