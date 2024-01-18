@@ -32,10 +32,7 @@ pipeline {
                 echo "--------------------- Checkout Start ---------------------"
                 timeout(time: 15, unit: "MINUTES"){
                     sh """
-                        export http_proxy=http://127.0.0.1:33210/
-                        export https_proxy=https://127.0.0.1:33210/
-                        git config --global http.proxy http://127.0.0.1:33210/
-                        git config --global https.proxy https://127.0.0.1:33210/
+                        git config --global url.https://github.com/.insteadOf https://hub.fastgit.org/
                     """
                     checkout([$class: "GitSCM", branches: [[name: "**"]], extensions: [], userRemoteConfigs: [[url: "https://github.com/liuzhaomax/go-maxms.git"]]])
                 }
