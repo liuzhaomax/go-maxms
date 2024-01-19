@@ -8,7 +8,7 @@ pipeline {
         timestamps() //日志会有时间
         skipDefaultCheckout() //删除隐式checkout scm语句
         disableConcurrentBuilds() //禁止并行
-        timeout(time: 1, unit: "HOURS") //流水线超市设置1h
+        timeout(time: 1, unit: "HOURS") //流水线超时设置1h
         buildDiscarder(logRotator(numToKeepStr: "20")) //保留build数量
     }
     // 声明全局变量

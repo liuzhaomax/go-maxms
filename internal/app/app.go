@@ -64,7 +64,7 @@ func InitServer(ctx context.Context, handler http.Handler) func() {
 		defer cancel()
 		server.SetKeepAlivesEnabled(false)
 		if err := server.Shutdown(_ctx); err != nil {
-			cfg.App.Logger.WithContext(_ctx).WithField(core.FAILURE, core.GetFuncName()).Error(core.FormatError(1, "服务关闭异常", err))
+			cfg.App.Logger.WithContext(_ctx).WithField(core.FAILURE, core.GetFuncName()).Error(core.FormatError(core.Unknown, "服务关闭异常", err))
 		}
 		cfg.App.Logger.Info(core.FormatInfo("服务关闭成功"))
 	}
