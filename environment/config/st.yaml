@@ -36,6 +36,20 @@ lib:
   redis:
     host: 172.16.96.97
     port: 6379
+  etcd:
+    dial_timeout: 5
+    dial_keep_alive_time: 5
+    dial_keep_alive_timeout: 5
+    endpoints:
+      -
+        host: 172.16.96.97
+        port: 2379
+      -
+        host: 172.16.96.97
+        port: 12379
+      -
+        host: 172.16.96.97
+        port: 22379
 
 server:
   host: 0.0.0.0

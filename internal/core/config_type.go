@@ -60,6 +60,19 @@ type Lib struct {
 	Gin
 	DB
 	Redis
+	ETCD
+}
+
+type ETCD struct {
+	DialTimeout          int `mapstructure:"dial_timeout"`
+	DialKeepAliveTime    int `mapstructure:"dial_keep_alive_time"`
+	DialKeepAliveTimeout int `mapstructure:"dial_keep_alive_timeout"`
+	Endpoints            []Endpoints
+}
+
+type Endpoints struct {
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }
 
 type Log struct {
