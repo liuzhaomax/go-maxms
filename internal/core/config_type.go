@@ -61,16 +61,21 @@ type Lib struct {
 	DB
 	Redis
 	ETCD
+	Consul
+}
+
+type Consul struct {
+	Endpoint
 }
 
 type ETCD struct {
 	DialTimeout          int `mapstructure:"dial_timeout"`
 	DialKeepAliveTime    int `mapstructure:"dial_keep_alive_time"`
 	DialKeepAliveTimeout int `mapstructure:"dial_keep_alive_timeout"`
-	Endpoints            []Endpoints
+	Endpoint
 }
 
-type Endpoints struct {
+type Endpoint struct {
 	Host string `mapstructure:"host"`
 	Port string `mapstructure:"port"`
 }

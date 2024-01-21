@@ -40,16 +40,13 @@ lib:
     dial_timeout: 5
     dial_keep_alive_time: 5
     dial_keep_alive_timeout: 5
-    endpoints:
-      -
-        host: 172.16.96.97
-        port: 2379
-      -
-        host: 172.16.96.97
-        port: 12379
-      -
-        host: 172.16.96.97
-        port: 22379
+    endpoint:
+      host: 172.16.96.97
+      port: 2379
+  consul:
+    endpoint:
+      host: 172.16.96.97
+      port: 8500
 
 server:
   host: 0.0.0.0

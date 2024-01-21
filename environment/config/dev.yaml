@@ -40,10 +40,13 @@ lib:
     dial_timeout: 5
     dial_keep_alive_time: 5
     dial_keep_alive_timeout: 5
-    endpoints:
-      -
-        host: 127.0.0.1
-        port: 2379
+    endpoint:
+      host: 127.0.0.1
+      port: 2379
+  consul:
+    endpoint:
+      host: 127.0.0.1
+      port: 8500
 
 server:
   host: 127.0.0.1
