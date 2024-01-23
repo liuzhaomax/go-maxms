@@ -9,6 +9,7 @@ import (
 	"github.com/satori/go.uuid"
 	"google.golang.org/grpc/metadata"
 	"strings"
+	"time"
 )
 
 func TraceID() string {
@@ -80,6 +81,10 @@ func SelectFromMetadata(md metadata.MD, key string) string {
 	return EmptyString
 }
 
+// func SetMetadataForDownstream(ctx context.Context, downstreamName string, client *redis.Client) error {
+//
+// }
+
 func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redis.Client) error {
 	c.Request.Header.Set(ClientIp, c.Request.Header.Get(ClientIp))
 	c.Request.Header.Set(UserAgent, c.Request.Header.Get(UserAgent))
@@ -106,6 +111,11 @@ func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redi
 	}
 	if result == 0 {
 		return FormatError(CacheDenied, "缓存写入失败", errors.New("set已有该值"))
+	}
+	// 设置过期时间
+	err = client.Expire(context.Background(), Signature, time.Second*5).Err()
+	if err != nil {
+		return FormatError(CacheDenied, "签名过期时间设置失败", err)
 	}
 	return nil
 }

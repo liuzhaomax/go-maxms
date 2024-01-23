@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"net/http"
+	"time"
 )
 
 func (auth *Auth) ValidateSignature() gin.HandlerFunc {
@@ -23,6 +24,12 @@ func (auth *Auth) ValidateSignature() gin.HandlerFunc {
 		}
 		if result == 0 {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "签名验证失败", errors.New("set已有该值")))
+			return
+		}
+		// 设置过期时间
+		err = auth.Redis.Expire(context.Background(), core.Signature, time.Second*5).Err()
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "签名过期时间设置失败", err))
 			return
 		}
 		auth.GenOkMsg(c, "签名已写入缓存")
