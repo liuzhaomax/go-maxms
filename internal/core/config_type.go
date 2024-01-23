@@ -115,6 +115,7 @@ type Redis struct {
 }
 
 type Server struct {
+	Protocol        string `mapstructure:"protocol"`
 	Host            string `mapstructure:"host"`
 	Port            string `mapstructure:"port"`
 	BaseUrl         string `mapstructure:"base_url"`

@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	UserService_GetUserById_FullMethodName = "/UserService/GetUserById"
+	UserService_GetUserByUserID_FullMethodName = "/UserService/GetUserByUserID"
 )
 
 // UserServiceClient is the client API for UserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
-	GetUserById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserRes, error)
+	GetUserByUserID(ctx context.Context, in *UserIDReq, opts ...grpc.CallOption) (*UserRes, error)
 }
 
 type userServiceClient struct {
@@ -37,9 +37,9 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 	return &userServiceClient{cc}
 }
 
-func (c *userServiceClient) GetUserById(ctx context.Context, in *IdReq, opts ...grpc.CallOption) (*UserRes, error) {
+func (c *userServiceClient) GetUserByUserID(ctx context.Context, in *UserIDReq, opts ...grpc.CallOption) (*UserRes, error) {
 	out := new(UserRes)
-	err := c.cc.Invoke(ctx, UserService_GetUserById_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, UserService_GetUserByUserID_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,21 +47,19 @@ func (c *userServiceClient) GetUserById(ctx context.Context, in *IdReq, opts ...
 }
 
 // UserServiceServer is the server API for UserService service.
-// All implementations must embed UnimplementedUserServiceServer
+// All implementations should embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
-	GetUserById(context.Context, *IdReq) (*UserRes, error)
-	mustEmbedUnimplementedUserServiceServer()
+	GetUserByUserID(context.Context, *UserIDReq) (*UserRes, error)
 }
 
-// UnimplementedUserServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedUserServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedUserServiceServer struct {
 }
 
-func (UnimplementedUserServiceServer) GetUserById(context.Context, *IdReq) (*UserRes, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserById not implemented")
+func (UnimplementedUserServiceServer) GetUserByUserID(context.Context, *UserIDReq) (*UserRes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByUserID not implemented")
 }
-func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
 // UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to UserServiceServer will
@@ -74,20 +72,20 @@ func RegisterUserServiceServer(s grpc.ServiceRegistrar, srv UserServiceServer) {
 	s.RegisterService(&UserService_ServiceDesc, srv)
 }
 
-func _UserService_GetUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IdReq)
+func _UserService_GetUserByUserID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIDReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserById(ctx, in)
+		return srv.(UserServiceServer).GetUserByUserID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetUserById_FullMethodName,
+		FullMethod: UserService_GetUserByUserID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserById(ctx, req.(*IdReq))
+		return srv.(UserServiceServer).GetUserByUserID(ctx, req.(*UserIDReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +98,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUserById",
-			Handler:    _UserService_GetUserById_Handler,
+			MethodName: "GetUserByUserID",
+			Handler:    _UserService_GetUserByUserID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -49,6 +49,7 @@ lib:
       port: 8500
 
 server:
+  protocol: http
   host: 127.0.0.1
   port: 9200
   base_url: /

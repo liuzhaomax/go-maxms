@@ -12,22 +12,40 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
-	"github.com/liuzhaomax/go-maxms/src/api_user/business"
+	business2 "github.com/liuzhaomax/go-maxms/src/api_user/business"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
-	"github.com/liuzhaomax/go-maxms/src/api_user/model"
+	model2 "github.com/liuzhaomax/go-maxms/src/api_user/model"
+	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/business"
+	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/model"
 )
 
 // Injectors from wire.go:
 
 func InitInjector() (*Injector, func(), error) {
+	db, cleanup, err := core.InitDB()
+	if err != nil {
+		return nil, nil, err
+	}
+	modelUser := &model.ModelUser{
+		DB: db,
+	}
+	trans := &core.Trans{
+		DB: db,
+	}
+	client, cleanup2, err := core.InitRedis()
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
+	businessUser := &business.BusinessUser{
+		Model: modelUser,
+		Tx:    trans,
+		Redis: client,
+	}
 	engine := core.InitGinEngine()
 	logger := core.InitLogrus()
 	coreLogger := &core.Logger{
 		Logger: logger,
-	}
-	client, cleanup, err := core.InitRedis()
-	if err != nil {
-		return nil, nil, err
 	}
 	authAuth := &auth.Auth{
 		Logger: coreLogger,
@@ -40,19 +58,11 @@ func InitInjector() (*Injector, func(), error) {
 		Auth:         authAuth,
 		ReverseProxy: reverseProxy,
 	}
-	db, cleanup2, err := core.InitDB()
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	modelUser := &model.ModelUser{
+	modelModelUser := &model2.ModelUser{
 		DB: db,
 	}
-	trans := &core.Trans{
-		DB: db,
-	}
-	businessUser := &business.BusinessUser{
-		Model: modelUser,
+	businessBusinessUser := &business2.BusinessUser{
+		Model: modelModelUser,
 		Tx:    trans,
 		Redis: client,
 	}
@@ -60,7 +70,7 @@ func InitInjector() (*Injector, func(), error) {
 		Logger: coreLogger,
 	}
 	handlerUser := &handler.HandlerUser{
-		Business: businessUser,
+		Business: businessBusinessUser,
 		Logger:   coreLogger,
 		IRes:     response,
 	}
@@ -69,10 +79,11 @@ func InitInjector() (*Injector, func(), error) {
 		HandlerUser: handlerUser,
 	}
 	injector := &Injector{
-		Engine:  engine,
-		Handler: apiHandler,
-		DB:      db,
-		Redis:   client,
+		RPCEngine: businessUser,
+		Engine:    engine,
+		Handler:   apiHandler,
+		DB:        db,
+		Redis:     client,
 	}
 	return injector, func() {
 		cleanup2()

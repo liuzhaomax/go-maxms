@@ -3,14 +3,15 @@ syntax="proto3";
 option go_package="/pb";
 
 service UserService {
-  rpc GetUserById(IdReq) returns (UserRes);
+  rpc GetUserByUserID(UserIDReq) returns (UserRes);
 }
 
-message IdReq {
-  uint32 id=1;
+message UserIDReq {
+  string userID=1;
 }
 
 message UserRes {
   int32 id=1;
-  string mobile=2;
+  string userID=2;
+  string mobile=3;
 }
