@@ -8,6 +8,7 @@ import (
 func MapUser2UserRes(user *model.User) *pb.UserRes {
 	return &pb.UserRes{
 		Id:     int32(user.ID),
+		UserID: user.UserID,
 		Mobile: user.Mobile,
 	}
 }
