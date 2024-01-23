@@ -26,6 +26,8 @@ const (
 	Bearer      = "Bearer "
 	UserID      = "userID"
 	// headers params
+	Method        = "Method"
+	URI           = "URI"
 	ClientIp      = "Client_ip"
 	UserAgent     = "User-Agent"
 	TraceId       = "Trace_id"

@@ -7,6 +7,7 @@ import (
 	"github.com/lithammer/shortuuid"
 	"github.com/redis/go-redis/v9"
 	"github.com/satori/go.uuid"
+	"google.golang.org/grpc/metadata"
 	"strings"
 )
 
@@ -57,6 +58,26 @@ func ValidateHeaders(c *gin.Context) error {
 		return errors.New("缺失接口签名信息")
 	}
 	return nil
+}
+
+func ValidateMetadata(md metadata.MD) error {
+	if SelectFromMetadata(md, TraceId) == EmptyString ||
+		SelectFromMetadata(md, SpanId) == EmptyString {
+		return errors.New("缺失链路信息")
+	}
+	if SelectFromMetadata(md, AppId) == EmptyString {
+		return errors.New("缺失接口签名信息")
+	}
+	return nil
+}
+
+func SelectFromMetadata(md metadata.MD, key string) string {
+	for k, v := range md {
+		if strings.ToLower(k) == strings.ToLower(key) {
+			return v[0]
+		}
+	}
+	return EmptyString
 }
 
 func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redis.Client) error {

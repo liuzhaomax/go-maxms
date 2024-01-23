@@ -58,6 +58,7 @@ github.com/lithammer/shortuuid
 github.com/redis/go-redis/v9
 go.etcd.io/etcd/client/v3
 github.com/hashicorp/consul/api
+google.golang.org/grpc/metadata
 
 ## TODO
 1. 防抖与节流(完成-redis签名方式)

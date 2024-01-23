@@ -78,7 +78,10 @@ func InitRpcServer(ctx context.Context, business *businessRpc.BusinessUser) func
 	cfg := core.GetConfig()
 	cfg.App.Logger.Info(core.FormatInfo("服务启动开始"))
 	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
-	server := grpc.NewServer()
+	server := grpc.NewServer(
+		// 注册RPC中间件
+		grpc.UnaryInterceptor(core.LoggerForRPC),
+	)
 	pb.RegisterUserServiceServer(server, business)
 	go func() {
 		listen, err := net.Listen("tcp", addr)

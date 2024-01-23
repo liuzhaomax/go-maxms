@@ -1,10 +1,13 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/snowzach/rotatefilehook"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"net/http"
 	"os"
 	"runtime"
@@ -115,7 +118,8 @@ func selectLogLevel() logrus.Level {
 	}
 }
 
-func LoggerToFile() gin.HandlerFunc {
+// HTTP 日志中间件
+func LoggerForHTTP() gin.HandlerFunc {
 	logger := cfg.App.Logger
 	return func(c *gin.Context) {
 		clientIP := GetClientIP(c)
@@ -195,3 +199,38 @@ func LoggerToFile() gin.HandlerFunc {
 //    UpstreamID string        `json:"upstream_id"`
 //    AppID      string        `json:"app_id"`
 // }
+
+// RPC 日志中间件
+func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	logger := cfg.App.Logger
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		LogFailure(NotFound, "缺少metadata", nil)
+	}
+	LoggerFormat := logrus.Fields{
+		"method":     SelectFromMetadata(md, Method),
+		"uri":        SelectFromMetadata(md, URI),
+		"client_ip":  SelectFromMetadata(md, ClientIp),
+		"user_agent": SelectFromMetadata(md, UserAgent),
+		"token":      SelectFromMetadata(md, Authorization),
+		"trace_id":   SelectFromMetadata(md, TraceId),
+		"span_id":    SelectFromMetadata(md, SpanId),
+		"parent_id":  SelectFromMetadata(md, ParentId),
+		"app_id":     SelectFromMetadata(md, AppId),
+	}
+	logger.WithFields(LoggerFormat).Info("请求开始")
+	err := ValidateMetadata(md)
+	if err != nil {
+		LogFailure(MissingParameters, "请求头错误", err)
+		return nil, err
+	}
+	startTime := time.Now()
+	res, err := handler(ctx, req)
+	endTime := time.Now()
+	took := endTime.Sub(startTime)
+	// json标准写法
+	logger.WithFields(LoggerFormat).WithFields(logrus.Fields{
+		"took": took,
+	}).Info("请求结束")
+	return res, err
+}
