@@ -10,8 +10,18 @@ message UserIDReq {
   string userID=1;
 }
 
-message UserRes {
+message Status {
+  int32 code = 1;
+  string desc = 2;
+}
+
+message UserResData {
   int32 id=1;
   string userID=2;
   string mobile=3;
+}
+
+message UserRes {
+  Status status = 1;
+  UserResData data = 2;
 }

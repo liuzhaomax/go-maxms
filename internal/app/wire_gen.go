@@ -37,16 +37,20 @@ func InitInjector() (*Injector, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	businessUser := &business.BusinessUser{
-		Model: modelUser,
-		Tx:    trans,
-		Redis: client,
-	}
-	engine := core.InitGinEngine()
 	logger := core.InitLogrus()
 	coreLogger := &core.Logger{
 		Logger: logger,
 	}
+	response := &core.Response{
+		Logger: coreLogger,
+	}
+	businessUser := &business.BusinessUser{
+		Model: modelUser,
+		Tx:    trans,
+		Redis: client,
+		IRes:  response,
+	}
+	engine := core.InitGinEngine()
 	authAuth := &auth.Auth{
 		Logger: coreLogger,
 		Redis:  client,
@@ -65,9 +69,6 @@ func InitInjector() (*Injector, func(), error) {
 		Model: modelModelUser,
 		Tx:    trans,
 		Redis: client,
-	}
-	response := &core.Response{
-		Logger: coreLogger,
 	}
 	handlerUser := &handler.HandlerUser{
 		Business: businessBusinessUser,

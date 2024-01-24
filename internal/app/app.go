@@ -134,6 +134,7 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 		"pid":      os.Getpid(),
 		"host":     cfg.Server.Host,
 		"port":     cfg.Server.Port,
+		"protocol": cfg.Server.Protocol,
 	}).Info(core.FormatInfo("服务启动成功"))
 	return func() {
 		cleanServer()
