@@ -124,9 +124,9 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 		// init server
 		cleanServer = InitHttpServer(ctx, injector.Engine)
 	case "rpc":
-		cleanServer = InitRpcServer(ctx, injector.RPCEngine)
+		cleanServer = InitRpcServer(ctx, injector.RPCService)
 	default:
-		cleanServer = InitRpcServer(ctx, injector.RPCEngine)
+		cleanServer = InitRpcServer(ctx, injector.RPCService)
 	}
 	cfg.App.Logger.WithFields(logrus.Fields{
 		"app_name": cfg.App.Name,

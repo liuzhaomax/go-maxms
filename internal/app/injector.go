@@ -12,9 +12,9 @@ import (
 var InjectorSet = wire.NewSet(wire.Struct(new(Injector), "*"))
 
 type Injector struct {
-	RPCEngine *businessRpc.BusinessUser
-	Engine    *gin.Engine
-	Handler   *api.Handler
-	DB        *gorm.DB
-	Redis     *redis.Client
+	RPCService *businessRpc.BusinessUser
+	Engine     *gin.Engine
+	Handler    *api.Handler
+	DB         *gorm.DB
+	Redis      *redis.Client
 }
