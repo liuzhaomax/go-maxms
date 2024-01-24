@@ -26,7 +26,7 @@ func ServiceRegister() error {
 		// GRPC: serverAddr,
 		HTTP:                           serverAddr,
 		Timeout:                        "3s",
-		Interval:                       "1m",
+		Interval:                       "30s",
 		DeregisterCriticalServiceAfter: "5s",
 	}
 	agentServiceRegistration.Check = &check
