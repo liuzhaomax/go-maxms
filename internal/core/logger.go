@@ -213,7 +213,6 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 		"app_id":     SelectFromMetadata(md, AppId),
 	}
 	logger.WithFields(LoggerFormat).Info("请求开始")
-	// TODO 封装为中间件
 	err := ValidateMetadata(md)
 	if err != nil {
 		LogFailure(MissingParameters, "请求头错误", err)

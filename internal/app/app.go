@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/liuzhaomax/go-maxms/internal/core"
-	businessRpc "github.com/liuzhaomax/go-maxms/src/api_user_rpc/business"
 	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/pb"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -80,7 +79,7 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 	}
 }
 
-func InitRpcServer(ctx context.Context, business *businessRpc.BusinessUser) func() {
+func InitRpcServer(ctx context.Context, injector *Injector) func() {
 	cfg := core.GetConfig()
 	cfg.App.Logger.Info(core.FormatInfo("服务启动开始"))
 	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
@@ -88,7 +87,7 @@ func InitRpcServer(ctx context.Context, business *businessRpc.BusinessUser) func
 		// 注册RPC中间件
 		grpc.UnaryInterceptor(core.LoggerForRPC),
 	)
-	pb.RegisterUserServiceServer(server, business)
+	pb.RegisterUserServiceServer(server, injector.RPCService)
 	go func() {
 		listen, err := net.Listen("tcp", addr)
 		if err != nil {
@@ -130,9 +129,9 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 		// init server
 		cleanServer = InitHttpServer(ctx, injector.Engine)
 	case "rpc":
-		cleanServer = InitRpcServer(ctx, injector.RPCService)
+		cleanServer = InitRpcServer(ctx, injector)
 	default:
-		cleanServer = InitRpcServer(ctx, injector.RPCService)
+		cleanServer = InitRpcServer(ctx, injector)
 	}
 	cfg.App.Logger.WithFields(logrus.Fields{
 		"app_name": cfg.App.Name,

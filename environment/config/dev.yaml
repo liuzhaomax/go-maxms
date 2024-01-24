@@ -49,7 +49,7 @@ lib:
       port: 8500
 
 server:
-  protocol: http
+  protocol: rpc
   host: 172.26.160.1
   port: 9200
   base_url: /
