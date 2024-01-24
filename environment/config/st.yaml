@@ -44,6 +44,9 @@ lib:
       host: 172.16.96.97
       port: 2379
   consul:
+    timeout: 3s
+    interval: 30s
+    deregister_after: 5s
     endpoint:
       host: 172.16.96.97
       port: 8500

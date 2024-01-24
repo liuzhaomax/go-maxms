@@ -25,9 +25,9 @@ func ServiceRegister() error {
 	check := api.AgentServiceCheck{
 		// GRPC: serverAddr,
 		HTTP:                           serverAddr,
-		Timeout:                        "3s",
-		Interval:                       "30s",
-		DeregisterCriticalServiceAfter: "5s",
+		Timeout:                        cfg.Lib.Consul.Timeout,
+		Interval:                       cfg.Lib.Consul.Interval,
+		DeregisterCriticalServiceAfter: cfg.Lib.Consul.DeregisterAfter,
 	}
 	agentServiceRegistration.Check = &check
 	return client.Agent().ServiceRegister(agentServiceRegistration)
