@@ -49,8 +49,8 @@ lib:
       port: 8500
 
 server:
-  protocol: rpc
-  host: 127.0.0.1
+  protocol: http
+  host: 172.26.160.1
   port: 9200
   base_url: /
   read_timeout: 5 # seconds

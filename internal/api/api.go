@@ -24,6 +24,8 @@ type Handler struct {
 func (h *Handler) Register(app *gin.Engine) {
 	app.NoRoute(h.GetNoRoute)
 	app.Use(cors.Cors())
+	app.GET("/health", h.HealthHandler)
+	app.Use(h.Middleware.Validator.ValidateHeaders())
 	app.Use(h.Middleware.Auth.ValidateSignature())
 	router.Register(app, h.HandlerUser, h.Middleware)
 }
@@ -34,4 +36,8 @@ func (h *Handler) RegisterStaticFS(app *gin.Engine, path string) {
 
 func (h *Handler) GetNoRoute(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
+}
+
+func (h *Handler) HealthHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"health": "ok"})
 }

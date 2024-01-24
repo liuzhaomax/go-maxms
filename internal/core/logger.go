@@ -8,7 +8,6 @@ import (
 	"github.com/snowzach/rotatefilehook"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	"net/http"
 	"os"
 	"runtime"
 	"time"
@@ -139,11 +138,6 @@ func LoggerForHTTP() gin.HandlerFunc {
 		c.Set(TraceId, c.Request.Header.Get(TraceId))
 		// Incoming日志是来的什么就是什么，只有traceID应一致
 		logger.WithFields(LoggerFormat).Info("请求开始")
-		err := ValidateHeaders(c)
-		if err != nil {
-			LogFailure(MissingParameters, "请求头错误", err)
-			c.AbortWithStatusJSON(http.StatusBadRequest, FormatError(MissingParameters, "请求头错误", err))
-		}
 		startTime := time.Now()
 		c.Next()
 		endTime := time.Now()
@@ -219,6 +213,7 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 		"app_id":     SelectFromMetadata(md, AppId),
 	}
 	logger.WithFields(LoggerFormat).Info("请求开始")
+	// TODO 封装为中间件
 	err := ValidateMetadata(md)
 	if err != nil {
 		LogFailure(MissingParameters, "请求头错误", err)
