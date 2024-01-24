@@ -17,7 +17,7 @@ func ServiceRegister() error {
 	agentServiceRegistration := new(api.AgentServiceRegistration)
 	agentServiceRegistration.Address = defaultConfig.Address
 	agentServiceRegistration.Name = cfg.App.Name
-	agentServiceRegistration.ID = cfg.App.Name
+	agentServiceRegistration.ID = ShortUUID()
 	intPort, _ := strconv.Atoi(cfg.Server.Port)
 	agentServiceRegistration.Port = intPort
 	agentServiceRegistration.Tags = []string{cfg.App.Name, cfg.Server.Protocol}

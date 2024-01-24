@@ -2,11 +2,13 @@ package core
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strconv"
 	"strings"
 )
 
@@ -57,4 +59,18 @@ func GetProjectPath() string {
 	indexWithoutFileName := strings.LastIndex(path, string(os.PathSeparator))
 	indexWithoutLastPath := strings.LastIndex(path[:indexWithoutFileName], string(os.PathSeparator))
 	return strings.ReplaceAll(path[:indexWithoutLastPath], "\\", "/")
+}
+
+func GetRandomIdlePort() string {
+	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+	if err != nil {
+		panic(err)
+	}
+	listener, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		panic(err)
+	}
+	defer listener.Close()
+	port := listener.Addr().(*net.TCPAddr).Port
+	return strconv.Itoa(port)
 }
