@@ -80,11 +80,11 @@ func InitInjector() (*Injector, func(), error) {
 		HandlerUser: handlerUser,
 	}
 	injector := &Injector{
-		RPCEngine: businessUser,
-		Engine:    engine,
-		Handler:   apiHandler,
-		DB:        db,
-		Redis:     client,
+		RPCService: businessUser,
+		Engine:     engine,
+		Handler:    apiHandler,
+		DB:         db,
+		Redis:      client,
 	}
 	return injector, func() {
 		cleanup2()

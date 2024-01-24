@@ -74,7 +74,7 @@ func ValidateMetadata(md metadata.MD) error {
 
 func SelectFromMetadata(md metadata.MD, key string) string {
 	for k, v := range md {
-		if strings.ToLower(k) == strings.ToLower(key) {
+		if strings.EqualFold(k, key) {
 			return v[0]
 		}
 	}
