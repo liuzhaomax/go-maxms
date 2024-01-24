@@ -40,7 +40,7 @@ func InitConfig(opts *options) func() {
 	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
 	cfg.App.Logger.Info(core.FormatInfo("系统启动"))
 	// register service
-	err := core.ServiceRegister()
+	err := cfg.Lib.Consul.ServiceRegister()
 	if err != nil {
 		cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务注册失败", err))
 	}

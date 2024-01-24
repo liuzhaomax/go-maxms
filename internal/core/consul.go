@@ -7,7 +7,7 @@ import (
 )
 
 // ServiceRegister 服务注册
-func ServiceRegister() error {
+func (c *Consul) ServiceRegister() error {
 	defaultConfig := api.DefaultConfig()
 	defaultConfig.Address = fmt.Sprintf("%s:%s", cfg.Lib.Consul.Endpoint.Host, cfg.Lib.Consul.Endpoint.Port)
 	client, err := api.NewClient(defaultConfig)
