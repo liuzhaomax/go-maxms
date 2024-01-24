@@ -36,7 +36,7 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 		panic(err)
 	}
 	// 获取随机空闲端口，并赋值，用于负载均衡
-	cfg.Server.Port = GetRandomIdlePort()
+	// cfg.Server.Port = GetRandomIdlePort()
 	// 配置日志
 	cleanLogger := InitLogger()
 	// 配置Vault
