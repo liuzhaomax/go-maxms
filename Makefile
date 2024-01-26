@@ -7,9 +7,6 @@ TEST_INCLUSION=$(shell go list ./... | grep -Ewv 'main|test|internal|src/router|
 API_ENV=local
 SCENARIO=all
 
-# 安装依赖
-tidy:
-	go mod tidy
 
 # 读取contract
 spec:
@@ -30,6 +27,7 @@ run:
 # 语法检查
 # vendor确保lint不会启用下载，不然在ci过程中会timeout
 lint:
+	go mod tidy
 	go mod vendor
 	golangci-lint run -v -c ./.golangci.yml ./...
 
