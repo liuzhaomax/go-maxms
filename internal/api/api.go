@@ -25,6 +25,7 @@ func (h *Handler) Register(app *gin.Engine) {
 	app.NoRoute(h.GetNoRoute)
 	app.Use(cors.Cors())
 	app.GET("/health", h.HealthHandler)
+	app.Use(h.Middleware.Tracing.Trace())
 	app.Use(h.Middleware.Validator.ValidateHeaders())
 	app.Use(h.Middleware.Auth.ValidateSignature())
 	router.Register(app, h.HandlerUser, h.Middleware)

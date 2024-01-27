@@ -62,6 +62,11 @@ type Lib struct {
 	Redis
 	ETCD
 	Consul
+	Jaeger
+}
+
+type Jaeger struct {
+	Endpoint
 }
 
 type Consul struct {

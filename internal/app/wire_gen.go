@@ -12,6 +12,8 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
+	"github.com/liuzhaomax/go-maxms/internal/middleware/tracing"
+	"github.com/liuzhaomax/go-maxms/internal/middleware/validator"
 	business2 "github.com/liuzhaomax/go-maxms/src/api_user/business"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
 	model2 "github.com/liuzhaomax/go-maxms/src/api_user/model"
@@ -55,11 +57,22 @@ func InitInjector() (*Injector, func(), error) {
 		Logger: coreLogger,
 		Redis:  client,
 	}
+	validatorValidator := &validator.Validator{
+		Logger: coreLogger,
+		Redis:  client,
+	}
+	configuration := core.InitTracer()
+	tracingTracing := &tracing.Tracing{
+		Logger:       coreLogger,
+		TracerConfig: configuration,
+	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
 		Logger: coreLogger,
 	}
 	middlewareMiddleware := &middleware.Middleware{
 		Auth:         authAuth,
+		Validator:    validatorValidator,
+		Tracing:      tracingTracing,
 		ReverseProxy: reverseProxy,
 	}
 	modelModelUser := &model2.ModelUser{

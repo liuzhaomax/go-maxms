@@ -37,4 +37,7 @@ const (
 	AppId         = "App_id"
 	// redis
 	Signature = "signature"
+	// jaeger
+	Tracer = "tracer"
+	Parent = "parent"
 )

@@ -50,6 +50,10 @@ lib:
     endpoint:
       host: 127.0.0.1
       port: 8500
+  jaeger:
+    endpoint:
+      host: 127.0.0.1
+      port: 6831
 
 server:
   protocol: http
