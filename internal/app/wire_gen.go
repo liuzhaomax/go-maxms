@@ -88,9 +88,11 @@ func InitInjector() (*Injector, func(), error) {
 		Logger:   coreLogger,
 		IRes:     response,
 	}
+	registry := core.InitPrometheusRegistry()
 	apiHandler := &api.Handler{
-		Middleware:  middlewareMiddleware,
-		HandlerUser: handlerUser,
+		Middleware:         middlewareMiddleware,
+		HandlerUser:        handlerUser,
+		PrometheusRegistry: registry,
 	}
 	injector := &Injector{
 		RPCService: businessUser,

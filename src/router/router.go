@@ -6,12 +6,12 @@ import (
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
 )
 
-func Register(app *gin.Engine, handler *handler.HandlerUser, mw *middleware.Middleware) {
-	app.GET("/login", handler.GetPuk)
-	app.POST("/login", handler.PostLogin)
-	app.Use(mw.Auth.ValidateToken())
-	app.DELETE("/login", handler.DeleteLogin)
-	routerUser := app.Group("/users")
+func Register(root *gin.RouterGroup, handler *handler.HandlerUser, mw *middleware.Middleware) {
+	root.GET("/login", handler.GetPuk)
+	root.POST("/login", handler.PostLogin)
+	root.Use(mw.Auth.ValidateToken())
+	root.DELETE("/login", handler.DeleteLogin)
+	routerUser := root.Group("/users")
 	{
 		routerUser.GET("/:userID", handler.GetUserByUserID)
 	}

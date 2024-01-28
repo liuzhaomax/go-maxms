@@ -18,6 +18,7 @@ func InitInjector() (*Injector, func(), error) {
 		core.InitDB,
 		core.InitRedis,
 		core.InitTracer,
+		core.InitPrometheusRegistry,
 		api.APISet,
 		set.HandlerSet,
 		set.BusinessSet,
