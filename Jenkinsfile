@@ -57,29 +57,31 @@ pipeline {
         stage("Config Selection") {
             steps {
                 script {
-                    echo "Getting GitHub Tags..."
-                    def tags = getGitHubTags()
-                    def userInput
-                    try {
-                        timeout(time: 1, unit: "MINUTES") {
-                            userInput = input(
-                                id: "userInput",
-                                message: "Please select environment and tag:",
-                                parameters: [
-                                    [$class: "ChoiceParameterDefinition", name: "ENVIRONMENT", choices: "st\nsit\npnv\nqa\nprod", description: "Select environment"],
-                                    [$class: "ChoiceParameterDefinition", name: "TAG", choices: tags, description: "Select tag"]
-                                ]
-                            )
+                    timeout(time: 2, unit: "MINUTES"){
+                        echo "Getting GitHub Tags..."
+                        def tags = getGitHubTags()
+                        def userInput
+                        try {
+                            timeout(time: 1, unit: "MINUTES") {
+                                userInput = input(
+                                    id: "userInput",
+                                    message: "Please select environment and tag:",
+                                    parameters: [
+                                        [$class: "ChoiceParameterDefinition", name: "ENVIRONMENT", choices: "st\nsit\npnv\nqa\nprod", description: "Select environment"],
+                                        [$class: "ChoiceParameterDefinition", name: "TAG", choices: tags, description: "Select tag"]
+                                    ]
+                                )
+                            }
                         }
+                        catch (e) {
+                            echo "Using default env and tag values due to no operation in 1 min, or Exception caught: ${e}"
+                        }
+                        // 如果用户没有选择，使用默认值
+                        ENV = userInput ? userInput.ENVIRONMENT : "st"
+                        echo "Selected Environment: $ENV"
+                        TAG = userInput ? userInput.TAG : tags.first()
+                        echo "Selected Tag: $TAG"
                     }
-                    catch (e) {
-                        echo "Using default env and tag values due to no operation in 1 min, or Exception caught: ${e}"
-                    }
-                    // 如果用户没有选择，使用默认值
-                    ENV = userInput ? userInput.ENVIRONMENT : "st"
-                    echo "Selected Environment: $ENV"
-                    TAG = userInput ? userInput.TAG : tags.first()
-                    echo "Selected Tag: $TAG"
                 }
             }
         }
