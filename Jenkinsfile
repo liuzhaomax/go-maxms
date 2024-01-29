@@ -23,6 +23,7 @@ pipeline {
         Container_port = "9200"
         Host_port = "9200"
         JobName = "go-maxms/main"
+        DeploymentServerIP = "172.16.96.98"
     }
     // 流水线阶段
     stages {
@@ -204,7 +205,7 @@ pipeline {
                         echo "ENV: ${ENV}"
                         sh """
                             chmod +x ./deploy.sh
-                            ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV
+                            ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV $DeploymentServerIP
                         """
                     }
                 }
