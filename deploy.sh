@@ -21,7 +21,7 @@ fi
 
 # 确保没有同名image
 imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}')
-imageIDLocal=$(docker images | grep "${project}" | awk '{print $2}')
+imageIDLocal=$(docker images | grep "${project}" | awk '{print $3}')
 
 echo "History Image ID Remote: $imageIDRemote"
 echo "History Image ID Local: $imageIDLocal"
