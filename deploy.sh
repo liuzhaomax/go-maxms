@@ -20,7 +20,7 @@ if [ "$containerID" != "" ]; then
 fi
 
 # 确保没有同名image
-imageName="$harbor_repo/$project:$version"
+imageName="$harbor_addr/$harbor_repo/$project:$version"
 
 echo "Image Name: $imageName"
 
