@@ -10,7 +10,7 @@ environment=$7
 deployment_server_ip=$8
 
 # 确保没有container在运行
-containerID=$(docker ps -a | grep "${project}" | awk '{print $1}')
+containerID=$(docker -H tcp://$deployment_server_ip:2375 ps -a | grep "${project}" | awk '{print $1}')
 
 echo "Container ID: $containerID"
 
@@ -24,7 +24,7 @@ imageName="$harbor_addr/$harbor_repo/$project:$version"
 
 echo "Image Name: $imageName"
 
-tag=$(docker images | grep "${project}" | awk '{print $2}')
+tag=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $2}')
 
 echo "Image Tag: $tag"
 
