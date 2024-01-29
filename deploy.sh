@@ -20,10 +20,6 @@ if [ "$containerID" != "" ]; then
 fi
 
 # 确保没有同名image
-imageName="$harbor_addr/$harbor_repo/$project:$version"
-
-echo "Image Name: $imageName"
-
 imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}')
 imageIDLocal=$(docker images | grep "${project}" | awk '{print $2}')
 
@@ -37,6 +33,11 @@ fi
 if [ "$imageIDLocal" != "" ]; then
   docker rmi -f "$imageIDLocal"
 fi
+
+# 即将部署的镜像
+imageName="$harbor_addr/$harbor_repo/$project:$version"
+
+echo "Image Name: $imageName"
 
 # 远程登录harbor
 docker -H tcp://$deployment_server_ip:2375 login -u admin -p Harbor12345 "$harbor_addr"
