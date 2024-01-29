@@ -32,22 +32,12 @@ if [ "$tag" != "$version" ]; then
   docker rmi "$imageName"
 fi
 
-# 创建远程连接
-docker-machine create \
-  --driver generic \
- --generic-ip-address="${deployment_server_ip}" \
- --generic-ssh-key /var/ssh/max.pem \
- tmp_deployment_mechine
-
 # 远程登录harbor
-docker-machine ssh tmp_deployment_mechine \
-  docker login -u admin -p Harbor12345 "$harbor_addr"
+docker -H tcp://$deployment_server_ip:2375 login -u admin -p Harbor12345 "$harbor_addr"
 
-docker-machine ssh tmp_deployment_mechine \
-  docker pull "$imageName"
+docker -H tcp://$deployment_server_ip:2375 pull "$imageName"
 
-docker-machine ssh tmp_deployment_mechine \
-  docker run \
+docker -H tcp://$deployment_server_ip:2375 run \
   --name="$project" \
   -d \
   --restart=always \
@@ -57,8 +47,5 @@ docker-machine ssh tmp_deployment_mechine \
   -v /root/www:/usr/src/app/www \
   -v /root/logs/"${project}":/usr/src/app/logs \
   "$imageName"
-
-docker-machine stop tmp_deployment_mechine
-docker-machine rm tmp_deployment_mechine
 
 echo "SUCCESS: Container Created"
