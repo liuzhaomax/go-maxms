@@ -12,7 +12,7 @@ deployment_server_ip=$8
 # 确保没有container在运行
 containerID=$(docker -H tcp://$deployment_server_ip:2375 ps -a | grep "${project}" | awk '{print $1}')
 
-echo "Container ID: $containerID"
+echo "History Container ID: $containerID"
 
 if [ "$containerID" != "" ]; then
   docker -H tcp://$deployment_server_ip:2375 stop "$containerID"
@@ -27,8 +27,8 @@ echo "Image Name: $imageName"
 imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}')
 imageIDLocal=$(docker images | grep "${project}" | awk '{print $2}')
 
-echo "Image ID Remote: $imageIDRemote"
-echo "Image ID Local: $imageIDLocal"
+echo "History Image ID Remote: $imageIDRemote"
+echo "History Image ID Local: $imageIDLocal"
 
 if [ "$imageIDRemote" != "" ]; then
   docker -H tcp://$deployment_server_ip:2375 rmi "$imageIDRemote"
