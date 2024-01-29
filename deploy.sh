@@ -24,15 +24,18 @@ imageName="$harbor_addr/$harbor_repo/$project:$version"
 
 echo "Image Name: $imageName"
 
-tagRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $2}')
-tagLocal=$(docker images | grep "${project}" | awk '{print $2}')
+imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}')
+imageIDLocal=$(docker images | grep "${project}" | awk '{print $2}')
 
-echo "Image Remote Tag: $tagRemote"
-echo "Image Local Tag: $tagLocal"
+echo "Image ID Remote: $imageIDRemote"
+echo "Image ID Local: $imageIDLocal"
 
-if [ "$tagRemote" != "$version" ]; then
-  docker rmi -f "$tagLocal"
-  docker -H tcp://$deployment_server_ip:2375 rmi "$tagRemote"
+if [ "$imageIDRemote" != "" ]; then
+  docker -H tcp://$deployment_server_ip:2375 rmi "$imageIDRemote"
+fi
+
+if [ "$imageIDLocal" != "" ]; then
+  docker rmi -f "$imageIDLocal"
 fi
 
 # 远程登录harbor
