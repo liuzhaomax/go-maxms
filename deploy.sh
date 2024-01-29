@@ -15,8 +15,8 @@ containerID=$(docker ps -a | grep "${project}" | awk '{print $1}')
 echo "Container ID: $containerID"
 
 if [ "$containerID" != "" ]; then
-  docker stop "$containerID"
-  docker rm "$containerID"
+  docker -H tcp://$deployment_server_ip:2375 stop "$containerID"
+  docker -H tcp://$deployment_server_ip:2375 rm "$containerID"
 fi
 
 # 确保没有同名image
@@ -29,7 +29,7 @@ tag=$(docker images | grep "${project}" | awk '{print $2}')
 echo "Image Tag: $tag"
 
 if [ "$tag" != "$version" ]; then
-  docker rmi "$imageName"
+  docker -H tcp://$deployment_server_ip:2375 rmi "$imageName"
 fi
 
 # 远程登录harbor
