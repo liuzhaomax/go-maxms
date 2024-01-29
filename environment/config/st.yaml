@@ -9,7 +9,7 @@ app:
   white_list:
     -
       name: frontend
-      domain: http://172.16.96.97:9100
+      domain: http://172.16.96.98:9100
 
 lib:
   log:
@@ -27,14 +27,14 @@ lib:
     max_life_time: 8192
     max_open_conns: 100000
     max_idle_conns: 1000
-    host: 172.16.96.97
+    host: 172.16.96.98
     port: 3306
     name: go_maxms
     params: charset=utf8mb4&parseTime=True&loc=Local
     username: root
     password: 123456
   redis:
-    host: 172.16.96.97
+    host: 172.16.96.98
     port: 6379
   etcd:
     dial_timeout: 5
@@ -68,5 +68,5 @@ server:
 downstream:
   -
     name: go-maxms-be
-    host: 172.16.96.97
+    host: 172.16.96.98
     port: 9300
