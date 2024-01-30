@@ -20,7 +20,7 @@ if [ "$containerID" != "" ]; then
 fi
 
 # 清除同名image
-imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}')
+imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}' | head -n 1)
 
 echo "History Image ID Remote: $imageIDRemote"
 
