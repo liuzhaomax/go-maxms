@@ -19,7 +19,7 @@ if [ "$containerID" != "" ]; then
   docker -H tcp://$deployment_server_ip:2375 rm "$containerID"
 fi
 
-# 确保没有同名image
+# 清除同名image
 imageIDRemote=$(docker -H tcp://$deployment_server_ip:2375 images | grep "${project}" | awk '{print $3}')
 
 echo "History Image ID Remote: $imageIDRemote"
@@ -51,8 +51,8 @@ docker -H tcp://$deployment_server_ip:2375 run \
 
 echo "SUCCESS: Container Created"
 
-# 部署后，清楚jenkins服务器产生的image
-imageIDLocal=$(docker images | grep "${project}" | awk '{print $3}')
+# 部署后，清除jenkins服务器产生的image
+imageIDLocal=$(docker images | grep "${project}" | awk '{print $3}' | head -n 1)
 
 echo "History Image ID Local: $imageIDLocal"
 
