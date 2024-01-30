@@ -49,6 +49,8 @@ docker -H tcp://$deployment_server_ip:2375 run \
   -v /root/logs/"${project}":/usr/src/app/logs \
   "$imageName"
 
+echo "SUCCESS: Container Created"
+
 # 部署后，清楚jenkins服务器产生的image
 imageIDLocal=$(docker images | grep "${project}" | awk '{print $3}')
 
@@ -57,5 +59,3 @@ echo "History Image ID Local: $imageIDLocal"
 if [ "$imageIDLocal" != "" ]; then
   docker rmi -f "$imageIDLocal"
 fi
-
-echo "SUCCESS: Container Created"
