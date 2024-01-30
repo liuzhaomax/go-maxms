@@ -28,14 +28,6 @@ if [ "$imageIDRemote" != "" ]; then
   docker -H tcp://$deployment_server_ip:2375 rmi "$imageIDRemote"
 fi
 
-imageIDLocal=$(docker images | grep "${project}" | awk '{print $3}')
-
-echo "History Image ID Local: $imageIDLocal"
-
-if [ "$imageIDLocal" != "" ]; then
-  docker rmi -f "$imageIDLocal"
-fi
-
 # 即将部署的镜像
 imageName="$harbor_addr/$harbor_repo/$project:$version"
 
@@ -56,5 +48,14 @@ docker -H tcp://$deployment_server_ip:2375 run \
   -v /root/www:/usr/src/app/www \
   -v /root/logs/"${project}":/usr/src/app/logs \
   "$imageName"
+
+# 部署后，清楚jenkins服务器产生的image
+imageIDLocal=$(docker images | grep "${project}" | awk '{print $3}')
+
+echo "History Image ID Local: $imageIDLocal"
+
+if [ "$imageIDLocal" != "" ]; then
+  docker rmi -f "$imageIDLocal"
+fi
 
 echo "SUCCESS: Container Created"
