@@ -92,6 +92,7 @@ type Log struct {
 	Level    string `mapstructure:"level"`
 	Format   string `mapstructure:"format"`
 	Color    bool   `mapstructure:"color"`
+	FilePath string `mapstructure:"file_path"`
 	FileName string `mapstructure:"file_name"`
 }
 
