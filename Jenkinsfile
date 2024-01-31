@@ -20,8 +20,8 @@ pipeline {
         harborPassword = "Harbor12345"
         harborAddress = "172.16.96.97:9002"
         harborRepo = "go-maxms"
-        Container_port = "9200"
-        Host_port = "9200"
+        Container_port = "9999"
+        Host_port = "9999"
         JobName = "go-maxms/main"
         DeploymentServerIP = "172.16.96.98"
     }
