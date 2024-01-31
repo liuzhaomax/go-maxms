@@ -27,7 +27,7 @@ func InitLogrus() *logrus.Logger {
 // 初始化系统日志
 func InitLogger() func() {
 	log := GetConfig().Lib.Log
-	if err := os.MkdirAll(log.FilePath, 0755); err != nil {
+	if err := os.MkdirAll(log.FilePath, 0666); err != nil {
 		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志目录创建失败", err))
 	}
 	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支，日志必须保存至少180天
