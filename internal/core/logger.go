@@ -38,7 +38,7 @@ func InitLogger() func() {
 	}
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
-	logger.SetFormatter(selectFormatter("text"))
+	logger.SetFormatter(selectFormatter(log.Format))
 	// logger.SetReportCaller(true) // 输出caller
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   fileName,
