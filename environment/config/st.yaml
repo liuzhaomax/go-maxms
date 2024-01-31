@@ -16,7 +16,7 @@ lib:
     level: debug # trace << debug << info << warn << error << fatal << panic
     format: json # text
     color: true
-    file_name: app.log
+    file_name: log/app.log
   vault:
     address: https://vault.liuzhaomax.cn
   gin:
