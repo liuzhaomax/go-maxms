@@ -16,7 +16,7 @@ lib:
     level: debug # trace << debug << info << warn << error << fatal << panic
     format: text # text json
     color: true
-    file_path: log
+    file_path: ./log
     file_name: app.log
   vault:
     address: http://127.0.0.1:8200

@@ -15,7 +15,7 @@ lib:
   log:
     level: debug # trace << debug << info << warn << error << fatal << panic
     format: json # text json
-    color: true
+    color: false
     file_path: ./log
     file_name: app.log
   vault:

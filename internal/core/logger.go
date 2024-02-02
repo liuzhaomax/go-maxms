@@ -71,6 +71,9 @@ func selectFormatter(forceFormatter ...string) logrus.Formatter {
 	if len(forceFormatter) != 0 {
 		format = forceFormatter[0]
 	}
+	if forceFormatter == nil {
+		format = "json"
+	}
 	switch format {
 	case "text":
 		return &logrus.TextFormatter{
