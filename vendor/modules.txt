@@ -1,5 +1,28 @@
 # github.com/HdrHistogram/hdrhistogram-go v1.1.2
 ## explicit; go 1.14
+# github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d
+## explicit
+github.com/StackExchange/wmi
+# github.com/alibaba/sentinel-golang v1.0.4
+## explicit; go 1.13
+github.com/alibaba/sentinel-golang/api
+github.com/alibaba/sentinel-golang/core/base
+github.com/alibaba/sentinel-golang/core/circuitbreaker
+github.com/alibaba/sentinel-golang/core/config
+github.com/alibaba/sentinel-golang/core/flow
+github.com/alibaba/sentinel-golang/core/hotspot
+github.com/alibaba/sentinel-golang/core/hotspot/cache
+github.com/alibaba/sentinel-golang/core/isolation
+github.com/alibaba/sentinel-golang/core/log
+github.com/alibaba/sentinel-golang/core/log/metric
+github.com/alibaba/sentinel-golang/core/stat
+github.com/alibaba/sentinel-golang/core/stat/base
+github.com/alibaba/sentinel-golang/core/system
+github.com/alibaba/sentinel-golang/core/system_metric
+github.com/alibaba/sentinel-golang/exporter/metric
+github.com/alibaba/sentinel-golang/exporter/metric/prometheus
+github.com/alibaba/sentinel-golang/logging
+github.com/alibaba/sentinel-golang/util
 # github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 ## explicit
 github.com/anaskhan96/go-password-encoder
@@ -79,6 +102,10 @@ github.com/go-jose/go-jose/v3
 github.com/go-jose/go-jose/v3/cipher
 github.com/go-jose/go-jose/v3/json
 github.com/go-jose/go-jose/v3/jwt
+# github.com/go-ole/go-ole v1.2.4
+## explicit; go 1.12
+github.com/go-ole/go-ole
+github.com/go-ole/go-ole/oleutil
 # github.com/go-playground/locales v0.14.1
 ## explicit; go 1.17
 github.com/go-playground/locales
@@ -267,6 +294,14 @@ github.com/sagikazarmark/slog-shim
 # github.com/satori/go.uuid v1.2.0
 ## explicit
 github.com/satori/go.uuid
+# github.com/shirou/gopsutil/v3 v3.21.6
+## explicit; go 1.15
+github.com/shirou/gopsutil/v3/cpu
+github.com/shirou/gopsutil/v3/internal/common
+github.com/shirou/gopsutil/v3/load
+github.com/shirou/gopsutil/v3/mem
+github.com/shirou/gopsutil/v3/net
+github.com/shirou/gopsutil/v3/process
 # github.com/sirupsen/logrus v1.9.3
 ## explicit; go 1.13
 github.com/sirupsen/logrus
@@ -304,6 +339,12 @@ github.com/spf13/viper/internal/encoding/yaml
 # github.com/subosito/gotenv v1.6.0
 ## explicit; go 1.18
 github.com/subosito/gotenv
+# github.com/tklauser/go-sysconf v0.3.6
+## explicit; go 1.13
+github.com/tklauser/go-sysconf
+# github.com/tklauser/numcpus v0.2.2
+## explicit; go 1.11
+github.com/tklauser/numcpus
 # github.com/twitchyliquid64/golang-asm v0.15.1
 ## explicit; go 1.13
 github.com/twitchyliquid64/golang-asm/asm/arch
@@ -501,6 +542,9 @@ gopkg.in/ini.v1
 # gopkg.in/natefinch/lumberjack.v2 v2.2.1
 ## explicit; go 1.13
 gopkg.in/natefinch/lumberjack.v2
+# gopkg.in/yaml.v2 v2.4.0
+## explicit; go 1.15
+gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3

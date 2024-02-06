@@ -25,7 +25,7 @@ func (rp *ReverseProxy) Redirect(target string) gin.HandlerFunc {
 		}
 		proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
 		rp.GenOkMsg(c, fmt.Sprintf("反向代理到地址: %s", target))
-		proxy.ServeHTTP(c.Writer, c.Request)
+		Throttle(target, c, proxy)
 	}
 }
 
