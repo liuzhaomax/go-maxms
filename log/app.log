@@ -1,0 +1,591 @@
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-02T14:19:40.8762313+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-02T14:19:40.8772297+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-02T14:19:40.8972296+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-02T14:19:40.8972296+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-02T14:19:40.8982312+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-02T14:19:40.8982312+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-02T14:19:40.9712313+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-02T14:19:40.9712313+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-02T14:19:40.9712313+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-02T14:19:40.9712313+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-02T14:19:40.9972293+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-02T14:19:40.9972293+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-02T14:19:41.2529446+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-02T14:19:41.2529577+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-02T14:19:41.2556774+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-02T14:19:41.2561923+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-02T14:19:41.2610854+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-02T14:19:41.2610854+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-02T14:19:41.2632605+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":20956,"port":"9999","protocol":"http","time":"2024-02-02T14:19:41.2632605+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-02T14:19:41.2632605+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-02T14:20:24.1588696+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-02T14:20:24.1588696+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-02T14:20:24.15939+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-02T14:20:24.1594128+08:00"}
+[37mDEBUG  [0m[2024-02-02 14:20:29] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180[0m  [37m成功[0m="github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"
+[36mINFO   [0m[2024-02-02 14:20:29] OK: Vault: app/go-maxms写入成功                  
+[37mDEBUG  [0m[2024-02-02 14:20:29] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129[0m  [37m成功[0m="github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"
+[36mINFO   [0m[2024-02-02 14:20:29] OK: Vault: secret获取成功                        
+[36mINFO   [0m[2024-02-02 14:20:29] OK: 配置文件加载成功                                  [36mpath[0m=environment/config/dev.yaml
+[36mINFO   [0m[2024-02-02 14:20:29] OK: 系统启动                                     
+[36mINFO   [0m[2024-02-02 14:20:29] OK: 服务注册成功                                   
+[36mINFO   [0m[2024-02-02 14:20:29] OK: 数据库连接启动                                  
+[37mDEBUG  [0m[2024-02-02 14:20:29] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31[0m  [37m成功[0m="github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"
+[36mINFO   [0m[2024-02-02 14:20:29] OK: 数据库品种: mysql                             
+[37mDEBUG  [0m[2024-02-02 14:20:29] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25[0m  [37m成功[0m=github.com/liuzhaomax/go-maxms/internal/core.InitDB
+[36mINFO   [0m[2024-02-02 14:20:29] OK: 数据库连接成功                                  
+[37mDEBUG  [0m[2024-02-02 14:20:30] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162[0m  [37m成功[0m="github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"
+[36mINFO   [0m[2024-02-02 14:20:30] OK: Vault: salt写入成功                          
+[37mDEBUG  [0m[2024-02-02 14:20:30] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15[0m  [37m成功[0m=github.com/liuzhaomax/go-maxms/internal/core.InitRedis
+[36mINFO   [0m[2024-02-02 14:20:30] OK: Redis连接启动                                
+[37mDEBUG  [0m[2024-02-02 14:20:30] 成功: Caller: [1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21[0m  [37m成功[0m=github.com/liuzhaomax/go-maxms/internal/core.InitRedis
+[36mINFO   [0m[2024-02-02 14:20:30] OK: Redis连接成功                                
+[36mINFO   [0m[2024-02-02 14:20:30] OK: 服务启动开始                                   
+[36mINFO   [0m[2024-02-02 14:20:30] OK: 服务启动成功                                    [36mapp_name[0m=go-maxms [36mhost[0m=127.0.0.1 [36mpid[0m=3500 [36mport[0m=9999 [36mprotocol[0m=http [36mversion[0m=0.1
+[36mINFO   [0m[2024-02-02 14:20:30] Service is running at 127.0.0.1:9999         
+[36mINFO   [0m[2024-02-02 14:20:47] OK: 服务中断信号收到 [interrupt]                     
+[36mINFO   [0m[2024-02-02 14:20:47] OK: 系统停止                                     
+[36mINFO   [0m[2024-02-02 14:20:47] OK: 服务关闭开始                                   
+[36mINFO   [0m[2024-02-02 14:20:47] OK: 服务关闭成功                                   
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-02T14:25:32.6495752+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-02T14:25:32.6505759+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-02T14:25:32.6685756+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-02T14:25:32.6685756+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-02T14:25:32.6695764+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-02T14:25:32.6695764+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-02T14:25:32.7455775+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-02T14:25:32.7455775+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-02T14:25:32.7455775+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-02T14:25:32.7455775+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-02T14:25:32.7719751+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-02T14:25:32.7719751+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-02T14:25:33.0255541+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-02T14:25:33.0265519+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-02T14:25:33.030551+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-02T14:25:33.030551+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-02T14:25:33.0345512+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-02T14:25:33.0355507+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-02T14:25:33.0365508+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":9148,"port":"9999","protocol":"http","time":"2024-02-02T14:25:33.0365508+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-02T14:25:33.0365508+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-02T14:25:38.7736404+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-02T14:25:38.7736404+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-02T14:25:38.7736404+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-02T14:25:38.7741717+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:39:01.3027494+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:39:01.303277+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:39:01.3181042+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:39:01.3186349+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:39:01.3186349+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:39:01.3191641+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:39:01.3842632+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:39:01.3842632+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:39:01.3842632+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:39:01.3842632+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:39:01.4190285+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:39:01.4192004+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:39:01.6477969+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:39:01.6477969+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:39:01.6515204+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:39:01.6515204+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:39:01.6546462+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:39:01.6551674+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:39:01.6562151+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":10148,"port":"9999","protocol":"http","time":"2024-02-04T14:39:01.6567389+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-04T14:39:01.6567389+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:41:04.3212029+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:41:04.3212029+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:41:04.3217298+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:41:04.3222358+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:41:08.9960451+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:41:08.9965785+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:41:09.0132889+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:41:09.0132889+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:41:09.0138225+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:41:09.0138225+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:41:09.0806666+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:41:09.0806666+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:41:09.0811759+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:41:09.0812024+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:41:09.1135521+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:41:09.1135521+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:41:09.3423365+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:41:09.3429039+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:41:09.3734779+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:41:09.3826007+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:41:09.3876953+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:41:09.3882306+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:41:09.3903417+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":14372,"port":"9999","protocol":"http","time":"2024-02-04T14:41:09.3903417+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-04T14:41:09.3903417+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:47:25.9390324+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:47:25.9390324+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:47:25.9390324+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:47:25.9396697+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:47:29.8238704+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:47:29.8246998+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:47:29.838875+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:47:29.838875+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:47:29.8393968+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:47:29.8393968+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:47:29.8996833+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:47:29.9002104+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:47:29.9002104+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:47:29.9002104+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:47:29.9285933+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:47:29.9285933+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:47:30.1466333+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:47:30.1466333+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:47:30.1493575+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:47:30.1496248+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:47:30.152933+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:47:30.152933+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:47:30.1545405+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":3216,"port":"9999","protocol":"http","time":"2024-02-04T14:47:30.1545405+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-04T14:47:30.1545405+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:47:44.2244022+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:47:44.2244022+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:47:44.2244022+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:47:44.22494+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:47:50.2561219+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:47:50.2566432+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:47:50.2711223+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:47:50.2711223+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:47:50.272164+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:47:50.27269+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:48:06.4361824+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:48:09.3817934+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:48:09.3817934+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:48:09.3823291+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:48:09.4115999+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:48:09.4115999+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:48:09.6482492+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:48:09.648771+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:48:09.6519787+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:48:09.6519787+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:48:09.6557483+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:48:09.6557483+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:49:59.5281379+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:49:59.5292121+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:49:59.543407+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:49:59.543407+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:49:59.5439616+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:49:59.5439616+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:49:59.6057508+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:49:59.6057508+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:49:59.6057508+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:49:59.606278+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:49:59.6287918+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:49:59.6287918+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:49:59.8498941+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:49:59.8504688+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:49:59.8542194+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:49:59.8542194+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:49:59.8573831+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:49:59.8573831+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:49:59.8594759+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":20496,"port":"9999","protocol":"http","time":"2024-02-04T14:49:59.8594759+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-04T14:49:59.8594759+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:53:05.0804828+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:53:05.0804828+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:53:05.0809899+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:53:05.0812943+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:53:09.9818082+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:53:09.9823634+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:53:09.9967372+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:53:09.9972606+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:53:09.9983047+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:53:09.9983047+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:53:29.3930124+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:53:29.3935344+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:53:29.4130176+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:53:29.4130176+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:53:29.4135409+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:53:29.4135409+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:53:29.4825842+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:53:29.4830887+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:53:29.483135+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:53:29.483135+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:53:29.5072504+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:53:29.5072504+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:53:29.762349+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:53:29.7628742+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:53:29.765471+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:53:29.7659967+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:53:29.7691452+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:53:29.7691452+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:53:29.7708572+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":22048,"port":"9999","protocol":"http","time":"2024-02-04T14:53:29.7708572+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-04T14:53:29.7708572+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:54:06.7033033+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:54:06.7033033+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:54:06.7033033+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:54:06.7038258+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:54:10.6007188+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:54:10.6012469+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:54:10.6177313+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:54:10.6177313+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:54:10.6182527+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:54:10.6182527+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:54:10.6884814+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:54:10.6884814+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:54:10.6890131+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:54:10.6890131+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:54:10.7175491+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:54:10.7175491+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:54:10.9682459+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:54:10.9687693+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:54:10.9709271+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:54:10.9714433+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:54:10.9746703+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:54:10.9746703+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:54:10.9762259+08:00"}
+{"app_name":"go-maxms","host":"192.168.1.14","level":"info","msg":"OK: 服务启动成功","pid":20872,"port":"9999","protocol":"http","time":"2024-02-04T14:54:10.9762259+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 192.168.1.14:9999","time":"2024-02-04T14:54:10.9762259+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:54:44.788574+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:54:44.788574+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:54:44.788574+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:54:44.7891227+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:54:48.649558+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:54:48.6500887+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:54:48.6643402+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:54:48.6643402+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:54:48.6648666+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:54:48.6648666+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:54:48.7263558+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:54:48.7263558+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:54:48.7268816+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:54:48.7268816+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:54:48.7471532+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:54:48.7476581+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:54:48.9662498+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:54:48.9662498+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:54:48.9689207+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:54:48.9694439+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:54:48.9720695+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:54:48.9725913+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:54:48.9741552+08:00"}
+{"app_name":"go-maxms","host":"172.30.64.1","level":"info","msg":"OK: 服务启动成功","pid":22488,"port":"9999","protocol":"http","time":"2024-02-04T14:54:48.9741552+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 172.30.64.1:9999","time":"2024-02-04T14:54:48.9741552+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T14:55:01.8230906+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T14:55:01.8236631+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T14:55:01.8236631+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T14:55:01.8241905+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:180\u001b[0m\n","time":"2024-02-04T14:55:05.7634534+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-04T14:55:05.764016+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:129\u001b[0m\n","time":"2024-02-04T14:55:05.778003+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-04T14:55:05.778003+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-04T14:55:05.7785297+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-04T14:55:05.7785297+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-04T14:55:05.8418014+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-04T14:55:05.8423259+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:31\u001b[0m\n","time":"2024-02-04T14:55:05.8423259+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-04T14:55:05.8423259+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:25\u001b[0m\n","time":"2024-02-04T14:55:05.8637136+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-04T14:55:05.8637136+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:162\u001b[0m\n","time":"2024-02-04T14:55:06.0882342+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-04T14:55:06.0882342+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:15\u001b[0m\n","time":"2024-02-04T14:55:06.0912702+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-04T14:55:06.0912702+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:21\u001b[0m\n","time":"2024-02-04T14:55:06.0950035+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-04T14:55:06.0950035+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-04T14:55:06.0965745+08:00"}
+{"app_name":"go-maxms","host":"0.0.0.0","level":"info","msg":"OK: 服务启动成功","pid":1392,"port":"9999","protocol":"http","time":"2024-02-04T14:55:06.0965745+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 0.0.0.0:9999","time":"2024-02-04T14:55:06.0965745+08:00"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:55:34.3598968+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:55:34.3626376+08:00","token":"","took":194300,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:56:04.3717456+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:56:04.3722686+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:56:34.3752134+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:56:34.3757352+08:00","token":"","took":511400,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:57:04.3786684+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:57:04.3791979+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:57:34.3822789+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:57:34.3828287+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:58:04.3859759+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:58:04.3864876+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:58:34.389057+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:58:34.38958+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:59:04.393221+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:59:04.3937894+08:00","token":"","took":49800,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T14:59:34.4002103+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T14:59:34.4014669+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:00:04.4061731+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:00:04.4066934+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:00:34.4149677+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:00:34.4173014+08:00","token":"","took":55700,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:01:04.4240667+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:01:04.4246392+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:01:34.42776+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:01:34.4282865+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:02:04.4310077+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:02:04.4315291+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:02:34.4344142+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:02:34.4349374+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:03:04.4386812+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:03:04.4392221+08:00","token":"","took":30600,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:03:34.4427326+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:03:34.4432409+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:04:04.4464678+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:04:04.4469755+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:04:34.4496781+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:04:34.4501987+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:05:04.4534945+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:05:04.454025+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:05:34.4571783+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:05:34.4577011+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:06:04.4605352+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:06:04.4610597+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:06:34.463986+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:06:34.4645098+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:07:04.4682609+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:07:04.4688243+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:07:34.4717074+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:07:34.4722343+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:08:04.4753392+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:08:04.4759111+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:08:34.4793801+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:08:34.4793801+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:09:04.4868082+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:09:04.4879085+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:09:34.4939009+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:09:34.4944914+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:10:04.4974284+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:10:04.4974284+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:10:34.5070752+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:10:34.5082215+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:11:04.5116214+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:11:04.5121836+08:00","token":"","took":6200,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:11:34.5150911+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:11:34.5156672+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:12:04.5189016+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:12:04.5195103+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:12:34.5228886+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:12:34.5234047+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:13:04.5262427+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:13:04.5267687+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:13:34.5298686+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:13:34.5304077+08:00","token":"","took":32100,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:14:04.533048+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:14:04.5336064+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:14:34.5401026+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:14:34.5401026+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:15:04.5438305+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:15:04.5443786+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:15:34.5476987+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:15:34.548239+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:16:04.5517849+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:16:04.5522901+08:00","token":"","took":505200,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:16:34.5550849+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:16:34.5550849+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:17:04.5581644+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:17:04.5586826+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:17:34.5622004+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:17:34.5627448+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:18:04.5725006+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:18:04.5739086+08:00","token":"","took":129700,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:18:34.5800678+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:18:34.5800678+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:19:04.5869522+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:19:04.5874661+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:19:34.5909059+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:19:34.5914643+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:20:04.5951145+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:20:04.5956668+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:20:34.5992408+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:20:34.599796+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:21:04.602815+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:21:04.6033391+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:21:34.6060216+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:21:34.6065719+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:22:04.6095861+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:22:04.6105844+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:22:34.6143715+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:22:34.614901+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:23:04.6177597+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:23:04.6177597+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:23:34.6218409+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:23:34.6224702+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:24:04.6260761+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:24:04.6265996+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:24:34.629933+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:24:34.629933+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-04T15:25:04.6327977+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-04T15:25:04.6327977+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-04T15:25:05.7573145+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-04T15:25:05.7573145+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-04T15:25:05.7573145+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-04T15:25:05.7578374+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:184\u001b[0m\n","time":"2024-02-06T13:02:00.4886671+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-06T13:02:00.4891969+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:133\u001b[0m\n","time":"2024-02-06T13:02:00.5027683+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-06T13:02:00.5032904+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-06T13:02:00.5032904+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-06T13:02:00.5038117+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-06T13:02:00.5669656+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-06T13:02:00.5669656+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:44\u001b[0m\n","time":"2024-02-06T13:02:00.5674917+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*DB).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-06T13:02:00.5674917+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:38\u001b[0m\n","time":"2024-02-06T13:02:00.8591821+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-06T13:02:00.8591821+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:166\u001b[0m\n","time":"2024-02-06T13:02:01.0772082+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-06T13:02:01.0777232+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:19\u001b[0m\n","time":"2024-02-06T13:02:01.0827376+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-06T13:02:01.0828052+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:25\u001b[0m\n","time":"2024-02-06T13:02:01.0864884+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-06T13:02:01.0864884+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-06T13:02:01.0880475+08:00"}
+{"app_name":"go-maxms","host":"0.0.0.0","level":"info","msg":"OK: 服务启动成功","pid":20164,"port":"9999","protocol":"http","time":"2024-02-06T13:02:01.0880475+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 0.0.0.0:9999","time":"2024-02-06T13:02:01.0880475+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-06T13:02:03.1984414+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-06T13:02:03.1984414+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-06T13:02:03.1984414+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-06T13:02:03.1989653+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:184\u001b[0m\n","time":"2024-02-06T15:18:02.9742934+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-06T15:18:02.9748294+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:133\u001b[0m\n","time":"2024-02-06T15:18:02.9898905+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-06T15:18:02.9898905+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-06T15:18:02.9898905+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-06T15:18:02.9898905+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-06T15:18:03.0589283+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-06T15:18:03.0594344+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:44\u001b[0m\n","time":"2024-02-06T15:18:03.0594588+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*DB).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-06T15:18:03.0594588+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:38\u001b[0m\n","time":"2024-02-06T15:18:03.0940663+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-06T15:18:03.0946059+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:166\u001b[0m\n","time":"2024-02-06T15:18:03.3147099+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-06T15:18:03.3152471+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:19\u001b[0m\n","time":"2024-02-06T15:18:03.3179119+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-06T15:18:03.3179119+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:25\u001b[0m\n","time":"2024-02-06T15:18:03.3211787+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-06T15:18:03.32171+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-06T15:18:03.3227795+08:00"}
+{"app_name":"go-maxms","host":"0.0.0.0","level":"info","msg":"OK: 服务启动成功","pid":24512,"port":"9999","protocol":"http","time":"2024-02-06T15:18:03.3227795+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 0.0.0.0:9999","time":"2024-02-06T15:18:03.3227795+08:00"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-06T15:19:46.9486529+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-06T15:19:46.9486529+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-06T15:19:46.9486529+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-06T15:19:46.9492061+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:184\u001b[0m\n","time":"2024-02-06T15:19:51.6401543+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-06T15:19:51.6406816+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:133\u001b[0m\n","time":"2024-02-06T15:19:51.6566751+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-06T15:19:51.6572075+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-06T15:19:51.6572075+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-06T15:19:51.6577509+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-06T15:19:51.7245675+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-06T15:19:51.7245675+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:44\u001b[0m\n","time":"2024-02-06T15:19:51.7250942+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*DB).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-06T15:19:51.7250942+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:38\u001b[0m\n","time":"2024-02-06T15:19:51.7532086+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-06T15:19:51.7532086+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:166\u001b[0m\n","time":"2024-02-06T15:19:52.0074017+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-06T15:19:52.007942+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:19\u001b[0m\n","time":"2024-02-06T15:19:52.0106702+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-06T15:19:52.0106702+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:25\u001b[0m\n","time":"2024-02-06T15:19:52.0145997+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-06T15:19:52.0145997+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-06T15:19:52.0162244+08:00"}
+{"app_name":"go-maxms","host":"127.0.0.1","level":"info","msg":"OK: 服务启动成功","pid":22768,"port":"9999","protocol":"http","time":"2024-02-06T15:19:52.0162244+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 127.0.0.1:9999","time":"2024-02-06T15:19:52.0162244+08:00"}
+{"app_id":"000","client_ip":"127.0.0.1","level":"info","method":"GET","msg":"请求开始","parent_id":"789","span_id":"111","time":"2024-02-06T15:20:29.103126+08:00","token":"","trace_id":"123","uri":"/login","user_agent":"PostmanRuntime/7.36.1"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/middleware/auth/signature.go:35\u001b[0m\n","time":"2024-02-06T15:20:29.1792087+08:00","trace_id":"123"}
+{"level":"info","msg":"OK: 签名已写入缓存","time":"2024-02-06T15:20:29.1792087+08:00","trace_id":"123"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/vendor/github.com/gin-gonic/gin/context.go:174\u001b[0m\n","time":"2024-02-06T15:20:29.1797463+08:00","trace_id":"123"}
+{"level":"info","msg":"OK: OK: 签名已写入缓存","time":"2024-02-06T15:20:29.1797463+08:00","trace_id":"123"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/src/api_user/handler/h_user.go:19\u001b[0m\n","time":"2024-02-06T15:20:29.1797463+08:00","trace_id":"123"}
+{"level":"info","msg":"OK: 响应正常","time":"2024-02-06T15:20:29.1802824+08:00","trace_id":"123"}
+{"app_id":"000","client_ip":"127.0.0.1","level":"info","method":"GET","msg":"请求结束","parent_id":"789","span_id":"111","status":200,"time":"2024-02-06T15:20:29.1808281+08:00","token":"","took":77702100,"trace_id":"123","uri":"/login","user_agent":"PostmanRuntime/7.36.1"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-06T15:24:50.3163066+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-06T15:24:50.3163066+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-06T15:24:50.3163066+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-06T15:24:50.3168385+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:184\u001b[0m\n","time":"2024-02-06T15:24:54.9552647+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-06T15:24:54.9558325+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:133\u001b[0m\n","time":"2024-02-06T15:24:54.9699693+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-06T15:24:54.9699693+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-06T15:24:54.9704984+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-06T15:24:54.9704984+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-06T15:24:55.0380511+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-06T15:24:55.0380511+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:44\u001b[0m\n","time":"2024-02-06T15:24:55.0385884+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*DB).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-06T15:24:55.0385884+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:38\u001b[0m\n","time":"2024-02-06T15:24:55.068904+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-06T15:24:55.068904+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:166\u001b[0m\n","time":"2024-02-06T15:24:55.2930274+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-06T15:24:55.2930274+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:19\u001b[0m\n","time":"2024-02-06T15:24:55.2962394+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-06T15:24:55.2962394+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:25\u001b[0m\n","time":"2024-02-06T15:24:55.2995803+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-06T15:24:55.2995803+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-06T15:24:55.3011881+08:00"}
+{"app_name":"go-maxms","host":"172.30.64.1","level":"info","msg":"OK: 服务启动成功","pid":24228,"port":"9999","protocol":"http","time":"2024-02-06T15:24:55.3011881+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 172.30.64.1:9999","time":"2024-02-06T15:24:55.3011881+08:00"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-06T15:25:04.9439161+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-06T15:25:04.9444887+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-06T15:25:34.9478201+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-06T15:25:34.9483437+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-06T15:25:35.2085378+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-06T15:25:35.2085378+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-06T15:25:35.2085378+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-06T15:25:35.2090728+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:184\u001b[0m\n","time":"2024-02-06T15:25:53.9126037+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-06T15:25:53.9136807+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:133\u001b[0m\n","time":"2024-02-06T15:25:53.9298208+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-06T15:25:53.9298208+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-06T15:25:53.9303596+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-06T15:25:53.9303596+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-06T15:25:54.0013817+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-06T15:25:54.0013817+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:44\u001b[0m\n","time":"2024-02-06T15:25:54.0020895+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*DB).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-06T15:25:54.0020895+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:38\u001b[0m\n","time":"2024-02-06T15:25:54.0364489+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-06T15:25:54.0364489+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:166\u001b[0m\n","time":"2024-02-06T15:25:54.2838976+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-06T15:25:54.2844378+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:19\u001b[0m\n","time":"2024-02-06T15:25:54.2877046+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-06T15:25:54.2877046+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:25\u001b[0m\n","time":"2024-02-06T15:25:54.292207+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-06T15:25:54.292207+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-06T15:25:54.2938031+08:00"}
+{"app_name":"go-maxms","host":"172.30.64.1","level":"info","msg":"OK: 服务启动成功","pid":1704,"port":"9999","protocol":"http","time":"2024-02-06T15:25:54.2938031+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 172.30.64.1:9999","time":"2024-02-06T15:25:54.2938031+08:00"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-06T15:25:54.9003565+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-06T15:25:54.9008874+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"000","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"789","span_id":"111","time":"2024-02-06T15:26:02.4214662+08:00","token":"","trace_id":"123","uri":"/login","user_agent":"PostmanRuntime/7.36.1"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/middleware/auth/signature.go:35\u001b[0m\n","time":"2024-02-06T15:26:02.4812313+08:00","trace_id":"123"}
+{"level":"info","msg":"OK: 签名已写入缓存","time":"2024-02-06T15:26:02.4817743+08:00","trace_id":"123"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/src/api_user/handler/h_user.go:19\u001b[0m\n","time":"2024-02-06T15:26:02.4817743+08:00","trace_id":"123"}
+{"level":"info","msg":"OK: 响应正常","time":"2024-02-06T15:26:02.4817743+08:00","trace_id":"123"}
+{"app_id":"000","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"789","span_id":"111","status":200,"time":"2024-02-06T15:26:02.4828484+08:00","token":"","took":61195000,"trace_id":"123","uri":"/login","user_agent":"PostmanRuntime/7.36.1"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-06T15:26:04.5679225+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-06T15:26:04.5679225+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-06T15:26:04.5679225+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-06T15:26:04.5684546+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:184\u001b[0m\n","time":"2024-02-06T15:26:08.5264608+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutAppSecret"}
+{"level":"info","msg":"OK: Vault: app/go-maxms写入成功","time":"2024-02-06T15:26:08.5270036+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:133\u001b[0m\n","time":"2024-02-06T15:26:08.5444736+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).GetSecret"}
+{"level":"info","msg":"OK: Vault: secret获取成功","time":"2024-02-06T15:26:08.5444736+08:00"}
+{"level":"info","msg":"OK: 配置文件加载成功","path":"environment/config/dev.yaml","time":"2024-02-06T15:26:08.5450068+08:00"}
+{"level":"info","msg":"OK: 系统启动","time":"2024-02-06T15:26:08.5450068+08:00"}
+{"level":"info","msg":"OK: 服务注册成功","time":"2024-02-06T15:26:08.6128396+08:00"}
+{"level":"info","msg":"OK: 数据库连接启动","time":"2024-02-06T15:26:08.613384+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:44\u001b[0m\n","time":"2024-02-06T15:26:08.613384+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*DB).LoadDB"}
+{"level":"info","msg":"OK: 数据库品种: mysql","time":"2024-02-06T15:26:08.613384+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/db.go:38\u001b[0m\n","time":"2024-02-06T15:26:08.6455835+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitDB"}
+{"level":"info","msg":"OK: 数据库连接成功","time":"2024-02-06T15:26:08.6455835+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/vault.go:166\u001b[0m\n","time":"2024-02-06T15:26:08.8883219+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.(*Config).PutSalt"}
+{"level":"info","msg":"OK: Vault: salt写入成功","time":"2024-02-06T15:26:08.8888582+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:19\u001b[0m\n","time":"2024-02-06T15:26:08.8916648+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接启动","time":"2024-02-06T15:26:08.8916648+08:00"}
+{"level":"debug","msg":"成功: Caller: \u001b[1;34mD:/workspace/Github/go-maxms/internal/core/redis.go:25\u001b[0m\n","time":"2024-02-06T15:26:08.8948908+08:00","成功":"github.com/liuzhaomax/go-maxms/internal/core.InitRedis"}
+{"level":"info","msg":"OK: Redis连接成功","time":"2024-02-06T15:26:08.8954259+08:00"}
+{"level":"info","msg":"OK: 服务启动开始","time":"2024-02-06T15:26:08.8970273+08:00"}
+{"app_name":"go-maxms","host":"172.30.64.1","level":"info","msg":"OK: 服务启动成功","pid":24820,"port":"9999","protocol":"http","time":"2024-02-06T15:26:08.8970273+08:00","version":"0.1"}
+{"level":"info","msg":"Service is running at 172.30.64.1:9999","time":"2024-02-06T15:26:08.8970273+08:00"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求开始","parent_id":"","span_id":"","time":"2024-02-06T15:26:24.9036427+08:00","token":"","trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"app_id":"","client_ip":"172.30.64.1","level":"info","method":"GET","msg":"请求结束","parent_id":"","span_id":"","status":200,"time":"2024-02-06T15:26:24.9041712+08:00","token":"","took":0,"trace_id":"","uri":"/health","user_agent":"Consul Health Check"}
+{"level":"info","msg":"OK: 服务中断信号收到 [interrupt]","time":"2024-02-06T15:26:26.4352851+08:00"}
+{"level":"info","msg":"OK: 系统停止","time":"2024-02-06T15:26:26.4352851+08:00"}
+{"level":"info","msg":"OK: 服务关闭开始","time":"2024-02-06T15:26:26.4352851+08:00"}
+{"level":"info","msg":"OK: 服务关闭成功","time":"2024-02-06T15:26:26.4358351+08:00"}
