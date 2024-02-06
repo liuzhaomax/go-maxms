@@ -1,13 +1,13 @@
 package reverse_proxy
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"path"
 )
 
 var ReverseProxySet = wire.NewSet(wire.Struct(new(ReverseProxy), "*"))
@@ -16,16 +16,15 @@ type ReverseProxy struct {
 	Logger core.ILogger
 }
 
-func (rp *ReverseProxy) Redirect(target *url.URL) gin.HandlerFunc {
+// Redirect URL使用通配符，例如/api/*
+func (rp *ReverseProxy) Redirect(target string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		director := func(req *http.Request) {
-			req.URL.Scheme = target.Scheme
-			req.URL.Host = target.Host
-			req.URL.Path = path.Join(target.Path, "/api", c.Param("action"))
+		proxyUrl, err := url.Parse(target)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusForbidden, rp.GenErrMsg(c, "反向代理URL解析错误", err))
 		}
-		proxy := &httputil.ReverseProxy{
-			Director: director,
-		}
+		proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
+		rp.GenOkMsg(c, fmt.Sprintf("反向代理到地址: %s", target))
 		proxy.ServeHTTP(c.Writer, c.Request)
 	}
 }
