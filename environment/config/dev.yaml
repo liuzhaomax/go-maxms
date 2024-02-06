@@ -60,7 +60,7 @@ lib:
 
 server:
   protocol: http
-  host: 127.0.0.1
+  host: 172.30.64.1
   port: 9999
   base_url: /
   read_timeout: 5 # seconds
