@@ -18,6 +18,7 @@ const (
 	ParseIssue        Code = 4
 	MissingParameters Code = 400
 	Unauthorized      Code = 401
+	Forbidden         Code = 403
 	NotFound          Code = 404
 	DownstreamDown    Code = 5
 	IOException       Code = 6
@@ -43,6 +44,8 @@ func (c Code) String() string {
 		return "缺少参数"
 	case Unauthorized:
 		return "未授权"
+	case Forbidden:
+		return "请求被拒绝"
 	case NotFound:
 		return "没找到"
 	case DownstreamDown:

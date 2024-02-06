@@ -25,13 +25,13 @@ func (rp *ReverseProxy) Redirect(target string) gin.HandlerFunc {
 		}
 		proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
 		rp.GenOkMsg(c, fmt.Sprintf("反向代理到地址: %s", target))
-		Throttle(target, c, proxy)
+		// rp.Throttle(target, c, proxy)
+		proxy.ServeHTTP(c.Writer, c.Request)
 	}
 }
 
 // 使用
-// proxyUrl, _ := url.Parse("http://127.0.0.1:8080")
-// r.GET("/api/:action", ReverseProxyRedirect(proxyUrl))
+// root.GET("/login", mw.ReverseProxy.Redirect("http://172.30.64.1:9999"))
 
 func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) string {
 	rp.Logger.SucceedWithField(c, desc)
@@ -39,6 +39,6 @@ func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) string {
 }
 
 func (rp *ReverseProxy) GenErrMsg(c *gin.Context, desc string, err error) error {
-	rp.Logger.FailWithField(c, core.Unauthorized, desc, err)
-	return core.FormatError(core.Unauthorized, desc, err)
+	rp.Logger.FailWithField(c, core.Forbidden, desc, err)
+	return core.FormatError(core.Forbidden, desc, err)
 }
