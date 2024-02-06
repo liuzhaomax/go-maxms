@@ -61,6 +61,7 @@ github.com/hashicorp/consul/api
 google.golang.org/grpc/metadata
 github.com/uber/jaeger-client-go
 github.com/prometheus/client_golang/prometheus
+github.com/alibaba/sentinel-golang/api
 
 ## TODO
 1. ~~防抖与节流(完成-redis签名方式)~~，sentinel实现
