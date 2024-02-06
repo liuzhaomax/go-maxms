@@ -6,6 +6,13 @@ import (
 	"strconv"
 )
 
+type Consul struct {
+	Timeout         string `mapstructure:"timeout"`
+	Interval        string `mapstructure:"interval"`
+	DeregisterAfter string `mapstructure:"deregister_after"`
+	Endpoint
+}
+
 // ServiceRegister 服务注册
 func (c *Consul) ServiceRegister() error {
 	defaultConfig := api.DefaultConfig()

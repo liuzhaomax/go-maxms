@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+type Vault struct {
+	Address string `mapstructure:"address"`
+}
+
 // vault access
 const (
 	Username = "liuzhao"

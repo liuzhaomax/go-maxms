@@ -65,17 +65,6 @@ type Lib struct {
 	Jaeger
 }
 
-type Jaeger struct {
-	Endpoint
-}
-
-type Consul struct {
-	Timeout         string `mapstructure:"timeout"`
-	Interval        string `mapstructure:"interval"`
-	DeregisterAfter string `mapstructure:"deregister_after"`
-	Endpoint
-}
-
 type ETCD struct {
 	DialTimeout          int `mapstructure:"dial_timeout"`
 	DialKeepAliveTime    int `mapstructure:"dial_keep_alive_time"`
@@ -84,41 +73,6 @@ type ETCD struct {
 }
 
 type Endpoint struct {
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
-}
-
-type Log struct {
-	Level    string `mapstructure:"level"`
-	Format   string `mapstructure:"format"`
-	Color    bool   `mapstructure:"color"`
-	FilePath string `mapstructure:"file_path"`
-	FileName string `mapstructure:"file_name"`
-}
-
-type Vault struct {
-	Address string `mapstructure:"address"`
-}
-
-type Gin struct {
-	RunMode string `mapstructure:"run_mode"`
-}
-
-type DB struct {
-	Type         string `mapstructure:"type"`
-	Debug        bool   `mapstructure:"debug"`
-	MaxLifeTime  int    `mapstructure:"max_life_time"`
-	MaxOpenConns int    `mapstructure:"max_open_conns"`
-	MaxIdleConns int    `mapstructure:"max_idle_conns"`
-	Host         string `mapstructure:"host"`
-	Port         string `mapstructure:"port"`
-	Name         string `mapstructure:"name"`
-	Params       string `mapstructure:"params"`
-	Username     string `mapstructure:"username"`
-	Password     string `mapstructure:"password"`
-}
-
-type Redis struct {
 	Host string `mapstructure:"host"`
 	Port string `mapstructure:"port"`
 }

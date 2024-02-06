@@ -6,6 +6,10 @@ import (
 	jConfig "github.com/uber/jaeger-client-go/config"
 )
 
+type Jaeger struct {
+	Endpoint
+}
+
 func InitTracer() *jConfig.Configuration {
 	return &jConfig.Configuration{
 		Sampler: &jConfig.SamplerConfig{

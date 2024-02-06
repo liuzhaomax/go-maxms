@@ -19,6 +19,14 @@ func init() {
 	logrus.SetFormatter(selectFormatter("text"))
 }
 
+type Log struct {
+	Level    string `mapstructure:"level"`
+	Format   string `mapstructure:"format"`
+	Color    bool   `mapstructure:"color"`
+	FilePath string `mapstructure:"file_path"`
+	FileName string `mapstructure:"file_name"`
+}
+
 // 日志扩展loggerx的Provider
 func InitLogrus() *logrus.Logger {
 	return cfg.App.Logger

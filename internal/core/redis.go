@@ -11,9 +11,13 @@ const (
 	redisPassword = "123456"
 )
 
+type Redis struct {
+	Endpoint
+}
+
 func InitRedis() (*redis.Client, func(), error) {
 	LogSuccess("Redis连接启动")
-	client, clean, err := cfg.LoadRedis()
+	client, clean, err := cfg.Lib.Redis.LoadRedis()
 	if err != nil {
 		LogFailure(ConnectionFailed, "Redis连接失败", err)
 		return nil, clean, err
@@ -22,9 +26,9 @@ func InitRedis() (*redis.Client, func(), error) {
 	return client, clean, nil
 }
 
-func (cfg *Config) LoadRedis() (*redis.Client, func(), error) {
+func (r *Redis) LoadRedis() (*redis.Client, func(), error) {
 	ctx := context.Background()
-	addr := fmt.Sprintf("%s:%s", cfg.Lib.Redis.Host, cfg.Lib.Redis.Port)
+	addr := fmt.Sprintf("%s:%s", r.Endpoint.Host, r.Endpoint.Port)
 	opts := &redis.Options{
 		Network:               "",
 		Addr:                  addr,

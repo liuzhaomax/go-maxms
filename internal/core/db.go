@@ -10,9 +10,22 @@ import (
 	"time"
 )
 
+type DB struct {
+	Type         string `mapstructure:"type"`
+	Debug        bool   `mapstructure:"debug"`
+	MaxLifeTime  int    `mapstructure:"max_life_time"`
+	MaxOpenConns int    `mapstructure:"max_open_conns"`
+	MaxIdleConns int    `mapstructure:"max_idle_conns"`
+	Name         string `mapstructure:"name"`
+	Params       string `mapstructure:"params"`
+	Username     string `mapstructure:"username"`
+	Password     string `mapstructure:"password"`
+	Endpoint
+}
+
 func InitDB() (*gorm.DB, func(), error) {
 	cfg.App.Logger.Info(FormatInfo("数据库连接启动"))
-	db, clean, err := cfg.LoadDB()
+	db, clean, err := cfg.Lib.DB.LoadDB()
 	if err != nil {
 		LogFailure(ConnectionFailed, "数据库连接失败", err)
 		return nil, clean, err
@@ -27,9 +40,9 @@ func InitDB() (*gorm.DB, func(), error) {
 	return db, clean, err
 }
 
-func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
-	LogSuccess(fmt.Sprintf("数据库品种: %s", cfg.DB.Type))
-	db, err := gorm.Open(mysql.Open(cfg.DB.DSN()), &gorm.Config{
+func (d *DB) LoadDB() (*gorm.DB, func(), error) {
+	LogSuccess(fmt.Sprintf("数据库品种: %s", d.Type))
+	db, err := gorm.Open(mysql.Open(d.DSN()), &gorm.Config{
 		Logger: InitGormLogger(),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
@@ -38,7 +51,7 @@ func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	if cfg.DB.Debug {
+	if d.Debug {
 		db = db.Debug()
 	}
 	sqlDB, err := db.DB()
@@ -55,9 +68,9 @@ func (cfg *Config) LoadDB() (*gorm.DB, func(), error) {
 	if err != nil {
 		return nil, clean, err
 	}
-	sqlDB.SetMaxIdleConns(cfg.DB.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(cfg.DB.MaxOpenConns)
-	sqlDB.SetConnMaxLifetime(time.Duration(cfg.DB.MaxLifeTime) * time.Second)
+	sqlDB.SetMaxIdleConns(d.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(d.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(d.MaxLifeTime) * time.Second)
 	return db, clean, err
 }
 
@@ -73,12 +86,12 @@ func (d *DB) AutoMigrate(db *gorm.DB) error {
 	return nil
 }
 
-func (db *DB) DSN() string {
-	if db.Password == "" {
-		db.Password = "123456"
+func (d *DB) DSN() string {
+	if d.Password == "" {
+		d.Password = "123456"
 	}
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s",
-		db.Username, db.Password, db.Host, db.Port, db.Name, db.Params)
+		d.Username, d.Password, d.Endpoint.Host, d.Endpoint.Port, d.Name, d.Params)
 }
 
 func createAdmin(db *gorm.DB) {
