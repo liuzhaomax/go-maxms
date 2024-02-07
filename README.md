@@ -64,15 +64,17 @@ github.com/prometheus/client_golang/prometheus
 github.com/alibaba/sentinel-golang/api
 
 ## TODO
-1. ~~防抖与节流(完成-redis签名方式)~~，sentinel实现
-2. ~~etcd注册中心，服务注册与服务发现，心跳检查~~，consul实现
-3. ~~etcd配置中心~~，不实现
-4. ~~Prometheus，grafana，jaeger，ELK~~，dtm，消息队列，~~OCP4~~，~~熔断限流降级~~
+1. ~~防抖与节流(完成-redis签名方式)，sentinel实现~~
+2. ~~etcd注册中心，服务注册与服务发现，心跳检查，consul实现~~
+3. ~~etcd配置中心，不实现~~
+4. ~~Prometheus，grafana，jaeger，ELK，OCP4，熔断限流降级~~
 5. ~~采用第一种鉴权方式，做SWG，修改auth中间件~~
 6. consul 服务发现随机端口
-7. SGW反向代理
-8. SGW限流熔断降级
+7. ~~SGW反向代理~~
+8. SGW限流熔断降级 - 日志
 9. SGW防爬虫
+10. dtm
+11. 消息队列
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
@@ -84,3 +86,4 @@ github.com/alibaba/sentinel-golang/api
 7. redis TTL，持久化，布隆过滤器，雪崩击穿穿透
 8. redis日志收集
 9. RPC的中间件，包括token和签名
+10. sentinel golang 不支持dashboard，需要二次开发：需建立与sentinel-dashboard通信的客户端（在config.Sentinel中定义地址），监听dashboard配置变化
