@@ -23,7 +23,7 @@ type Config struct {
 	App
 	Lib
 	Server
-	Downstream []Downstream
+	Downstreams []Downstream
 }
 
 type App struct {

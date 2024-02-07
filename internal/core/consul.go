@@ -1,15 +1,16 @@
 package core
 
 import (
+	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	"strconv"
 )
 
 type Consul struct {
-	Timeout         string `mapstructure:"timeout"`
-	Interval        string `mapstructure:"interval"`
-	DeregisterAfter string `mapstructure:"deregister_after"`
+	Timeout         int `mapstructure:"timeout"`
+	Interval        int `mapstructure:"interval"`
+	DeregisterAfter int `mapstructure:"deregister_after"`
 	Endpoint
 }
 
@@ -32,10 +33,32 @@ func (c *Consul) ServiceRegister() error {
 	check := api.AgentServiceCheck{
 		// GRPC: serverAddr,
 		HTTP:                           serverAddr,
-		Timeout:                        cfg.Lib.Consul.Timeout,
-		Interval:                       cfg.Lib.Consul.Interval,
-		DeregisterCriticalServiceAfter: cfg.Lib.Consul.DeregisterAfter,
+		Timeout:                        fmt.Sprintf("%ds", cfg.Lib.Consul.Timeout),
+		Interval:                       fmt.Sprintf("%ds", cfg.Lib.Consul.Interval),
+		DeregisterCriticalServiceAfter: fmt.Sprintf("%ds", cfg.Lib.Consul.DeregisterAfter),
 	}
 	agentServiceRegistration.Check = &check
 	return client.Agent().ServiceRegister(agentServiceRegistration)
+}
+
+// ServiceDiscover 服务发现
+func (c *Consul) ServiceDiscover() error {
+	if len(cfg.Downstreams) == 0 {
+		return nil
+	}
+	defaultConfig := api.DefaultConfig()
+	client, err := api.NewClient(defaultConfig)
+	if err != nil {
+		return err
+	}
+	for _, downstream := range cfg.Downstreams {
+		services, _, err := client.Catalog().Service(downstream.Name, cfg.Server.Protocol, nil)
+		if err != nil {
+			return err
+		}
+		if len(services) == 0 {
+			return errors.New("未发现可用服务: " + downstream.Name)
+		}
+	}
+	return nil
 }

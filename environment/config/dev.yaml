@@ -6,7 +6,7 @@ app:
     rsa: false # rsa和vault有关联关系
     vault: true
     signature: true # signature默认依赖于redis
-    random_port: false
+    random_port: true
   white_list:
     -
       name: frontend
@@ -48,9 +48,9 @@ lib:
       host: 127.0.0.1
       port: 2379
   consul:
-    timeout: 3s
-    interval: 30s
-    deregister_after: 5s
+    timeout: 3
+    interval: 30
+    deregister_after: 5
     endpoint:
       host: 127.0.0.1
       port: 8500
@@ -69,5 +69,5 @@ server:
   idle_timeout: 15
   shutdown_timeout: 10
 
-downstream:
+downstreams:
   - name: go-maxms-be

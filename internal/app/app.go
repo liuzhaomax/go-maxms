@@ -45,6 +45,18 @@ func InitConfig(opts *options) func() {
 		cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务注册失败", err))
 	}
 	cfg.App.Logger.Info(core.FormatInfo("服务注册成功"))
+	// discover services
+	go func() {
+		for {
+			err = cfg.Lib.Consul.ServiceDiscover()
+			if err != nil {
+				cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Warn(core.FormatError(core.Unknown, "下游服务发现失败", err))
+			} else {
+				cfg.App.Logger.Info(core.FormatInfo("下游服务发现成功"))
+			}
+			time.Sleep(time.Duration(cfg.Lib.Consul.Interval) * time.Second)
+		}
+	}()
 	return func() {
 		cleanLogger()
 	}
@@ -62,7 +74,7 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 		IdleTimeout:  time.Duration(cfg.Server.IdleTimeout) * time.Second,
 	}
 	go func() {
-		cfg.App.Logger.WithContext(ctx).Infof("Service is running at %s", addr)
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s", cfg.App.Name, addr)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
 		}
@@ -93,7 +105,7 @@ func InitRpcServer(ctx context.Context, injector *Injector) func() {
 		if err != nil {
 			cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务监听失败", err))
 		}
-		cfg.App.Logger.WithContext(ctx).Infof("Service is running at %s", addr)
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s", cfg.App.Name, addr)
 		err = server.Serve(listen)
 		if err != nil {
 			cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务启动失败", err))
