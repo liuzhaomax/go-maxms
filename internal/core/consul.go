@@ -47,6 +47,7 @@ func (c *Consul) ServiceDiscover() error {
 		return nil
 	}
 	defaultConfig := api.DefaultConfig()
+	defaultConfig.Address = fmt.Sprintf("%s:%s", cfg.Lib.Consul.Endpoint.Host, cfg.Lib.Consul.Endpoint.Port)
 	client, err := api.NewClient(defaultConfig)
 	if err != nil {
 		return err
