@@ -69,7 +69,7 @@ github.com/alibaba/sentinel-golang/api
 3. ~~etcd配置中心，不实现~~
 4. ~~Prometheus，grafana，jaeger，ELK，OCP4，熔断限流降级~~
 5. ~~采用第一种鉴权方式，做SWG，修改auth中间件~~
-6. consul 服务发现随机端口
+6. ~~consul 服务发现随机端口~~
 7. ~~SGW反向代理~~
 8. SGW限流熔断降级 - 日志
 9. SGW防爬虫
