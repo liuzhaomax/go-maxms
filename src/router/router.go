@@ -7,7 +7,8 @@ import (
 )
 
 func Register(root *gin.RouterGroup, handler *handler.HandlerUser, mw *middleware.Middleware) {
-	root.GET("/login", handler.GetPuk)
+	// root.GET("/login", handler.GetPuk)
+	root.GET("/login", mw.ReverseProxy.Redirect("http://172.30.64.1:9998"))
 	root.POST("/login", handler.PostLogin)
 	root.Use(mw.Auth.ValidateToken())
 	root.DELETE("/login", handler.DeleteLogin)

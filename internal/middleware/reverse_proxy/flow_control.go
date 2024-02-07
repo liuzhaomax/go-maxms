@@ -23,7 +23,7 @@ func (rp *ReverseProxy) Throttle(target string, c *gin.Context, proxy *httputil.
 			Resource:               target,
 			TokenCalculateStrategy: flow.Direct,
 			ControlBehavior:        flow.Throttling, // 匀速限流
-			Threshold:              1,
+			Threshold:              100,
 			StatIntervalInMs:       1000, // 1000ms允许100个，QPS=100
 			MaxQueueingTimeMs:      500,  // 500ms最大队列时长
 			WarmUpPeriodSec:        30,   // 30s预热
@@ -34,9 +34,12 @@ func (rp *ReverseProxy) Throttle(target string, c *gin.Context, proxy *httputil.
 	}
 	// 埋点
 	entry, blockError := sentinel.Entry(target, sentinel.WithTrafficType(base.Inbound))
-	defer entry.Exit()
+	if entry != nil {
+		defer entry.Exit()
+	}
 	if blockError != nil {
 		c.AbortWithStatusJSON(http.StatusForbidden, rp.GenErrMsg(c, "请求被限流", err))
+		return
 	}
 	proxy.ServeHTTP(c.Writer, c.Request)
 }
