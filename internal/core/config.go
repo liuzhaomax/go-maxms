@@ -36,11 +36,11 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 		panic(err)
 	}
 	// 获取随机空闲端口，并赋值，用于负载均衡
-	// cfg.Server.Port = GetRandomIdlePort()
+	if cfg.App.Enabled.RandomPort {
+		cfg.Server.Port = GetRandomIdlePort()
+	}
 	// 配置日志
 	cleanLogger := InitLogger()
-	// 配置Vault
-	InitVault()
 	// enabled几种情况（默认是第二种）
 	// 1. 不使用RSA和vault：jwt_secret要自行设置（如下），salt会自动更新
 	// 2. 不使用RSA，使用vault：jwt_secret，salt，puk，prk都要在vault预先设置好
@@ -50,6 +50,7 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	cfg.App.Id = ShortUUID()
 	cfg.App.Secret = MD5Str(ShortUUID())
 	if cfg.App.Enabled.Vault {
+		InitVault() // 配置Vault
 		cfg.PutAppSecret()
 	}
 	if cfg.App.Enabled.RSA {

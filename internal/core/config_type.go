@@ -44,9 +44,10 @@ type App struct {
 }
 
 type Enabled struct {
-	Vault     bool `mapstructure:"vault"`
-	RSA       bool `mapstructure:"rsa"`
-	Signature bool `mapstructure:"signature"`
+	Vault      bool `mapstructure:"vault"`
+	RSA        bool `mapstructure:"rsa"`
+	Signature  bool `mapstructure:"signature"`
+	RandomPort bool `mapstructure:"random_port"`
 }
 
 type WhiteList struct {
@@ -92,6 +93,4 @@ type Downstream struct {
 	Id     string
 	Secret string
 	Name   string `mapstructure:"name"`
-	Host   string `mapstructure:"host"`
-	Port   string `mapstructure:"port"`
 }

@@ -6,6 +6,7 @@ app:
     rsa: false # rsa和vault有关联关系
     vault: true
     signature: true # signature默认依赖于redis
+    random_port: false
   white_list:
     -
       name: frontend
@@ -69,7 +70,4 @@ server:
   shutdown_timeout: 10
 
 downstream:
-  -
-    name: go-maxms-be
-    host: 127.0.0.1
-    port: 9300
+  - name: go-maxms-be
