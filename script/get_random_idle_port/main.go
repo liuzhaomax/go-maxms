@@ -49,7 +49,9 @@ func UpdateYamlConfig() string {
 		log.Fatalf("解析配置文件时出错: %v", err)
 	}
 	// 修改port
-	cfg.Server.Port = GetRandomIdlePort()
+	if cfg.App.Enabled.RandomPort {
+		cfg.Server.Port = GetRandomIdlePort()
+	}
 	// 修改yaml文件
 	if err = v.WriteConfig(); err != nil {
 		log.Fatalf("写入配置文件时出错: %v", err)

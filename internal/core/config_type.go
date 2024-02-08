@@ -22,7 +22,7 @@ func GetConfig() *Config {
 type Config struct {
 	App
 	Lib
-	Server      Server `mapstructure:"server"`
+	Server
 	Downstreams []Downstream
 }
 
