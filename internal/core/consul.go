@@ -30,6 +30,7 @@ func (c *Consul) ServiceRegister() error {
 	agentServiceRegistration.Port = intPort
 	agentServiceRegistration.Tags = []string{cfg.App.Name, cfg.Server.Protocol}
 	serverAddr := fmt.Sprintf("http://%s:%s/health", cfg.Server.Host, cfg.Server.Port)
+	fmt.Printf("微服务的地址是: %s\n", serverAddr)
 	check := api.AgentServiceCheck{
 		// GRPC: serverAddr,
 		HTTP:                           serverAddr,
