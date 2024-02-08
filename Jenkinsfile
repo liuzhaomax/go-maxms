@@ -174,14 +174,12 @@ pipeline {
                     script {
                         // 生成随机空闲端口
                         try {
-                            def yamlContent = readFile("./environment/config/${ENV}.yaml")
-                            def config = readYaml text: yamlContent
                             if (config.app.enabled.random_port) {
                                 def randomPort = sh(script: 'go run ./script/get_random_idle_port/main.go', returnStdout: true).trim()
                                 echo "Generated random port: $randomPort"
-                                // 匹配 server 字段下的 port 字段
-                                yamlContent = yamlContent.replaceAll(/(server:\n\s+port: )\d+/, "\$1${randomPort}")
-                                writeFile file: "./environment/config/${ENV}.yaml", text: yamlContent
+                                def yaml = readYaml file: "./environment/config/${ENV}.yaml"
+                                yaml.server.port = randomPort
+                                writeYaml file: './environment/config/${ENV}.yaml', data: yaml
                                 env.Container_port = randomPort
                                 env.Host_port = randomPort
                             } else {
