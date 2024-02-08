@@ -36,6 +36,7 @@ func UpdateYamlConfig() {
 	v.AutomaticEnv()
 	env := v.GetString("ENV")
 	// 也可以通过添加flag “c”，执行命令行，来手动修改运行环境
+	fmt.Println(fmt.Sprintf("%s/%s.yaml", configDir, env))
 	configFile := flag.String("c", fmt.Sprintf("%s/%s.yaml", configDir, env), "配置文件")
 	flag.Parse()
 	// 读取Config
@@ -50,6 +51,7 @@ func UpdateYamlConfig() {
 	}
 	// 修改port
 	cfg.Server.Port = GetRandomIdlePort()
+	fmt.Printf("现在的port是：%s\n", cfg.Server.Port)
 	// 修改yaml文件
 	if err = v.WriteConfig(); err != nil {
 		log.Fatalf("写入配置文件时出错: %v", err)
