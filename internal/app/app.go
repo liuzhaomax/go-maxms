@@ -65,7 +65,7 @@ func InitConfig(opts *options) func() {
 func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 	cfg := core.GetConfig()
 	cfg.App.Logger.Info(core.FormatInfo("服务启动开始"))
-	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
+	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Port)
 	server := &http.Server{
 		Addr:         addr,
 		Handler:      handler,
