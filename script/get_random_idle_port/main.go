@@ -35,10 +35,12 @@ func UpdateYamlConfig() {
 	cfg := core.GetConfig()
 	v.AutomaticEnv()
 	env := flag.String("e", "dev", "环境")
-	// 也可以通过添加flag “c”，执行命令行，来手动修改运行环境
+	flag.Parse()
 	fmt.Printf("%s/%s.yaml\n", configDir, *env)
+	// 也可以通过添加flag “c”，执行命令行，来手动修改运行环境
 	configFile := flag.String("c", fmt.Sprintf("%s/%s.yaml", configDir, *env), "配置文件")
 	flag.Parse()
+	fmt.Printf("%s/%s.yaml\n", configDir, *env)
 	// 读取Config
 	v.SetConfigFile(*configFile)
 	err := v.ReadInConfig()
