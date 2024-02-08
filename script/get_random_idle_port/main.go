@@ -53,6 +53,7 @@ func UpdateYamlConfig() string {
 		cfg.Server.Port = GetRandomIdlePort()
 	}
 	// 修改yaml文件
+	v.Set("server.port", cfg.Server.Port)
 	if err = v.WriteConfig(); err != nil {
 		log.Fatalf("写入配置文件时出错: %v", err)
 	}
