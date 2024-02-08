@@ -23,7 +23,7 @@ func (c *Consul) ServiceRegister() error {
 		return err
 	}
 	agentServiceRegistration := new(api.AgentServiceRegistration)
-	agentServiceRegistration.Address = defaultConfig.Address
+	agentServiceRegistration.Address = cfg.Server.Host
 	agentServiceRegistration.Name = cfg.App.Name
 	agentServiceRegistration.ID = ShortUUID()
 	intPort, _ := strconv.Atoi(cfg.Server.Port)
