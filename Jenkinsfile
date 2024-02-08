@@ -178,7 +178,6 @@ pipeline {
                             if (yaml.app.enabled.random_port) {
                                 def randomPort = sh(script: 'go run ./script/get_random_idle_port/main.go', returnStdout: true).trim()
                                 echo "Generated random port: $randomPort"
-
                                 yaml.server.port = randomPort
                                 writeYaml file: './environment/config/${ENV}.yaml', data: yaml
                                 env.Container_port = randomPort
