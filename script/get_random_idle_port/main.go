@@ -13,7 +13,7 @@ import (
 const configDir = "environment/config"
 
 func main() {
-	UpdateYamlConfig()
+	fmt.Print(UpdateYamlConfig())
 }
 
 func GetRandomIdlePort() string {
@@ -30,17 +30,14 @@ func GetRandomIdlePort() string {
 	return strconv.Itoa(port)
 }
 
-func UpdateYamlConfig() {
+func UpdateYamlConfig() string {
 	v := viper.New()
 	cfg := core.GetConfig()
 	v.AutomaticEnv()
 	env := flag.String("e", "dev", "环境")
-	flag.Parse()
-	fmt.Printf("%s/%s.yaml\n", configDir, *env)
-	// 也可以通过添加flag “c”，执行命令行，来手动修改运行环境
+	flag.Parse() // 后面有*env，必须先解析
 	configFile := flag.String("c", fmt.Sprintf("%s/%s.yaml", configDir, *env), "配置文件")
 	flag.Parse()
-	fmt.Printf("%s/%s.yaml\n", configDir, *env)
 	// 读取Config
 	v.SetConfigFile(*configFile)
 	err := v.ReadInConfig()
@@ -53,9 +50,10 @@ func UpdateYamlConfig() {
 	}
 	// 修改port
 	cfg.Server.Port = GetRandomIdlePort()
-	fmt.Printf("现在的port是：%s\n", cfg.Server.Port)
+	fmt.Printf("随机到的空闲port是：%s\n", cfg.Server.Port)
 	// 修改yaml文件
 	if err = v.WriteConfig(); err != nil {
 		log.Fatalf("写入配置文件时出错: %v", err)
 	}
+	return cfg.Server.Port
 }
