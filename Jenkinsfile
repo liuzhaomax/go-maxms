@@ -171,8 +171,9 @@ pipeline {
             steps {
                 echo "--------------------- Build Image Start ---------------------"
                 timeout(time: 5, unit: "MINUTES"){
+                    goHome = tool "go"
                     sh """
-                        go run ./script/get_random_idle_port/main.go
+                        ${goHome}/bin/go run ./script/get_random_idle_port/main.go
                         docker build -t ${ProjectKey}:${TAG} .
                     """
                 }
