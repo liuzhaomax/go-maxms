@@ -175,6 +175,8 @@ pipeline {
                         // 生成随机空闲端口
                         try {
                             sh "pwd"
+                            echo './environment/config/"${ENV}".yaml'
+                            echo "./environment/config/${ENV}.yaml"
                             def yaml = readYaml file: './environment/config/"${ENV}".yaml'
                             echo "pass1"
                             if (yaml.app.enabled.random_port) {
