@@ -212,7 +212,6 @@ pipeline {
                     timeout(time: 2, unit: "MINUTES") {
                         echo "ENV: ${ENV}"
                         echo "Port: ${Host_port}"
-                        echo "Container_port: ${Container_port}"
                         sh """
                             chmod +x ./deploy.sh
                             ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV $DeploymentServerIP
