@@ -173,7 +173,7 @@ pipeline {
                 script {
                     timeout(time: 5, unit: "MINUTES"){
                         goHome = tool "go"
-                        randomPort = sh(script: "go run ./script/get_random_idle_port/main.go -e ${ENV}", returnStdout: true).trim()
+                        randomPort = sh(script: "${goHome}/bin/go run ./script/get_random_idle_port/main.go -e ${ENV}", returnStdout: true).trim()
                         Container_port = randomPort
                         Host_port = randomPort
                         sh """
