@@ -177,7 +177,6 @@ pipeline {
                         Container_port = randomPort
                         Host_port = randomPort
                         sh """
-                            # ${goHome}/bin/go run ./script/get_random_idle_port/main.go -e $ENV
                             docker build -t ${ProjectKey}:${TAG} .
                         """
                     }
@@ -212,6 +211,7 @@ pipeline {
                 script {
                     timeout(time: 2, unit: "MINUTES") {
                         echo "ENV: ${ENV}"
+                        echo "Port: ${Host_port}"
                         sh """
                             chmod +x ./deploy.sh
                             ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV $DeploymentServerIP

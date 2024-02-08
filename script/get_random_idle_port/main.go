@@ -50,7 +50,6 @@ func UpdateYamlConfig() string {
 	}
 	// 修改port
 	cfg.Server.Port = GetRandomIdlePort()
-	fmt.Printf("随机到的空闲port是：%s\n", cfg.Server.Port)
 	// 修改yaml文件
 	if err = v.WriteConfig(); err != nil {
 		log.Fatalf("写入配置文件时出错: %v", err)
