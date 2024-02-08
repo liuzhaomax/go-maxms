@@ -174,7 +174,7 @@ pipeline {
                     timeout(time: 5, unit: "MINUTES"){
                         goHome = tool "go"
                         sh """
-                            ${goHome}/bin/go run ./script/get_random_idle_port/main.go
+                            ${goHome}/bin/go run ./script/get_random_idle_port/main.go -e $ENV
                             docker build -t ${ProjectKey}:${TAG} .
                         """
                     }
