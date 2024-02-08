@@ -20,8 +20,8 @@ pipeline {
         harborPassword = "Harbor12345"
         harborAddress = "172.16.96.97:9002"
         harborRepo = "go-maxms"
-        Container_port = "9999"
-        Host_port = "9999"
+        Container_port = "9999" // 启用随机端口，会被赋值
+        Host_port = "9999" // 启用随机端口，会被赋值
         JobName = "go-maxms/main"
         DeploymentServerIP = "172.16.96.98"
     }
@@ -205,6 +205,20 @@ pipeline {
                 script {
                     timeout(time: 2, unit: "MINUTES") {
                         echo "ENV: ${ENV}"
+                        // 生成随机空闲端口
+                        def yamlContent = readFile('path/to/your/${ENV}.yaml')
+                        def config = readYaml text: yamlContent
+                        if (config.app.enabled.random_port) {
+                            def randomPort = sh(script: 'go run ./script/get_random_idle_port/main.go', returnStdout: true).trim()
+                            echo "Generated random port: $randomPort"
+                            config.server.port = randomPort
+                            writeFile file: 'modified_st.yaml', text: toYaml(config)
+                            env.Container_port = randomPort
+                            env.Host_port = randomPort
+                        } else {
+                            echo "Random port generation is disabled."
+                        }
+
                         sh """
                             chmod +x ./deploy.sh
                             ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV $DeploymentServerIP

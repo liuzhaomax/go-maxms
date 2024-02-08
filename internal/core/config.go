@@ -35,10 +35,6 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 		logrus.WithField("path", configFile).WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "配置文件反序列化失败", err))
 		panic(err)
 	}
-	// 获取随机空闲端口，并赋值，用于负载均衡
-	if cfg.App.Enabled.RandomPort {
-		cfg.Server.Port = GetRandomIdlePort()
-	}
 	// 配置日志
 	cleanLogger := InitLogger()
 	// enabled几种情况（默认是第二种）
