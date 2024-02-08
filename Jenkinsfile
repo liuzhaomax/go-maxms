@@ -171,6 +171,21 @@ pipeline {
             steps {
                 echo "--------------------- Build Image Start ---------------------"
                 timeout(time: 5, unit: "MINUTES"){
+                    script {
+                        // 生成随机空闲端口
+                        def yamlContent = readFile('path/to/your/${ENV}.yaml')
+                        def config = readYaml text: yamlContent
+                        if (config.app.enabled.random_port) {
+                            def randomPort = sh(script: 'go run ./script/get_random_idle_port/main.go', returnStdout: true).trim()
+                            echo "Generated random port: $randomPort"
+                            config.server.port = randomPort
+                            writeFile file: 'modified_st.yaml', text: toYaml(config)
+                            env.Container_port = randomPort
+                            env.Host_port = randomPort
+                        } else {
+                            echo "Random port generation is disabled."
+                        }
+                    }
                     sh """
                         docker build -t ${ProjectKey}:${TAG} .
                     """
@@ -205,20 +220,6 @@ pipeline {
                 script {
                     timeout(time: 2, unit: "MINUTES") {
                         echo "ENV: ${ENV}"
-                        // 生成随机空闲端口
-                        def yamlContent = readFile('path/to/your/${ENV}.yaml')
-                        def config = readYaml text: yamlContent
-                        if (config.app.enabled.random_port) {
-                            def randomPort = sh(script: 'go run ./script/get_random_idle_port/main.go', returnStdout: true).trim()
-                            echo "Generated random port: $randomPort"
-                            config.server.port = randomPort
-                            writeFile file: 'modified_st.yaml', text: toYaml(config)
-                            env.Container_port = randomPort
-                            env.Host_port = randomPort
-                        } else {
-                            echo "Random port generation is disabled."
-                        }
-
                         sh """
                             chmod +x ./deploy.sh
                             ./deploy.sh $harborAddress $harborRepo $ProjectKey $TAG $Container_port $Host_port $ENV $DeploymentServerIP
