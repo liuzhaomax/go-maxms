@@ -71,3 +71,4 @@ server:
 
 downstreams:
   - name: go-maxms-be
+    addr: http://172.30.64.1:9998

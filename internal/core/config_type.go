@@ -93,4 +93,5 @@ type Downstream struct {
 	Id     string
 	Secret string
 	Name   string `mapstructure:"name"`
+	Addr   string `mapstructure:"addr"`
 }

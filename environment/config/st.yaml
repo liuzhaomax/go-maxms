@@ -6,7 +6,7 @@ app:
     rsa: false # rsa和vault有关联关系
     vault: true
     signature: true # signature默认依赖于redis
-    random_port: false
+    random_port: true
   white_list:
     -
       name: frontend
@@ -71,3 +71,5 @@ server:
 
 downstreams:
   - name: go-maxms-be
+    addr: http://172.16.96.98:9998
+

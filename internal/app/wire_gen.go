@@ -67,7 +67,8 @@ func InitInjector() (*Injector, func(), error) {
 		TracerConfig: configuration,
 	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
-		Logger: coreLogger,
+		Logger:      coreLogger,
+		RedisClient: client,
 	}
 	middlewareMiddleware := &middleware.Middleware{
 		Auth:         authAuth,
