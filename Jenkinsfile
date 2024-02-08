@@ -1,4 +1,6 @@
 //#!groovy
+@Grab('org.yaml:snakeyaml:1.17')
+import org.yaml.snakeyaml.Yaml
 
 pipeline {
     // 指定集群节点
@@ -172,8 +174,6 @@ pipeline {
                 echo "--------------------- Build Image Start ---------------------"
                 timeout(time: 5, unit: "MINUTES"){
                     script {
-                        @Grab('org.yaml:snakeyaml:1.17')
-                        import org.yaml.snakeyaml.Yaml
                         // 生成随机空闲端口
                         try {
                             def read = readYaml file: "./environment/config/${ENV}.yaml"
