@@ -43,7 +43,7 @@ func (c *Consul) ServiceRegister() error {
 
 // ServiceDiscover 服务发现
 func (c *Consul) ServiceDiscover() error {
-	if len(cfg.Downstreams) == 0 {
+	if cfg.Downstreams == nil || len(cfg.Downstreams) == 0 {
 		return nil
 	}
 	defaultConfig := api.DefaultConfig()
