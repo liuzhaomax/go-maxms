@@ -28,7 +28,7 @@ wire
 
 mysql：
 ```shell
-mysql -u root -p  -P 3306
+mysql -u root -p
 ```
 
 代码覆盖率检查：
