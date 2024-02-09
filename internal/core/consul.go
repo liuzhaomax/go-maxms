@@ -52,13 +52,18 @@ func (c *Consul) ServiceDiscover() error {
 	if err != nil {
 		return err
 	}
-	for _, downstream := range cfg.Downstreams {
+	for i, downstream := range cfg.Downstreams {
 		services, _, err := client.Catalog().Service(downstream.Name, cfg.Server.Protocol, nil)
 		if err != nil {
 			return err
 		}
 		if len(services) == 0 {
 			return errors.New("未发现可用服务: " + downstream.Name)
+		}
+		for _, service := range services {
+			if downstream.Name == service.ServiceName {
+				cfg.Downstreams[i].Addr = fmt.Sprintf("http://%s:%d", service.ServiceAddress, service.ServicePort)
+			}
 		}
 	}
 	return nil
