@@ -148,9 +148,8 @@ func LoggerForHTTP() gin.HandlerFunc {
 			"span_id":    c.Request.Header.Get(SpanId),
 			"parent_id":  c.Request.Header.Get(ParentId),
 			"app_id":     c.Request.Header.Get(AppId),
+			"request_id": c.Request.Header.Get(RequestId),
 		}
-		// 将trace id 存入ctx
-		c.Set(TraceId, c.Request.Header.Get(TraceId))
 		// Incoming日志是来的什么就是什么，只有traceID应一致
 		logger.WithFields(LoggerFormat).Info("请求开始")
 		startTime := time.Now()
@@ -178,6 +177,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 		//    SpanID:     c.Request.Header.Get(SpanId),
 		//    ParentID:   c.Request.Header.Get(ParentId),
 		//    AppID:      c.Request.Header.Get(AppId),
+		//    RequestID:  c.Request.Header.Get(RequestId),
 		// }
 		// formatBytes, _ := json.Marshal(format)
 		// logger.Info(string(formatBytes))
@@ -207,6 +207,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 //    ParentID   string        `json:"parent_id"`
 //    UpstreamID string        `json:"upstream_id"`
 //    AppID      string        `json:"app_id"`
+//    RequestID  string        `json:"request_id"`
 // }
 
 // RPC 日志中间件
@@ -226,6 +227,7 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 		"span_id":    SelectFromMetadata(md, SpanId),
 		"parent_id":  SelectFromMetadata(md, ParentId),
 		"app_id":     SelectFromMetadata(md, AppId),
+		"request_id": SelectFromMetadata(md, RequestId),
 	}
 	logger.WithFields(LoggerFormat).Info("请求开始")
 	err := ValidateMetadata(md)

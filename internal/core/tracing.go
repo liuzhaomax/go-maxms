@@ -88,6 +88,7 @@ func SelectFromMetadata(md metadata.MD, key string) string {
 func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redis.Client) error {
 	c.Request.Header.Set(ClientIp, c.Request.Header.Get(ClientIp))
 	c.Request.Header.Set(UserAgent, c.Request.Header.Get(UserAgent))
+	c.Request.Header.Set(RequestId, c.Request.Header.Get(RequestId))
 	c.Request.Header.Set(TraceId, c.Request.Header.Get(TraceId))
 	c.Request.Header.Set(ParentId, c.Request.Header.Get(SpanId))
 	c.Request.Header.Set(SpanId, SpanID())

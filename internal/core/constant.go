@@ -35,6 +35,7 @@ const (
 	ParentId      = "Parent_id"
 	Authorization = "Authorization"
 	AppId         = "App_id"
+	RequestId     = "Request_id"
 	// redis
 	Signature = "signature"
 	// jaeger
