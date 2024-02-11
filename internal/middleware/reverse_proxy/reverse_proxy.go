@@ -25,7 +25,7 @@ func (rp *ReverseProxy) Redirect(serviceName string) gin.HandlerFunc {
 		var addr string
 		for _, downstream := range cfg.Downstreams {
 			if downstream.Name == serviceName {
-				addr = downstream.Addr
+				addr = fmt.Sprintf("http://%s:%s", downstream.Endpoint.Host, downstream.Endpoint.Port)
 				break
 			}
 		}

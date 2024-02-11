@@ -27,10 +27,10 @@ func (t *Tracing) Trace() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, t.GenErrMsg(c, "tracer生成失败", err))
 		}
 		span := tracer.StartSpan(c.Request.URL.Path)
+		defer span.Finish()
 		c.Set(core.Tracer, tracer)
 		c.Set(core.Parent, span)
 		c.Next()
-		span.Finish()
 	}
 }
 

@@ -71,5 +71,7 @@ server:
 
 downstreams:
   - name: go-maxms-be
-    addr: http://172.16.96.98:9998
+    endpoint:
+      host: 172.16.96.98
+      port: 9801
 
