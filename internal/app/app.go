@@ -39,14 +39,14 @@ func InitConfig(opts *options) func() {
 	cleanLogger := cfg.LoadConfig(opts.ConfigFile)
 	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
 	cfg.App.Logger.Info(core.FormatInfo("系统启动"))
-	// register service
-	err := cfg.Lib.Consul.ServiceRegister()
-	if err != nil {
-		cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务注册失败", err))
-	}
-	cfg.App.Logger.Info(core.FormatInfo("服务注册成功"))
-	// discover services
 	if cfg.App.Enabled.ServiceDiscovery {
+		// register service
+		err := cfg.Lib.Consul.ServiceRegister()
+		if err != nil {
+			cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Fatal(core.FormatError(core.Unknown, "服务注册失败", err))
+		}
+		cfg.App.Logger.Info(core.FormatInfo("服务注册成功"))
+		// discover services
 		go func() {
 			for {
 				err = cfg.Lib.Consul.ServiceDiscover()
