@@ -7,6 +7,7 @@ app:
     vault: true
     signature: true # signature默认依赖于redis
     random_port: false
+    service_discovery: false
   white_list:
     -
       name: frontend

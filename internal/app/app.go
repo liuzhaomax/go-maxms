@@ -46,17 +46,19 @@ func InitConfig(opts *options) func() {
 	}
 	cfg.App.Logger.Info(core.FormatInfo("服务注册成功"))
 	// discover services
-	go func() {
-		for {
-			err = cfg.Lib.Consul.ServiceDiscover()
-			if err != nil {
-				cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Warn(core.FormatError(core.Unknown, "下游服务发现失败", err))
-			} else {
-				cfg.App.Logger.Info(core.FormatInfo("下游服务发现成功"))
+	if cfg.App.Enabled.ServiceDiscovery {
+		go func() {
+			for {
+				err = cfg.Lib.Consul.ServiceDiscover()
+				if err != nil {
+					cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Warn(core.FormatError(core.Unknown, "下游服务发现失败", err))
+				} else {
+					cfg.App.Logger.Info(core.FormatInfo("下游服务发现成功"))
+				}
+				time.Sleep(time.Duration(cfg.Lib.Consul.Interval) * time.Second)
 			}
-			time.Sleep(time.Duration(cfg.Lib.Consul.Interval) * time.Second)
-		}
-	}()
+		}()
+	}
 	return func() {
 		cleanLogger()
 	}

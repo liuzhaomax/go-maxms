@@ -44,10 +44,11 @@ type App struct {
 }
 
 type Enabled struct {
-	Vault      bool `mapstructure:"vault"`
-	RSA        bool `mapstructure:"rsa"`
-	Signature  bool `mapstructure:"signature"`
-	RandomPort bool `mapstructure:"random_port"`
+	Vault            bool `mapstructure:"vault"`
+	RSA              bool `mapstructure:"rsa"`
+	Signature        bool `mapstructure:"signature"`
+	RandomPort       bool `mapstructure:"random_port"`
+	ServiceDiscovery bool `mapstructure:"service_discovery"`
 }
 
 type WhiteList struct {
