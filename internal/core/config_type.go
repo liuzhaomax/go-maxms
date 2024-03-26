@@ -65,6 +65,7 @@ type Lib struct {
 	ETCD
 	Consul
 	Jaeger
+	Rocketmq
 }
 
 type ETCD struct {

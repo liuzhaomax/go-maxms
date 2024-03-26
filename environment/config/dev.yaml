@@ -59,6 +59,12 @@ lib:
     endpoint:
       host: 127.0.0.1
       port: 6831
+  rocketmq:
+    timeout: 3
+    retry: 2
+    endpoint:
+      host: 192.168.1.14
+      port: 9876
 
 server:
   protocol: http

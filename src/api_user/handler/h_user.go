@@ -10,38 +10,39 @@ import (
 var HandlerUserSet = wire.NewSet(wire.Struct(new(HandlerUser), "*"))
 
 type HandlerUser struct {
-	Business *business.BusinessUser
-	Logger   core.ILogger
-	IRes     core.IResponse
+	Business    *business.BusinessUser
+	Logger      core.ILogger
+	Res         core.IResponse
+	RocketMQSet core.IRocketMQ
 }
 
 func (h *HandlerUser) GetPuk(c *gin.Context) {
-	h.IRes.ResSuccess(c, core.GetConfig().App.PublicKeyStr)
+	h.Res.ResSuccess(c, core.GetConfig().App.PublicKeyStr)
 }
 
 func (h *HandlerUser) PostLogin(c *gin.Context) {
 	token, err := h.Business.PostLogin(c)
 	if err != nil {
-		h.IRes.ResFailure(c, 500, core.Unknown, "登录失败", err)
+		h.Res.ResFailure(c, 500, core.Unknown, "登录失败", err)
 		return
 	}
-	h.IRes.ResSuccess(c, token)
+	h.Res.ResSuccess(c, token)
 }
 
 func (h *HandlerUser) DeleteLogin(c *gin.Context) {
 	err := h.Business.DeleteLogin(c)
 	if err != nil {
-		h.IRes.ResFailure(c, 500, core.Unknown, "登出失败", err)
+		h.Res.ResFailure(c, 500, core.Unknown, "登出失败", err)
 		return
 	}
-	h.IRes.ResSuccess(c, nil)
+	h.Res.ResSuccess(c, nil)
 }
 
 func (h *HandlerUser) GetUserByUserID(c *gin.Context) {
 	user, err := h.Business.GetUserByUserID(c)
 	if err != nil {
-		h.IRes.ResFailure(c, 500, core.Unknown, "查询失败", err)
+		h.Res.ResFailure(c, 500, core.Unknown, "查询失败", err)
 		return
 	}
-	h.IRes.ResSuccess(c, user)
+	h.Res.ResSuccess(c, user)
 }

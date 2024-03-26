@@ -26,6 +26,7 @@ func InitInjector() (*Injector, func(), error) {
 		core.LoggerSet,
 		core.ResponseSet,
 		core.TransactionSet,
+		core.RocketMQSet,
 		middleware.MwsSet,
 		middleware.MiddlewareSet,
 		InjectorSet,
