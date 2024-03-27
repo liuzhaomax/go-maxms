@@ -75,7 +75,8 @@ github.com/apache/rocketmq-client-go/v2
 8. SGW限流熔断降级 - 日志
 9. SGW防爬虫
 10. dtm
-11. 消息队列
+11. 消息队列 - 日志
+12. SSO
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
