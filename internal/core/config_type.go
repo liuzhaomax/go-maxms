@@ -31,6 +31,7 @@ type App struct {
 	Secret        string
 	Name          string `mapstructure:"name"`
 	Version       string `mapstructure:"version"`
+	Domain        string `mapstructure:"domain"`
 	PublicKey     *rsa.PublicKey
 	PrivateKey    *rsa.PrivateKey
 	PublicKeyStr  string
@@ -38,9 +39,8 @@ type App struct {
 	Salt          string
 	JWTSecret     string
 	Logger        *logrus.Logger
-	Domain        string `mapstructure:"domain"`
-	Enabled
-	WhiteList []WhiteList
+	Enabled       Enabled     `mapstructure:"enabled"`
+	WhiteList     []WhiteList `mapstructure:"white_list"`
 }
 
 type Enabled struct {

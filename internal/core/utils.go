@@ -12,16 +12,45 @@ import (
 	"strings"
 )
 
+// In 判断某数据结构中，有没有给出的值(needle)
 func In(haystack interface{}, needle interface{}) bool {
 	sVal := reflect.ValueOf(haystack)
 	kind := sVal.Kind()
-	if kind == reflect.Slice || kind == reflect.Array {
-		for i := 0; i < sVal.Len(); i++ {
-			if sVal.Index(i).Interface() == needle {
+	if kind != reflect.Slice && kind != reflect.Array {
+		return false
+	}
+	for i := 0; i < sVal.Len(); i++ {
+		elem := sVal.Index(i)
+		if searchElement(elem, needle) {
+			return true
+		}
+	}
+	return false
+}
+
+func searchElement(elem reflect.Value, needle interface{}) bool {
+	switch elem.Kind() {
+	case reflect.Struct:
+		for j := 0; j < elem.NumField(); j++ {
+			field := elem.Field(j)
+			if field.Kind() == reflect.Struct {
+				if searchElement(field, needle) {
+					return true
+				}
+			} else if field.Interface() == needle {
 				return true
 			}
 		}
-		return false
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < elem.Len(); i++ {
+			if searchElement(elem.Index(i), needle) {
+				return true
+			}
+		}
+	default:
+		if elem.Interface() == needle {
+			return true
+		}
 	}
 	return false
 }
