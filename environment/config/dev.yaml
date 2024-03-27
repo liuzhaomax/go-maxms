@@ -11,7 +11,7 @@ app:
   white_list:
     -
       name: frontend
-      domain: http://127.0.0.1:9100
+      domain: http://127.0.0.1:3000
 
 lib:
   log:
