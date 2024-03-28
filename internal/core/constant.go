@@ -36,6 +36,7 @@ const (
 	Authorization = "Authorization"
 	AppId         = "App_id"
 	RequestId     = "Request_id"
+	UserId        = "User_id"
 	// redis
 	Signature = "signature"
 	// jaeger

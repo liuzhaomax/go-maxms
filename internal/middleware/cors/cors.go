@@ -8,20 +8,20 @@ import (
 
 func Cors() gin.HandlerFunc {
 	whiteList := core.GetConfig().App.WhiteList
-	return func(ctx *gin.Context) {
-		if core.In(whiteList, ctx.Request.Header.Get("Origin")) {
-			ctx.Header("Access-Control-Allow-Origin", ctx.Request.Header.Get("Origin"))
+	return func(c *gin.Context) {
+		if core.In(whiteList, c.Request.Header.Get("Origin")) {
+			c.Header("Access-Control-Allow-Origin", c.Request.Header.Get("Origin"))
 		}
-		ctx.Header("Access-Control-Allow-Headers", "Content-Type, AccessToken, X-CSRF-Token, Authorization, Token, Set-Cookie, X-Requested-With, Access-Control-Allow-Origin, Content-Security-Policy, Request_id, App_id")
-		ctx.Header("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE, OPTIONS")
-		ctx.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
-		ctx.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, AccessToken, X-CSRF-Token, Authorization, Token, Set-Cookie, X-Requested-With, Access-Control-Allow-Origin, Content-Security-Policy, Request_id, App_id, User_id")
+		c.Header("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE, OPTIONS")
+		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+		c.Header("Access-Control-Allow-Credentials", "true")
 		// let go all options request
-		method := ctx.Request.Method
+		method := c.Request.Method
 		if method == "OPTIONS" {
-			ctx.Header("Access-Control-Max-Age", "86400") // one day
-			ctx.AbortWithStatus(http.StatusNoContent)
+			c.Header("Access-Control-Max-Age", "86400") // one day
+			c.AbortWithStatus(http.StatusNoContent)
 		}
-		ctx.Next()
+		c.Next()
 	}
 }

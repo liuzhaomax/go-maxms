@@ -21,12 +21,12 @@ func (h *HandlerUser) GetPuk(c *gin.Context) {
 }
 
 func (h *HandlerUser) PostLogin(c *gin.Context) {
-	token, err := h.Business.PostLogin(c)
+	tokenRes, err := h.Business.PostLogin(c)
 	if err != nil {
 		h.Res.ResFailure(c, 500, core.Unknown, "登录失败", err)
 		return
 	}
-	h.Res.ResSuccess(c, token)
+	h.Res.ResSuccess(c, tokenRes)
 }
 
 func (h *HandlerUser) DeleteLogin(c *gin.Context) {
