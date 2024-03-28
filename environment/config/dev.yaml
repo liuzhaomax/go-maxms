@@ -1,7 +1,7 @@
 app:
   name: go-maxms
   version: 0.1
-  domain: liuzhaomax.cn
+  domain: localhost:3001
   enabled:
     rsa: false # rsa和vault有关联关系
     vault: true
@@ -11,7 +11,7 @@ app:
   white_list:
     -
       name: frontend
-      domain: http://127.0.0.1:3000
+      domain: http://localhost:3001
 
 lib:
   log:
