@@ -1,8 +1,9 @@
-package core
+package test
 
 import (
 	"errors"
 	"fmt"
+	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/magiconair/properties/assert"
 	"testing"
 )
@@ -21,7 +22,7 @@ func TestFormatInfo(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := FormatInfo(tc.have)
+			got := core.FormatInfo(tc.have)
 			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
 		})
 	}
@@ -30,13 +31,13 @@ func TestFormatInfo(t *testing.T) {
 func TestFormatError(t *testing.T) {
 	cases := []struct {
 		name string
-		have Error
+		have core.Error
 		want string
 	}{
 		{
 			name: "没有error payload",
-			have: Error{
-				Code: Unknown,
+			have: core.Error{
+				Code: core.Unknown,
 				Desc: "配置文件加载失败",
 				Err:  nil,
 			},
@@ -44,8 +45,8 @@ func TestFormatError(t *testing.T) {
 		},
 		{
 			name: "有error payload",
-			have: Error{
-				Code: Unknown,
+			have: core.Error{
+				Code: core.Unknown,
 				Desc: "配置文件加载失败",
 				Err:  errors.New("未知错误"),
 			},
@@ -53,7 +54,7 @@ func TestFormatError(t *testing.T) {
 		},
 		{
 			name: "未知错误码",
-			have: Error{
+			have: core.Error{
 				Code: 999999,
 				Desc: "配置文件加载失败",
 				Err:  nil,
@@ -63,7 +64,7 @@ func TestFormatError(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := FormatError(tc.have.Code, tc.have.Desc, tc.have.Err)
+			got := core.FormatError(tc.have.Code, tc.have.Desc, tc.have.Err)
 			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
 		})
 	}

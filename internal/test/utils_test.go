@@ -1,7 +1,8 @@
-package core
+package test
 
 import (
 	"fmt"
+	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/magiconair/properties/assert"
 	"strings"
 	"testing"
@@ -35,7 +36,7 @@ func TestIn(t *testing.T) {
 		},
 	}
 	for _, tc := range cases {
-		got := In(tc.have.slice, tc.have.element)
+		got := core.In(tc.have.slice, tc.have.element)
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
 		})
@@ -52,7 +53,7 @@ func TestGetFuncName(t *testing.T) {
 			want: "core.TestGetFuncName",
 		},
 	}
-	funcName := GetFuncName()
+	funcName := core.GetFuncName()
 	gotSlice := strings.Split(funcName, "/")
 	got := gotSlice[len(gotSlice)-1]
 	for _, tc := range cases {
@@ -72,7 +73,7 @@ func TestGetCallerFileAndLine(t *testing.T) {
 			want: fmt.Sprintf("\033[1;34m%s\033[0m\n", "D:/workspace/Github/go-maxms/internal/core/utils_test.go:75"),
 		},
 	}
-	got := GetCallerFileAndLine(2)
+	got := core.GetCallerFileAndLine(2)
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
