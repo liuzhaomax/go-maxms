@@ -10,10 +10,10 @@ import (
 var HandlerUserSet = wire.NewSet(wire.Struct(new(HandlerUser), "*"))
 
 type HandlerUser struct {
-	Business    *business.BusinessUser
-	Logger      core.ILogger
-	Res         core.IResponse
-	RocketMQSet core.IRocketMQ
+	Business *business.BusinessUser
+	Logger   core.ILogger
+	Res      core.IResponse
+	RocketMQ core.IRocketMQ
 }
 
 func (h *HandlerUser) GetPuk(c *gin.Context) {
