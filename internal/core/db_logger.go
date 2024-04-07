@@ -3,6 +3,7 @@ package core
 import (
 	"context"
 	"errors"
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -46,6 +47,9 @@ func (l *GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql 
 	sql, rows := fc()
 	// trace ID
 	traceId := ctx.Value(TraceId)
+	if c, ok := ctx.(*gin.Context); ok {
+		traceId = c.Request.Header.Get(TraceId)
+	}
 	// 通用字段
 	logFields := logrus.Fields{
 		"sql":      sql,
