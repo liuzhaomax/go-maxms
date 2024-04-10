@@ -95,7 +95,7 @@ func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redi
 	c.Request.Header.Set(ParentId, c.Request.Header.Get(ParentId))
 	c.Request.Header.Set(AppId, cfg.App.Id)
 	userId, _ := c.Cookie(UserID)
-	nonce := c.Request.Header.Get(ParentId) // ParentId已被赋值为req headers里的spanId
+	nonce := c.Request.Header.Get(ParentId) + c.Request.RequestURI
 	downstreamAppId := EmptyString
 	downstreamAppSecret := EmptyString
 	for _, downstream := range cfg.Downstreams {
