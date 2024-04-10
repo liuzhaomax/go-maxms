@@ -12,8 +12,8 @@ import (
 func (auth *Auth) ValidateSignature() gin.HandlerFunc {
 	cfg := core.GetConfig()
 	return func(c *gin.Context) {
-		userId, _ := c.Cookie(core.UserID)         // 允许为空，不需处理err
-		nonce := c.Request.Header.Get(core.SpanId) // 在core.SetHeadersForDownstream之前，所以是spanId
+		userId, _ := c.Cookie(core.UserID) // 允许为空，不需处理err
+		nonce := c.Request.Header.Get(core.SpanId) + c.Request.RequestURI
 		// 根据headers里给定的信息，生成签名并比对
 		signatureGen := core.GenAppSignature(cfg.App.Id, cfg.App.Secret, userId, nonce)
 		result, err := auth.Redis.SAdd(context.Background(), core.Signature, signatureGen).Result()
