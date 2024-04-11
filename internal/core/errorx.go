@@ -11,21 +11,22 @@ import (
 type Code uint32
 
 const (
-	OK                Code = 0
-	Unknown           Code = 1
-	ConfigError       Code = 2
-	ConnectionFailed  Code = 3
-	ParseIssue        Code = 4
-	MissingParameters Code = 400
-	Unauthorized      Code = 401
-	Forbidden         Code = 403
-	NotFound          Code = 404
-	DownstreamDown    Code = 5
-	IOException       Code = 6
-	PermissionDenied  Code = 7
-	DBDenied          Code = 8
-	CacheDenied       Code = 9
-	VaultDenied       Code = 10
+	OK                  Code = 0
+	Unknown             Code = 1
+	ConfigError         Code = 2
+	ConnectionFailed    Code = 3
+	ParseIssue          Code = 4
+	MissingParameters   Code = 400
+	Unauthorized        Code = 401
+	Forbidden           Code = 403
+	NotFound            Code = 404
+	InternalServerError Code = 500
+	DownstreamDown      Code = 5
+	IOException         Code = 6
+	PermissionDenied    Code = 7
+	DBDenied            Code = 8
+	CacheDenied         Code = 9
+	VaultDenied         Code = 10
 )
 
 func (c Code) String() string {
@@ -48,6 +49,8 @@ func (c Code) String() string {
 		return "请求被拒绝"
 	case NotFound:
 		return "没找到"
+	case InternalServerError:
+		return "服务器内部错误"
 	case DownstreamDown:
 		return "下游宕机"
 	case IOException:
