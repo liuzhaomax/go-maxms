@@ -10,8 +10,8 @@ app:
     service_discovery: false
   white_list:
     -
-      name: frontend
-      domain: http://localhost:3001
+      name: sgw
+      domain: http://localhost:9999
 
 lib:
   log:

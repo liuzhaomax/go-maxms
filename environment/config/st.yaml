@@ -10,8 +10,8 @@ app:
     service_discovery: true
   white_list:
     -
-      name: frontend
-      domain: http://172.16.96.98:9100
+      name: sgw
+      domain: http://172.16.96.98:9999
 
 lib:
   log:
