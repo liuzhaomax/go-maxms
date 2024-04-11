@@ -25,6 +25,7 @@ func (t *Trans) ExecTrans(ctx context.Context, fn func(context.Context) error) e
 	if _, ok := t.GetTrans(ctx); ok {
 		return fn(ctx)
 	}
+	// 避免显式调用db.Begin()
 	return t.DB.Transaction(func(db *gorm.DB) error {
 		return fn(t.NewTrans(ctx, db))
 	})
