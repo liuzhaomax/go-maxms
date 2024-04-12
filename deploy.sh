@@ -45,7 +45,7 @@ docker -H tcp://$deployment_server_ip:2375 run \
   --privileged=true \
   -p "${host_port}:${container_port}" \
   -e ENV="${environment}" \
-  -v /root/www:/usr/src/app/www \
+  -v /root/static/"${project}/www":/usr/src/app/www \
   -v /root/logs/"${project}":/usr/src/app/log \
   "$imageName"
 
