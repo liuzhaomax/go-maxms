@@ -50,7 +50,7 @@ func (c Code) String() string {
 	case NotFound:
 		return "没找到"
 	case InternalServerError:
-		return "服务器内部错误"
+		return "内部服务器错误"
 	case DownstreamDown:
 		return "下游宕机"
 	case IOException:
