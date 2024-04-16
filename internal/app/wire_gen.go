@@ -46,11 +46,13 @@ func InitInjector() (*Injector, func(), error) {
 	response := &core.Response{
 		Logger: coreLogger,
 	}
+	rocketMQ := &core.RocketMQ{}
 	businessUser := &business.BusinessUser{
-		Model: modelUser,
-		Tx:    trans,
-		Redis: client,
-		IRes:  response,
+		Model:    modelUser,
+		Tx:       trans,
+		Redis:    client,
+		IRes:     response,
+		RocketMQ: rocketMQ,
 	}
 	engine := core.InitGinEngine()
 	authAuth := &auth.Auth{
@@ -84,7 +86,6 @@ func InitInjector() (*Injector, func(), error) {
 		Tx:    trans,
 		Redis: client,
 	}
-	rocketMQ := &core.RocketMQ{}
 	handlerUser := &handler.HandlerUser{
 		Business: businessBusinessUser,
 		Logger:   coreLogger,
