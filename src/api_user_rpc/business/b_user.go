@@ -13,10 +13,11 @@ import (
 var BusinessUserSet = wire.NewSet(wire.Struct(new(BusinessUser), "*"))
 
 type BusinessUser struct {
-	Model *model.ModelUser
-	Tx    *core.Trans
-	Redis *redis.Client
-	IRes  core.IResponse
+	Model    *model.ModelUser
+	Tx       *core.Trans
+	Redis    *redis.Client
+	IRes     core.IResponse
+	RocketMQ core.IRocketMQ
 }
 
 func (b *BusinessUser) GetUserByUserID(ctx context.Context, req *pb.UserIDReq) (*pb.UserRes, error) {
