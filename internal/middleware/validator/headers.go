@@ -20,6 +20,7 @@ func (v *Validator) ValidateHeaders() gin.HandlerFunc {
 		err := core.ValidateHeaders(c)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, v.GenErrMsg(c, "请求头错误", err))
+			return
 		}
 		c.Next()
 	}
