@@ -3,6 +3,7 @@ package core
 import (
 	"flag"
 	"fmt"
+	"github.com/fsnotify/fsnotify"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -35,6 +36,32 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 		logrus.WithField("path", configFile).WithField(FAILURE, GetFuncName()).Panic(FormatError(ParseIssue, "配置文件反序列化失败", err))
 		panic(err)
 	}
+
+	// 配置热更新
+	v.WatchConfig()
+	v.OnConfigChange(func(e fsnotify.Event) {
+		logrus.WithField("path", e.Name).Info("配置文件发生变化，重新加载配置")
+		err := v.ReadInConfig()
+		if err != nil {
+			logrus.WithField("path", e.Name).WithField(FAILURE, GetFuncName()).Error(FormatError(ConfigError, "重新加载配置文件失败", err))
+			return
+		}
+		err = v.Unmarshal(cfg)
+		if err != nil {
+			logrus.WithField("path", e.Name).WithField(FAILURE, GetFuncName()).Error(FormatError(ParseIssue, "配置文件反序列化失败", err))
+			return
+		}
+		logrus.WithField("path", e.Name).Info("重新加载配置，成功")
+	})
+
+	// 处理加载的配置
+	cleanLogger := cfg.HandleLoadedConfig()
+	return func() {
+		cleanLogger()
+	}
+}
+
+func (cfg *Config) HandleLoadedConfig() func() {
 	// 配置日志
 	cleanLogger := InitLogger()
 	// enabled几种情况（默认是第二种）
