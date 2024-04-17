@@ -149,6 +149,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 			"parent_id":  c.Request.Header.Get(ParentId),
 			"app_id":     c.Request.Header.Get(AppId),
 			"request_id": c.Request.Header.Get(RequestId),
+			"user_id":    c.Request.Header.Get(UserId),
 		}
 		// Incoming日志是来的什么就是什么，只有traceID应一致
 		logger.WithFields(LoggerFormat).Info("请求开始")
@@ -178,6 +179,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 		//    ParentID:   c.Request.Header.Get(ParentId),
 		//    AppID:      c.Request.Header.Get(AppId),
 		//    RequestID:  c.Request.Header.Get(RequestId),
+		//    UserID:     c.Request.Header.Get(UserId),
 		// }
 		// formatBytes, _ := json.Marshal(format)
 		// logger.Info(string(formatBytes))
@@ -208,6 +210,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 //    UpstreamID string        `json:"upstream_id"`
 //    AppID      string        `json:"app_id"`
 //    RequestID  string        `json:"request_id"`
+//    UserID  string        `json:"user_id"`
 // }
 
 // RPC 日志中间件
@@ -228,13 +231,9 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 		"parent_id":  SelectFromMetadata(md, ParentId),
 		"app_id":     SelectFromMetadata(md, AppId),
 		"request_id": SelectFromMetadata(md, RequestId),
+		"user_id":    SelectFromMetadata(md, UserId),
 	}
 	logger.WithFields(LoggerFormat).Info("请求开始")
-	err := ValidateMetadata(md)
-	if err != nil {
-		LogFailure(MissingParameters, "请求头错误", err)
-		return nil, err
-	}
 	startTime := time.Now()
 	res, err := handler(ctx, req)
 	endTime := time.Now()
