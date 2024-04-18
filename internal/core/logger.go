@@ -222,7 +222,7 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 	}
 	LoggerFormat := logrus.Fields{
 		"method":     SelectFromMetadata(md, Method),
-		"uri":        SelectFromMetadata(md, URI),
+		"uri":        SelectFromMetadata(md, RequestURI),
 		"client_ip":  SelectFromMetadata(md, ClientIp),
 		"user_agent": SelectFromMetadata(md, UserAgent),
 		"token":      SelectFromMetadata(md, Authorization),
