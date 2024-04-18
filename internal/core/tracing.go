@@ -83,9 +83,49 @@ func SelectFromMetadata(md metadata.MD, key string) string {
 	return EmptyString
 }
 
-// func SetMetadataForDownstream(ctx context.Context, downstreamName string, client *redis.Client) error {
-//
-// }
+func SetMetadataForDownstreamFromHttpHeaders(ctx context.Context, c *gin.Context, downstreamName string, client *redis.Client) (context.Context, error) {
+	var mdMap = map[string]string{}
+	mdMap[ClientIp] = c.Request.Header.Get(ClientIp)
+	mdMap[UserAgent] = c.Request.Header.Get(UserAgent)
+	mdMap[RequestId] = c.Request.Header.Get(RequestId)
+	mdMap[TraceId] = c.Request.Header.Get(TraceId)
+	mdMap[ParentId] = c.Request.Header.Get(ParentId)
+	mdMap[AppId] = cfg.App.Id
+	mdMap[UserId] = c.Request.Header.Get(UserId)
+	mdMap[Authorization] = c.Request.Header.Get(Authorization)
+	md := metadata.New(mdMap)
+	newCtx := metadata.NewOutgoingContext(ctx, md)
+	// 接口签名用
+	userId := c.Request.Header.Get(UserId)
+	if userId == EmptyString {
+		userId = ShortUUID()
+	}
+	nonce := c.Request.Header.Get(ParentId) + c.Request.RequestURI
+	downstreamAppId := EmptyString
+	downstreamAppSecret := EmptyString
+	for _, downstream := range cfg.Downstreams {
+		if downstream.Name == downstreamName {
+			downstreamAppId = downstream.Id
+			downstreamAppSecret = downstream.Secret
+			break
+		}
+	}
+	// 生成签名并写入redis
+	signature := GenAppSignature(downstreamAppId, downstreamAppSecret, userId, nonce)
+	result, err := client.SAdd(context.Background(), Signature, signature).Result()
+	if err != nil {
+		return ctx, FormatError(CacheDenied, "缓存写入失败", err)
+	}
+	if result == 0 {
+		return ctx, FormatError(CacheDenied, "缓存写入失败", errors.New("set已有该值"))
+	}
+	// 设置过期时间
+	err = client.Expire(context.Background(), Signature, time.Second*5).Err()
+	if err != nil {
+		return ctx, FormatError(CacheDenied, "签名过期时间设置失败", err)
+	}
+	return newCtx, nil
+}
 
 func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redis.Client) error {
 	c.Request.Header.Set(ClientIp, c.Request.Header.Get(ClientIp))
@@ -94,8 +134,12 @@ func SetHeadersForDownstream(c *gin.Context, downstreamName string, client *redi
 	c.Request.Header.Set(TraceId, c.Request.Header.Get(TraceId))
 	c.Request.Header.Set(ParentId, c.Request.Header.Get(ParentId))
 	c.Request.Header.Set(AppId, cfg.App.Id)
-	userId := c.Request.Header.Get(UserId)
+	c.Request.Header.Set(Authorization, c.Request.Header.Get(Authorization))
 	c.Request.Header.Set(UserId, c.Request.Header.Get(UserId))
+	userId := c.Request.Header.Get(UserId)
+	if userId == EmptyString {
+		userId = ShortUUID()
+	}
 	nonce := c.Request.Header.Get(ParentId) + c.Request.RequestURI
 	downstreamAppId := EmptyString
 	downstreamAppSecret := EmptyString
