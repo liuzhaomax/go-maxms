@@ -68,7 +68,8 @@ func ValidateMetadata(md metadata.MD) error {
 		SelectFromMetadata(md, RequestId) == EmptyString {
 		return errors.New("缺失链路信息")
 	}
-	if SelectFromMetadata(md, AppId) == EmptyString {
+	if SelectFromMetadata(md, AppId) == EmptyString ||
+		SelectFromMetadata(md, RequestURI) == EmptyString {
 		return errors.New("缺失接口签名信息")
 	}
 	return nil
