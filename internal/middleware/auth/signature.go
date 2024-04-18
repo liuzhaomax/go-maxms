@@ -12,7 +12,7 @@ import (
 func (auth *Auth) ValidateSignature() gin.HandlerFunc {
 	cfg := core.GetConfig()
 	return func(c *gin.Context) {
-		userId, _ := c.Cookie(core.UserID) // 允许为空，不需处理err
+		userId := c.Request.Header.Get(core.UserId)
 		nonce := c.Request.Header.Get(core.SpanId) + c.Request.RequestURI
 		// 根据headers里给定的信息，生成签名并比对
 		signatureGen := core.GenAppSignature(cfg.App.Id, cfg.App.Secret, userId, nonce)
