@@ -93,6 +93,7 @@ func SetMetadataForDownstreamFromHttpHeaders(ctx context.Context, c *gin.Context
 	mdMap[AppId] = cfg.App.Id
 	mdMap[UserId] = c.Request.Header.Get(UserId)
 	mdMap[Authorization] = c.Request.Header.Get(Authorization)
+	mdMap[RequestURI] = c.Request.RequestURI
 	md := metadata.New(mdMap)
 	newCtx := metadata.NewOutgoingContext(ctx, md)
 	// 接口签名用
