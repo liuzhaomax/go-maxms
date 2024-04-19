@@ -67,8 +67,8 @@ lib:
       port: 9876
 
 server:
-  protocol: http
-  host: 172.21.240.1
+  protocol: rpc
+  host: 192.168.1.14
   port: 9999
   base_url: /
   read_timeout: 5 # seconds
