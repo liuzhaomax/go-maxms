@@ -33,8 +33,10 @@ linters:
 #    - unparam # 传入永远是一样的，无需使用变量
     - whitespace
 
-#issues:
-#  exclude-rules:
+issues:
+  exclude-rules:
+    - path: internal
+      linters: ["nakedret"]
 #    - path: internal
 #      text: "123"
 #      linters:
