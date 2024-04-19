@@ -8,10 +8,10 @@ app:
     signature: true # signature默认依赖于redis
     random_port: true
     service_discovery: true
-  white_list:
-    -
-      name: sgw
-      domain: http://172.16.96.98:9999
+#  white_list:
+#    -
+#      name: sgw
+#      domain: http://172.16.96.98:9999
 
 lib:
   log:
