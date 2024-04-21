@@ -69,7 +69,7 @@ lib:
 server:
   protocol: http
   host: 172.16.96.98
-  port: 9999
+  port: 10001
   base_url: /
   read_timeout: 5 # seconds
   write_timeout: 10
