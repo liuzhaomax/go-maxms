@@ -95,7 +95,7 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 func InitRpcServer(ctx context.Context, handlerRPC *api.HandlerRPC) func() {
 	cfg := core.GetConfig()
 	cfg.App.Logger.Info(core.FormatInfo("服务启动开始"))
-	addr := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
+	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Port)
 	server := handlerRPC.Register()
 	go func() {
 		listen, err := net.Listen("tcp", addr)
