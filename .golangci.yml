@@ -1,6 +1,3 @@
-service:
-  golangci-lint-version: 1.52.2
-
 linters:
   disable-all: true
   enable:
@@ -45,7 +42,4 @@ issues:
 run:
   concurrency: 16
   tests: true
-  skip-dirs:
-    - vendor
-    - main
   allow-parallel-runners: true
