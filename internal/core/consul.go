@@ -1,7 +1,6 @@
 package core
 
 import (
-	"errors"
 	"fmt"
 	"github.com/hashicorp/consul/api"
 	"strconv"
@@ -64,7 +63,7 @@ func (c *Consul) ServiceDiscover() error {
 			return err
 		}
 		if len(services) == 0 {
-			return errors.New(fmt.Sprintf("未发现可用服务: %s: %s:%s", downstream.Name, downstream.Host, downstream.Port))
+			return fmt.Errorf("未发现可用服务: %s: %s:%s", downstream.Name, downstream.Host, downstream.Port)
 		}
 		for _, service := range services {
 			if downstream.Name == service.ServiceName {
