@@ -58,7 +58,7 @@ func (c *Consul) ServiceDiscover() error {
 		return err
 	}
 	for i, downstream := range cfg.Downstreams {
-		services, _, err := client.Catalog().Service(downstream.Name, cfg.Server.Protocol, nil)
+		services, _, err := client.Catalog().Service(downstream.Name, EmptyString, nil)
 		if err != nil {
 			return err
 		}
