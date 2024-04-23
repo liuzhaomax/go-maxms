@@ -64,7 +64,7 @@ func (c *Consul) ServiceDiscover() error {
 			return err
 		}
 		if len(services) == 0 {
-			return errors.New("未发现可用服务: " + downstream.Name)
+			return errors.New(fmt.Sprintf("未发现可用服务: %s: %s:%s", downstream.Name, downstream.Host, downstream.Port))
 		}
 		for _, service := range services {
 			if downstream.Name == service.ServiceName {
