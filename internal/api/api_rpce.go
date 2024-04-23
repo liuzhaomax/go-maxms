@@ -8,6 +8,8 @@ import (
 	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/pb"
 	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 var APIRPCSet = wire.NewSet(wire.Struct(new(HandlerRPC), "*"), wire.Bind(new(APIRPC), new(*HandlerRPC)))
@@ -37,11 +39,14 @@ func (h *HandlerRPC) Register() *grpc.Server {
 	// 连接多个中间件
 	serverOpts := []grpc.ServerOption{}
 	serverOpts = append(serverOpts, grpc.UnaryInterceptor(middleware_rpc.ChainUnaryInterceptors(interceptorMap)))
-
 	// 创建gRPC服务
 	server := grpc.NewServer(serverOpts...)
 	// 注册接口
 	pb.RegisterUserServiceServer(server, h.BusinessRPC)
+
+	// 健康检查
+	healthCheck := health.NewServer()
+	grpc_health_v1.RegisterHealthServer(server, healthCheck)
 
 	return server
 }

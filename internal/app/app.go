@@ -51,7 +51,7 @@ func InitConfig(opts *options) func() {
 				err = cfg.Lib.Consul.ServiceDiscover()
 				if err != nil {
 					cfg.App.Logger.WithField(core.FAILURE, core.GetFuncName()).Warn(core.FormatError(core.Unknown, "下游服务发现失败", err))
-				} else {
+				} else if len(cfg.Downstreams) != 0 {
 					cfg.App.Logger.Info(core.FormatInfo("下游服务发现成功"))
 				}
 				time.Sleep(time.Duration(cfg.Lib.Consul.Interval) * time.Second)
