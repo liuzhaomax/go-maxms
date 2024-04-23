@@ -8,6 +8,7 @@ container_port=$5
 host_port=$6
 environment=$7
 deployment_server_ip=$8
+static_folder_name=$9
 
 # 确保没有container在运行
 containerID=$(docker -H tcp://$deployment_server_ip:2375 ps -a | grep "${project}" | awk '{print $1}')
@@ -45,7 +46,7 @@ docker -H tcp://$deployment_server_ip:2375 run \
   --privileged=true \
   -p "${host_port}:${container_port}" \
   -e ENV="${environment}" \
-  -v /root/static/"${project}/www":/usr/src/app/www \
+  -v /root/static/"${static_folder_name}"/www:/usr/src/app/www \
   -v /root/logs/"${project}":/usr/src/app/log \
   "$imageName"
 
