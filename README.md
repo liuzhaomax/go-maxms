@@ -44,29 +44,6 @@ go test -cover -coverprofile=unit_test.out
 go tool cover -html=unit_test.out
 ```
 
-## 使用的需要安装的包
-github.com/anaskhan96/go-password-encoder
-github.com/google/wire/main/wire
-github.com/gin-gonic/gin
-github.com/sirupsen/logrus
-github.com/snowzach/rotatefilehook
-github.com/spf13/viper
-github.com/mattn/go-colorable
-github.com/golang/protobuf/protoc-gen-go
-google.golang.org/grpc
-google.golang.org/protobuf
-github.com/hashicorp/vault/api
-gorm.io/gorm
-github.com/lithammer/shortuuid
-github.com/redis/go-redis/v9
-go.etcd.io/etcd/client/v3
-github.com/hashicorp/consul/api
-google.golang.org/grpc/metadata
-github.com/uber/jaeger-client-go
-github.com/prometheus/client_golang/prometheus
-github.com/alibaba/sentinel-golang/api
-github.com/apache/rocketmq-client-go/v2
-
 ## TODO
 1. ~~防抖与节流(完成-redis签名方式)，sentinel实现~~
 2. ~~etcd注册中心，服务注册与服务发现，心跳检查，consul实现~~
@@ -80,6 +57,7 @@ github.com/apache/rocketmq-client-go/v2
 10. dtm
 11. 消息队列 - 日志
 12. SSO
+13. RPC服务集成prometheus
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
