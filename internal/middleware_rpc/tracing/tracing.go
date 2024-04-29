@@ -66,8 +66,6 @@ func (t *TracingRPC) Trace(ctx context.Context, req interface{}, info *grpc.Unar
 	spanID := spanContext.(jaeger.SpanContext).SpanID().String()
 	if parent != core.EmptyString {
 		md[core.ParentId] = md[core.SpanId]
-	} else {
-		md[core.ParentId] = []string{spanID}
 	}
 	md[core.TraceId] = []string{traceID}
 	md[core.SpanId] = []string{spanID}

@@ -1,23 +1,22 @@
 package core
 
 import (
-    "github.com/gin-gonic/gin"
-    "github.com/mattn/go-colorable"
+	"github.com/gin-gonic/gin"
+	"github.com/mattn/go-colorable"
 )
 
 func init() {
-    gin.DefaultWriter = colorable.NewColorableStdout()
-    gin.ForceConsoleColor()
+	gin.DefaultWriter = colorable.NewColorableStdout()
+	gin.ForceConsoleColor()
 }
 
 type Gin struct {
-    RunMode string `mapstructure:"run_mode"`
+	RunMode string `mapstructure:"run_mode"`
 }
 
 // InitGinEngine Gin引擎的provider
 func InitGinEngine() *gin.Engine {
-    gin.SetMode(GetConfig().Lib.Gin.RunMode) // debug, test, release
-    app := gin.Default()
-    app.Use(LoggerForHTTP()) // Gin使用logrus中间件处理日志
-    return app
+	gin.SetMode(GetConfig().Lib.Gin.RunMode) // debug, test, release
+	app := gin.Default()
+	return app
 }
