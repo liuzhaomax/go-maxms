@@ -57,7 +57,7 @@ go tool cover -html=unit_test.out
 10. dtm
 11. 消息队列 - 日志
 12. SSO
-13. RPC服务集成prometheus
+13. ~~RPC服务集成prometheus~~
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
