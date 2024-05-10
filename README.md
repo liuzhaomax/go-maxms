@@ -60,6 +60,8 @@ go tool cover -html=unit_test.out
 13. ~~RPC服务集成prometheus~~
 14. mysql集群
 15. redis集群
+16. 单元测试
+17. ginkgo test
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
