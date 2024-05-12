@@ -50,8 +50,8 @@
 5. redis账号密码登录
 6. redis主从哨兵
 7. redis TTL，持久化，布隆过滤器，雪崩击穿穿透
-8. redis日志收集
-9. RPC的中间件，包括token和签名
+8. ~~redis日志收集~~
+9. ~~RPC的中间件，包括token和签名~~
 10. sentinel golang 不支持dashboard，需要二次开发：需建立与sentinel-dashboard通信的客户端（在config.Sentinel中定义地址），监听dashboard配置变化
-11. prom监控 ELKf MQ jaeger consul vault
+11. ~~prom监控 ELKf MQ jaeger consul vault~~
 12. sgw负载均衡
