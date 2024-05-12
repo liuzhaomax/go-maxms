@@ -1,48 +1,6 @@
-# Go-MaxMs 模板
+# go-maxms微服务脚手架
 
-pb code gen
-> Download the protoc bin file.
-> https://github.com/protocolbuffers/protobuf/releases
-```shell
-# protoc-gen-go
-go install google.golang.org/protobuf/cmd/protoc-gen-go
-# grpc
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
-go get -u google.golang.org/protobuf
-go get -u google.golang.org/grpc
-```
-
-```shell
-protoc -I . --go_out=plugins=grpc:. *.proto
-```
-
-wire
-```shell
-# 安装
-go install github.com/google/wire/main/wire@latest
-go get -u github.com/google/wire/main/wire@v0.5.0
-# 生成
-cd internal/app
-go run github.com/google/wire/main/wire
-# 生成
-wire
-```
-
-mysql：
-```shell
-mysql -u root -p
-```
-
-代码覆盖率检查：
-```shell
-# 查看pwd下所有go文件代码覆盖率
-go test -cover
-# 查看pwd下所有go文件代码覆盖率，并输出覆盖率报告文件unit_test.out
-go test -cover -coverprofile=unit_test.out
-# 用html方式读取报告文件unit_test.out，可查看具体是哪段代码没有覆盖
-go tool cover -html=unit_test.out
-```
 
 ## TODO
 1. ~~防抖与节流(完成-redis签名方式)，sentinel实现~~
