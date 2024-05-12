@@ -18,6 +18,7 @@
 + 支持跨域访问
 + 支持分层架构
 + 支持CI/CD，jenkins流水线与docker自动化部署
++ 支持github工作流
 
 ## 使用指南
 查看[使用指南](./init_common.md)了解更多详情。
