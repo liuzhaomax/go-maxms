@@ -33,7 +33,7 @@ func (auth *AuthRPC) ValidateSignature(ctx context.Context, req interface{}, inf
 		err = auth.GenErrMsg(ctx, "签名验证失败", errors.New("签名不匹配"))
 		return
 	}
-	result, err := auth.Redis.SAdd(context.Background(), core.Nonce, signatureGen).Result()
+	result, err := auth.Redis.SAdd(context.Background(), core.Nonce, nonce).Result()
 	// 如果直接使用返回值，(*result).Val()，1是set里原来没有，加入成功，0是set里原来有，加入失败
 	if err != nil {
 		err = auth.GenErrMsg(ctx, "签名验证失败", err)
