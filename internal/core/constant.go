@@ -38,8 +38,9 @@ const (
 	RequestId     = "request_id"
 	UserId        = "user_id"
 	RequestURI    = "request_uri"
+	Signature     = "signature"
 	// redis
-	Signature = "signature"
+	Nonce = "nonce"
 	// jaeger
 	Tracer      = "tracer"
 	Parent      = "parent"

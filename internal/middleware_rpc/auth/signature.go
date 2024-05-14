@@ -21,10 +21,19 @@ func (auth *AuthRPC) ValidateSignature(ctx context.Context, req interface{}, inf
 		return
 	}
 	userId := md[core.UserId][0]
-	nonce := md[core.SpanId][0] + md[core.RequestURI][0]
+	nonceForValidation := md[core.ParentId][0]
+	nonce := md[core.SpanId][0]
+	if nonce == core.EmptyString {
+		nonce = core.ShortUUID()
+	}
 	// 根据headers里给定的信息，生成签名并比对
-	signatureGen := core.GenAppSignature(cfg.App.Id, cfg.App.Secret, userId, nonce)
-	result, err := auth.Redis.SAdd(context.Background(), core.Signature, signatureGen).Result()
+	signatureGen := core.GenAppSignature(cfg.App.Id, cfg.App.Secret, userId, nonceForValidation)
+	signatureMD := md[core.Signature][0]
+	if signatureGen != signatureMD {
+		err = auth.GenErrMsg(ctx, "签名验证失败", errors.New("签名不匹配"))
+		return
+	}
+	result, err := auth.Redis.SAdd(context.Background(), core.Nonce, signatureGen).Result()
 	// 如果直接使用返回值，(*result).Val()，1是set里原来没有，加入成功，0是set里原来有，加入失败
 	if err != nil {
 		err = auth.GenErrMsg(ctx, "签名验证失败", err)
@@ -35,7 +44,7 @@ func (auth *AuthRPC) ValidateSignature(ctx context.Context, req interface{}, inf
 		return
 	}
 	// 设置过期时间
-	err = auth.Redis.Expire(context.Background(), core.Signature, time.Second*5).Err()
+	err = auth.Redis.Expire(context.Background(), core.Nonce, time.Second*5).Err()
 	if err != nil {
 		err = auth.GenErrMsg(ctx, "签名过期时间设置失败", err)
 		return

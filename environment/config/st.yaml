@@ -22,6 +22,7 @@ lib:
     file_name: app.log
   vault:
     address: https://vault.liuzhaomax.cn
+    interval: 15
   gin:
     run_mode: debug # debug test release
   db:

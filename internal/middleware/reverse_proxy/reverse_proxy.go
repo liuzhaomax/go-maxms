@@ -36,7 +36,7 @@ func (rp *ReverseProxy) Redirect(serviceName string) gin.HandlerFunc {
 		}
 		proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
 		rp.GenOkMsg(c, fmt.Sprintf("反向代理到: %s, 地址: %s", serviceName, addr))
-		err = core.SetHeadersForDownstream(c)
+		err = core.SetHeadersForDownstream(c, cfg.Downstreams[0].Name)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusForbidden, rp.GenErrMsg(c, "反向代理请求头设置失败", err))
 			return

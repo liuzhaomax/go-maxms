@@ -82,7 +82,7 @@ func SelectFromMetadata(md metadata.MD, key string) string {
 	return EmptyString
 }
 
-func SetMetadataForDownstreamFromHttpHeaders(ctx context.Context, c *gin.Context) (context.Context, error) {
+func SetMetadataForDownstreamFromHttpHeaders(ctx context.Context, c *gin.Context, downstreamName string) (context.Context, error) {
 	var mdMap = map[string]string{}
 	mdMap[ClientIp] = c.Request.Header.Get(ClientIp)
 	mdMap[UserAgent] = c.Request.Header.Get(UserAgent)
@@ -95,12 +95,27 @@ func SetMetadataForDownstreamFromHttpHeaders(ctx context.Context, c *gin.Context
 	mdMap[Authorization] = c.Request.Header.Get(Authorization)
 	mdMap[RequestURI] = c.Request.RequestURI
 	mdMap[UberTraceId] = c.Request.Header.Get(UberTraceId)
+	// 接口签名用
+	userId := c.Request.Header.Get(UserId)
+	nonce := c.Request.Header.Get(SpanId)
+	downstreamAppId := EmptyString
+	downstreamAppSecret := EmptyString
+	for _, downstream := range cfg.Downstreams {
+		if downstream.Name == downstreamName {
+			downstreamAppId = downstream.Id
+			downstreamAppSecret = downstream.Secret
+			break
+		}
+	}
+	// 生成签名并写入redis
+	signature := GenAppSignature(downstreamAppId, downstreamAppSecret, userId, nonce)
+	mdMap[Signature] = signature
 	md := metadata.New(mdMap)
 	newCtx := metadata.NewOutgoingContext(ctx, md)
 	return newCtx, nil
 }
 
-func SetHeadersForDownstream(c *gin.Context) error {
+func SetHeadersForDownstream(c *gin.Context, downstreamName string) error {
 	c.Request.Header.Set(ClientIp, c.Request.Header.Get(ClientIp))
 	c.Request.Header.Set(UserAgent, c.Request.Header.Get(UserAgent))
 	c.Request.Header.Set(RequestId, c.Request.Header.Get(RequestId))
@@ -110,5 +125,19 @@ func SetHeadersForDownstream(c *gin.Context) error {
 	c.Request.Header.Set(AppId, cfg.App.Id)
 	c.Request.Header.Set(Authorization, c.Request.Header.Get(Authorization))
 	c.Request.Header.Set(UserId, c.Request.Header.Get(UserId))
+	// 接口签名
+	userId := c.Request.Header.Get(UserId)
+	nonce := c.Request.Header.Get(SpanId) // 当前ms的spanId
+	downstreamAppId := EmptyString
+	downstreamAppSecret := EmptyString
+	for _, downstream := range cfg.Downstreams {
+		if downstream.Name == downstreamName {
+			downstreamAppId = downstream.Id
+			downstreamAppSecret = downstream.Secret
+			break
+		}
+	}
+	signature := GenAppSignature(downstreamAppId, downstreamAppSecret, userId, nonce)
+	c.Request.Header.Set(Signature, signature)
 	return nil
 }
