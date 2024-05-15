@@ -42,7 +42,5 @@ const (
 	// redis
 	Nonce = "nonce"
 	// jaeger
-	Tracer      = "tracer"
-	Parent      = "parent"
 	UberTraceId = "uber-trace-id"
 )
