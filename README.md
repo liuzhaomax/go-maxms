@@ -41,6 +41,7 @@
 15. redis集群
 16. 单元测试
 17. ginkgo test
+18. OCP
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
