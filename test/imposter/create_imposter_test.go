@@ -1,4 +1,4 @@
-package main
+package imposter
 
 import (
 	"flag"
@@ -6,12 +6,13 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/spf13/viper"
 	"log"
+	"testing"
 )
 
-const configDir = "environment/config"
-const stubDir = "test/stub/imposter.json"
+const configDir = "../../environment/config"
+const stubDir = "../stub/imposter.json"
 
-func main() {
+func TestCreateImposter(t *testing.T) {
 	v := viper.New()
 	cfg := core.GetConfig()
 	v.AutomaticEnv()
