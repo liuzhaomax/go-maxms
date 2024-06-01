@@ -3,7 +3,11 @@
   "protocol": "http",
   "stubs": [{
     "responses": [
-      { "is": { "statusCode": 400 }}
+      {
+        "is": {
+          "statusCode": 400
+        }
+      }
     ],
     "predicates": [{
       "and": [
