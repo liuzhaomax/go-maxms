@@ -31,6 +31,7 @@ func TestCreateImposter(t *testing.T) {
 	if err != nil {
 		log.Fatalf("解析配置文件时出错: %v", err)
 	}
+
 	// 创建imposter
 	cfg.CreateImposter(stubDir)
 }
