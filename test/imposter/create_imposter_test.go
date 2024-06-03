@@ -11,13 +11,13 @@ import (
 
 const configDir = "../../environment/config"
 const stubDir = "../stub/imposter.json"
-const DEV = "dev"
+const ENV = "dev"
 
 func TestCreateImposter(t *testing.T) {
 	v := viper.New()
 	cfg := core.GetConfig()
 	v.AutomaticEnv()
-	env := flag.String("e", DEV, "环境")
+	env := flag.String("e", ENV, "环境")
 	flag.Parse() // 后面有*env，必须先解析
 	configFile := flag.String("c", fmt.Sprintf("%s/%s.yaml", configDir, *env), "配置文件")
 	flag.Parse()
