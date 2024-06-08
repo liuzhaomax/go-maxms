@@ -43,7 +43,7 @@
 17. ginkgo test
 18. OCP4
 19. grpcmock
-20. mountebank
+20. mountebank 需要开一个服务，用读取list的方式，来显示当前运行的stub，提供一个接口（所要查询的端口是否被stub占用）
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
