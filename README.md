@@ -48,7 +48,7 @@
 1. vault与k8s集成，在登录后读取jwtsecret
 2. vault与k8s集成，动态数据库账号密码  https://www.youtube.com/watch?v=otNkDHFNWt0
 3. ~~vault使用production模式启动，链接换为https~~
-4. 根据contract生成代码，包括type，不含集成其他工具的代码，（必填的非指针，可选的是指针），AST
+4. 根据contract生成代码，包括type，不含集成其他工具的代码，（必填的非指针，可选的是指针），AST，需要注意是否使用指针类型
 5. redis账号密码登录
 6. redis主从哨兵
 7. redis TTL，持久化，布隆过滤器，雪崩击穿穿透
