@@ -45,11 +45,13 @@ func getConfig() *core.Config {
 	v.SetConfigFile(*configFile)
 	err := v.ReadInConfig()
 	if err != nil {
-		log.Fatalf("读取配置文件时出错: %v", err)
+		log.Printf("读取配置文件时出错: %v", err)
+		return nil
 	}
 	err = v.Unmarshal(cfg)
 	if err != nil {
-		log.Fatalf("解析配置文件时出错: %v", err)
+		log.Printf("解析配置文件时出错: %v", err)
+		return nil
 	}
 	return cfg
 }
