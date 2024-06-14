@@ -18,7 +18,7 @@
 4. 检查路由、中间件
 5. 检查依赖，运行`make wire`
 6. 运行`make lint`
-7. 调用script，获取contract
+7. 修改makefile中的contract链接，运行`make spec`，获取contract
 8. `make run`
 9. commit
 
