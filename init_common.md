@@ -51,4 +51,6 @@
 
 ![Harbor新建项目.png](img/init_common/Harbor新建项目.png)
 
+### 2.3 Prometheus
 
+修改prometheus.yml，增加job
