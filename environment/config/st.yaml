@@ -3,8 +3,8 @@ app:
   version: 0.1
   domain: liuzhaomax.cn
   enabled:
-    rsa: false # rsa和vault有关联关系
-    vault: true
+    rsa: true # rsa和vault有关联关系
+    vault: false
     signature: true # signature默认依赖于redis
     random_port: true
     service_discovery: true
