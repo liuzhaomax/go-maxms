@@ -26,6 +26,7 @@ type Handler struct {
 }
 
 func (h *Handler) Register(app *gin.Engine) {
+	cfg := core.GetConfig()
 	// 404
 	app.NoRoute(h.GetNoRoute)
 	// CORS
@@ -43,7 +44,9 @@ func (h *Handler) Register(app *gin.Engine) {
 	{
 		// interceptor
 		root.Use(h.Middleware.Validator.ValidateHeaders())
-		root.Use(h.Middleware.Auth.ValidateSignature())
+		if cfg.App.Enabled.Signature {
+			root.Use(h.Middleware.Auth.ValidateSignature())
+		}
 		// dynamic api
 		router.Register(root, h.HandlerUser, h.Middleware)
 	}
