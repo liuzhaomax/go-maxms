@@ -51,6 +51,7 @@ func GetUserAgent(c *gin.Context) string {
 func ValidateHeaders(c *gin.Context) error {
 	if c.Request.Header.Get(TraceId) == EmptyString ||
 		c.Request.Header.Get(SpanId) == EmptyString ||
+		c.Request.Header.Get(ParentId) == EmptyString ||
 		c.Request.Header.Get(RequestId) == EmptyString {
 		return errors.New("缺失链路信息")
 	}
@@ -63,6 +64,7 @@ func ValidateHeaders(c *gin.Context) error {
 func ValidateMetadata(md metadata.MD) error {
 	if SelectFromMetadata(md, TraceId) == EmptyString ||
 		SelectFromMetadata(md, SpanId) == EmptyString ||
+		SelectFromMetadata(md, ParentId) == EmptyString ||
 		SelectFromMetadata(md, RequestId) == EmptyString {
 		return errors.New("缺失链路信息")
 	}
