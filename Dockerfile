@@ -1,4 +1,4 @@
-FROM golang:1.21
+FROM golang:1.22
 
 ENV GO111MODULE on
 ENV CGO_ENABLED 1
@@ -11,7 +11,7 @@ COPY . .
 
 # RUN go mod tidy
 
-RUN go build -o bin main/main.go
+RUN go build -o bin/main main/main.go
 
 # CMD ["sudo", "chmod", "+x", "bin/main"]
 
