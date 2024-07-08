@@ -12,14 +12,9 @@ import (
 type Mountebank struct {
 	Protocol string
 	Mb
-	Imposter
 }
 
 type Mb struct {
-	Endpoint
-}
-
-type Imposter struct {
 	Endpoint
 }
 

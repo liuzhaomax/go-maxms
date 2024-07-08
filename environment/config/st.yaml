@@ -72,10 +72,6 @@ lib:
       endpoint:
         host: 106.15.94.179
         port: 2525
-    imposter:
-      endpoint:
-        host: 106.15.94.179
-        port: 4545
 
 server:
   protocol: http
