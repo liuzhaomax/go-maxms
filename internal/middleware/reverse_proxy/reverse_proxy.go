@@ -1,6 +1,7 @@
 package reverse_proxy
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"time"
 )
 
 var ReverseProxySet = wire.NewSet(wire.Struct(new(ReverseProxy), "*"))
@@ -16,6 +18,31 @@ var ReverseProxySet = wire.NewSet(wire.Struct(new(ReverseProxy), "*"))
 type ReverseProxy struct {
 	Logger      core.ILogger
 	RedisClient *redis.Client
+}
+
+// 防抖持续时间
+const debounceDuration = 50 * time.Millisecond
+
+// DebounceMiddleware 接口防抖
+func (rp *ReverseProxy) DebounceMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		clientIP := c.ClientIP()
+		key := fmt.Sprintf("上次请求时间-%s", clientIP)
+		// 检查上次请求时间
+		lastRequest, err := rp.RedisClient.Get(context.Background(), key).Int64()
+		if err != nil && err != redis.Nil {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, rp.GenErrMsg(c, "接口防抖查询redis错误", err))
+			return
+		}
+		// 对比上次请求时间到现在的时间，小于防抖时间，则报错429
+		if err == nil && time.Since(time.Unix(lastRequest, 0)) < debounceDuration {
+			c.AbortWithStatusJSON(http.StatusTooManyRequests, rp.GenErrMsg(c, "请求过于频繁接口防抖生效", err))
+			return
+		}
+		// 记录当前请求时间
+		rp.RedisClient.Set(context.Background(), key, time.Now().Unix(), debounceDuration)
+		c.Next()
+	}
 }
 
 // Redirect URL使用通配符，例如/api/*
