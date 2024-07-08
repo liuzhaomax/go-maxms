@@ -36,8 +36,13 @@ unit:
 	go test -v -timeout 1000s -covermode=atomic -coverpkg=./... -coverprofile=unit_test.out $(TEST_INCLUSION)
 	go tool cover -html=unit_test.out
 
+# 打测试桩
+stub:
+	go test ./test/imposter/imposter_test.go -run TestUpdateImposter
+
 # 接口测试
 api:
 	go test -v -race -tags $(SCENARIO) ./test/api -args -env=$(API_ENV)
 
 .PHONY: spec
+.PHONY: stub
