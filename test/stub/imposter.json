@@ -1,30 +1,33 @@
 {
   "port": 4545,
   "protocol": "http",
-  "stubs": [{
-    "responses": [
-      {
-        "is": {
-          "statusCode": 400
+  "stubs": [
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "message": "Success",
+              "data": {
+                "id": 1,
+                "name": "Test1"
+              }
+            }
+          }
         }
-      }
-    ],
-    "predicates": [{
-      "and": [
+      ],
+      "predicates": [
         {
           "equals": {
             "path": "/test",
-            "method": "POST",
-            "headers": { "Content-Type": "application/json" }
-          }
-        },
-        {
-          "not": {
-            "contains": { "body": "requiredField" },
-            "caseSensitive": true
+            "method": "GET"
           }
         }
       ]
-    }]
-  }]
+    }
+  ]
 }
