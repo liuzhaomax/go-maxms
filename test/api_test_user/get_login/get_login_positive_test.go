@@ -1,5 +1,5 @@
-//go:build test || all
-// +build test all
+//go:build positive || all
+// +build positive all
 
 package get_login
 
