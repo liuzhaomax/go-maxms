@@ -1,7 +1,7 @@
 //go:build positive || all
 // +build positive all
 
-package get_login
+package test
 
 import (
 	"encoding/json"
