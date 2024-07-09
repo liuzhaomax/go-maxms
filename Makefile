@@ -42,7 +42,7 @@ stub:
 
 # 接口测试
 api:
-	go test -v -race -tags $(SCENARIO) ./test/api -args -env=$(API_ENV)
+	go test -v -tags $(SCENARIO) ./test -args -env=$(ENV)
 
 .PHONY: spec
 .PHONY: stub
