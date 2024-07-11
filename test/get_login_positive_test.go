@@ -15,7 +15,7 @@ import (
 var _ = Describe("GET /login 获取公钥", func() {
 	Context("200_success", func() {
 		It("应该返回含有公钥字符串的json", func() {
-			expectedRespBodyPath := "./response/200/200_success.json"
+			expectedRespBodyPath := "./base/get_login/response/200/200_success.json"
 			expectedRespBody := common.ReadFile(expectedRespBodyPath)
 			var expectedRespJson map[string]any
 			_ = json.Unmarshal(expectedRespBody, &expectedRespJson)
