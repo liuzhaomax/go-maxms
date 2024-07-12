@@ -32,7 +32,7 @@
 6. ~~consul 服务发现随机端口~~
 7. ~~SGW反向代理~~
 8. SGW限流熔断降级 - 日志
-9. SGW防爬虫
+9. ~~SGW防爬虫~~
 10. dtm
 11. 消息队列 - 日志
 12. SSO
@@ -40,7 +40,7 @@
 14. mysql集群
 15. redis集群
 16. 单元测试
-17. ginkgo test
+17. ~~ginkgo test~~
 18. OCP4
 19. grpcmock
 
