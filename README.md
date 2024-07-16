@@ -44,6 +44,7 @@
 18. OCP4
 19. grpcmock
 20. ~~接口防抖~~
+21. token再颁发
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
