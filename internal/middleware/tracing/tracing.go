@@ -22,7 +22,7 @@ type Tracing struct {
 func (t *Tracing) Trace() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 生成tracer
-		tracer, closer, err := t.TracerConfig.NewTracer(jConfig.Logger(jaeger.StdLogger))
+		tracer, closer, err := t.TracerConfig.NewTracer(jConfig.Logger(jaeger.NullLogger)) // 不打印log 没什么用
 		defer func(closer io.Closer) {
 			_ = closer.Close()
 		}(closer)
