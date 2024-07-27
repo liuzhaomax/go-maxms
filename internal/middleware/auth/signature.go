@@ -41,7 +41,6 @@ func (auth *Auth) ValidateSignature() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, auth.GenErrMsg(c, "签名过期时间设置失败", err))
 			return
 		}
-		auth.GenOkMsg(c, "签名已写入缓存")
 		c.Next()
 	}
 }

@@ -66,12 +66,22 @@ func (t *Tracing) Trace() gin.HandlerFunc {
 	}
 }
 
-func (t *Tracing) GenOkMsg(c *gin.Context, desc string) string {
+func (t *Tracing) GenOkMsg(c *gin.Context, desc string) any {
 	t.Logger.SucceedWithField(c, desc)
-	return core.FormatInfo(desc)
+	return gin.H{
+		"status": gin.H{
+			"code": core.OK,
+			"desc": core.FormatInfo(desc),
+		},
+	}
 }
 
-func (t *Tracing) GenErrMsg(c *gin.Context, desc string, err error) error {
+func (t *Tracing) GenErrMsg(c *gin.Context, desc string, err error) any {
 	t.Logger.FailWithField(c, core.Unknown, desc, err)
-	return core.FormatError(core.Unknown, desc, err)
+	return gin.H{
+		"status": gin.H{
+			"code": core.OK,
+			"desc": core.FormatError(core.Unknown, desc, err).Error(),
+		},
+	}
 }

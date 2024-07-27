@@ -77,12 +77,22 @@ func (rp *ReverseProxy) Redirect(serviceName string) gin.HandlerFunc {
 // 使用
 // root.GET("/login", mw.ReverseProxy.Redirect("maxblog-user"))
 
-func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) string {
+func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) any {
 	rp.Logger.SucceedWithField(c, desc)
-	return core.FormatInfo(desc)
+	return gin.H{
+		"status": gin.H{
+			"code": core.OK,
+			"desc": core.FormatInfo(desc),
+		},
+	}
 }
 
-func (rp *ReverseProxy) GenErrMsg(c *gin.Context, desc string, err error) error {
+func (rp *ReverseProxy) GenErrMsg(c *gin.Context, desc string, err error) any {
 	rp.Logger.FailWithField(c, core.Forbidden, desc, err)
-	return core.FormatError(core.Forbidden, desc, err)
+	return gin.H{
+		"status": gin.H{
+			"code": core.OK,
+			"desc": core.FormatError(core.Forbidden, desc, err).Error(),
+		},
+	}
 }
