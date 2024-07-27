@@ -25,6 +25,7 @@ lib:
     interval: 15
   gin:
     run_mode: debug # debug test release
+    max_multipart_memory: 10 # MB
   db:
     type: mysql
     debug: true
