@@ -37,11 +37,13 @@ func InitLogger() func() {
 	log := GetConfig().Lib.Log
 	if err := os.MkdirAll(log.FilePath, 0666); err != nil {
 		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志目录创建失败", err))
+		panic(err)
 	}
 	fileName := fmt.Sprintf("%s/%s", log.FilePath, log.FileName)
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
 		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志文件打开失败", err))
+		panic(err)
 	}
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
