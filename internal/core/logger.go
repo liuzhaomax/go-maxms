@@ -38,7 +38,6 @@ func InitLogger() func() {
 	if err := os.MkdirAll(log.FilePath, 0666); err != nil {
 		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志目录创建失败", err))
 	}
-	// TODO NOT NOW 根据时间创建不同的日志文件，减小IO开支，日志必须保存至少180天
 	fileName := fmt.Sprintf("%s/%s", log.FilePath, log.FileName)
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 	if err != nil {
@@ -50,9 +49,9 @@ func InitLogger() func() {
 	// logger.SetReportCaller(true) // 输出caller
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   fileName,
-		MaxSize:    50, // megabytes
-		MaxBackups: 3,  // amouts
-		MaxAge:     28, // days
+		MaxSize:    1,   // megabytes
+		MaxBackups: 3,   // amouts
+		MaxAge:     180, // days
 		Level:      selectLogLevel(),
 		Formatter:  selectFormatter(),
 	})
