@@ -1,0 +1,93 @@
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  PROJECT_NAME: "prismer-official"
+  CI_REGISTRY: "dockerhub.services"
+  DOCKER_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
+  HOST_PORT: "9999"  # 宿主机端口
+  CONTAINER_PORT: "9999"  # 容器端口
+
+before_script:
+  - export DOCKER_IMAGE="$(echo $CI_REGISTRY_IMAGE | sed 's/:443//'):$CI_COMMIT_REF_NAME"
+  - echo $CI_REGISTRY_USER
+  - echo $CI_REGISTRY_PASSWORD
+  - echo $CI_REGISTRY
+
+
+# 定义格式化和静态检查任务
+lint_and_fmt_job:
+  stage: lint
+  image: golang:1.22
+  script:
+    # 安装静态检查工具
+    - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    # 运行静态检查工具
+    - golangci-lint run -v -c ./.golangci.yml ./...
+    # 检查代码格式
+    - if [ -n "$(gofmt -l .)" ]; then echo "Code is not formatted"; gofmt -w .; exit 1; fi
+
+# 定义测试任务
+#test_job:
+#  stage: test
+#  image: golang:1.22
+#  script:
+#    - go test -v ./...
+
+# 定义编译任务
+build_job:
+  stage: build
+  script:
+    - docker build -t $DOCKER_IMAGE .
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker push $DOCKER_IMAGE
+    - docker rmi $DOCKER_IMAGE
+  only:
+    - tags
+
+deploy_st_job:
+  stage: deploy
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
+    - ssh-keyscan -p 22 223.166.23.84 >> ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/id_rsa
+    - chmod 644 ~/.ssh/known_hosts
+    - export DOCKER_IMAGE="$(echo $CI_REGISTRY_IMAGE | sed 's/:443//'):$CI_COMMIT_REF_NAME"
+  script:
+    - ssh -p 22 root@223.166.23.84 "docker --version"
+    - ssh -p 22 root@223.166.23.84 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh -p 22 root@223.166.23.84 "docker pull $DOCKER_IMAGE"
+    - ssh -p 22 root@223.166.23.84 "docker stop $PROJECT_NAME || true"
+    - ssh -p 22 root@223.166.23.84 "docker rm $PROJECT_NAME || true"
+    - ssh -p 22 root@223.166.23.84 "docker run -d --name $PROJECT_NAME --restart=always -p $HOST_PORT:$CONTAINER_PORT -e ENV=st -v /workspace/logs/$PROJECT_NAME:/workspace/log $DOCKER_IMAGE"
+    - ssh -p 22 root@223.166.23.84 "docker rmi -f $DOCKER_IMAGE"
+  only:
+    - /^st-[0-9]{8}-v[0-9]+.[0-9]+.[0-9]+$/
+
+deploy_prod_job:
+  stage: deploy
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
+    - ssh-keyscan -p 22 47.103.120.224 >> ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/id_rsa
+    - chmod 644 ~/.ssh/known_hosts
+    - export DOCKER_IMAGE="$(echo $CI_REGISTRY_IMAGE | sed 's/:443//'):$CI_COMMIT_REF_NAME"
+  script:
+    - ssh -p 22 root@47.103.120.224 "docker --version"
+    - ssh -p 22 root@47.103.120.224 "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh -p 22 root@47.103.120.224 "docker pull $DOCKER_IMAGE"
+    - ssh -p 22 root@47.103.120.224 "docker stop $PROJECT_NAME || true"
+    - ssh -p 22 root@47.103.120.224 "docker rm $PROJECT_NAME || true"
+    - ssh -p 22 root@47.103.120.224 "docker run -d --name $PROJECT_NAME --restart=always -p $HOST_PORT:$CONTAINER_PORT -e ENV=prod -v /workspace/logs/$PROJECT_NAME:/workspace/log $DOCKER_IMAGE"
+    - ssh -p 22 root@47.103.120.224 "docker rmi -f $DOCKER_IMAGE"
+  only:
+    - /^prod-[0-9]{8}-v[0-9]+.[0-9]+.[0-9]+$/

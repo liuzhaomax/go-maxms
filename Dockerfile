@@ -1,18 +1,29 @@
-FROM golang:1.21
+FROM golang:1.22 as builder
 
 ENV GO111MODULE on
 ENV CGO_ENABLED 1
 ENV GOOS linux
 ENV GOARCH amd64
 
-WORKDIR /usr/src/app
+WORKDIR /workspace
 
 COPY . .
 
-# RUN go mod tidy
+RUN go mod tidy
 
 RUN go build -o bin/main main/main.go
 
-# CMD ["sudo", "chmod", "+x", "bin/main"]
+FROM alpine:latest
 
-CMD ["bin/main"]
+ENV GO111MODULE on
+ENV CGO_ENABLED 1
+ENV GOOS linux
+ENV GOARCH amd64
+
+WORKDIR /workspace
+
+COPY --from=builder /workspace/bin/main /workspace/bin/main
+COPY --from=builder /workspace/script /workspace/script
+COPY --from=builder /workspace/environment /workspace/environment
+
+CMD ["./bin/main"]
