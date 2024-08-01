@@ -13,7 +13,7 @@ RUN go mod tidy
 
 RUN go build -o bin/main main/main.go
 
-FROM alpine:latest
+FROM ubuntu:latest
 
 ENV GO111MODULE on
 ENV CGO_ENABLED 1
