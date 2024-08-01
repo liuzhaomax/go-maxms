@@ -49,9 +49,10 @@ func InitLogger() func() {
 	// logger.SetReportCaller(true) // 输出caller
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   fileName,
-		MaxSize:    1,   // megabytes
-		MaxBackups: 3,   // amouts
-		MaxAge:     180, // days
+		MaxSize:    1,    // MB
+		MaxBackups: 3,    // 最多备份的日志文件数
+		MaxAge:     180,  // days
+		Compress:   true, // 自动压缩旧日志文件
 		Level:      selectLogLevel(),
 		Formatter:  selectFormatter(),
 	})
