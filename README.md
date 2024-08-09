@@ -46,6 +46,7 @@
 19. grpcmock
 20. ~~接口防抖~~
 21. token再颁发
+22. 重构，减少handler层级，自定义错误提示，log重构，s3 vs ec等加入，
 
 ## TODO 以后
 1. vault与k8s集成，在登录后读取jwtsecret
