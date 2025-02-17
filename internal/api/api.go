@@ -43,7 +43,9 @@ func (h *Handler) Register(app *gin.Engine) {
 	root := app.Group("")
 	{
 		// interceptor
-		root.Use(h.Middleware.Validator.ValidateHeaders())
+		if cfg.App.Enabled.HeaderParams {
+			root.Use(h.Middleware.Validator.ValidateHeaders())
+		}
 		if cfg.App.Enabled.Signature {
 			root.Use(h.Middleware.Auth.ValidateSignature())
 		}

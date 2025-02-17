@@ -47,6 +47,7 @@ type Enabled struct {
 	Vault            bool `mapstructure:"vault"`
 	RSA              bool `mapstructure:"rsa"`
 	Signature        bool `mapstructure:"signature"`
+	HeaderParams     bool `mapstructure:"header_params"`
 	RandomPort       bool `mapstructure:"random_port"`
 	ServiceDiscovery bool `mapstructure:"service_discovery"`
 }
