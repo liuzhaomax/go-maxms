@@ -33,9 +33,9 @@ func SetWWWDir(wwwDir string) Option {
 	}
 }
 
-func InitConfig(opts *options) func() {
+func InitConfig(opts *options) {
 	cfg := core.GetConfig()
-	cleanLogger := cfg.LoadConfig(opts.ConfigFile)
+	cfg.LoadConfig(opts.ConfigFile)
 	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(core.FormatInfo("配置文件加载成功"))
 	cfg.App.Logger.Info(core.FormatInfo("系统启动"))
 	if cfg.App.Enabled.ServiceDiscovery {
@@ -55,9 +55,6 @@ func InitConfig(opts *options) func() {
 				time.Sleep(time.Duration(cfg.Lib.Consul.Interval) * time.Second)
 			}
 		}()
-	}
-	return func() {
-		cleanLogger()
 	}
 }
 
@@ -122,7 +119,7 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 		optFunc(&opts)
 	}
 	// init conf
-	cleanConfig := InitConfig(&opts)
+	InitConfig(&opts)
 	cfg := core.GetConfig()
 	// init injector
 	injector, cleanInjection, _ := InitInjector()
@@ -151,7 +148,6 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	return func() {
 		cleanServer()
 		cleanInjection()
-		cleanConfig()
 	}
 }
 

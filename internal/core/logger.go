@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"os"
+	"path/filepath"
 	"runtime"
 	"time"
 )
@@ -33,28 +34,22 @@ func InitLogrus() *logrus.Logger {
 }
 
 // 初始化系统日志
-func InitLogger() func() {
+func InitLogger() *logrus.Logger {
 	log := GetConfig().Lib.Log
 	if err := os.MkdirAll(log.FilePath, 0666); err != nil {
 		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志目录创建失败", err))
-		panic(err)
 	}
-	fileName := fmt.Sprintf("%s/%s", log.FilePath, log.FileName)
-	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
-	if err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志文件打开失败", err))
-		panic(err)
-	}
+	fileName := filepath.Join(log.FilePath, log.FileName)
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
 	logger.SetFormatter(selectFormatter(log.Format))
-	// logger.SetReportCaller(true) // 输出caller
+	logger.SetReportCaller(true) // 输出caller
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   fileName,
-		MaxSize:    1,    // MB
-		MaxBackups: 3,    // 最多备份的日志文件数
-		MaxAge:     180,  // days
-		Compress:   true, // 自动压缩旧日志文件
+		MaxSize:    2,               // megabytes
+		MaxBackups: 999999999999999, // amounts
+		MaxAge:     200,             // days 国家规定日志必须保存6个月，这里设置200天
+		Compress:   false,
 		Level:      selectLogLevel(),
 		Formatter:  selectFormatter(),
 	})
@@ -64,15 +59,7 @@ func InitLogger() func() {
 	}
 	logger.AddHook(rotateFileHook)
 	cfg.App.Logger = logger
-	return func() {
-		if file != nil {
-			err = file.Close()
-			if err != nil {
-				logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志文件关闭失败", err))
-				panic(err)
-			}
-		}
-	}
+	return logger
 }
 
 func selectFormatter(forceFormatter ...string) logrus.Formatter {

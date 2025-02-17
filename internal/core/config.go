@@ -23,7 +23,7 @@ func LoadEnv() string {
 }
 
 // 加载配置
-func (cfg *Config) LoadConfig(configFile string) func() {
+func (cfg *Config) LoadConfig(configFile string) {
 	v := viper.New()
 	// 读取Config
 	v.SetConfigFile(configFile)
@@ -56,15 +56,12 @@ func (cfg *Config) LoadConfig(configFile string) func() {
 	})
 
 	// 处理加载的配置
-	cleanLogger := cfg.HandleLoadedConfig()
-	return func() {
-		cleanLogger()
-	}
+	cfg.HandleLoadedConfig()
 }
 
-func (cfg *Config) HandleLoadedConfig() func() {
+func (cfg *Config) HandleLoadedConfig() {
 	// 配置日志
-	cleanLogger := InitLogger()
+	InitLogger()
 	// enabled几种情况（默认是第二种）
 	// 1. 不使用RSA和vault：jwt_secret要自行设置（如下），salt会自动更新
 	// 2. 不使用RSA，使用vault：jwt_secret，salt，puk，prk都要在vault预先设置好
@@ -99,9 +96,6 @@ func (cfg *Config) HandleLoadedConfig() func() {
 	} else {
 		// 不适用vault需要自行设置jwt secret
 		cfg.App.JWTSecret = "liuzhaomax@163.com"
-	}
-	return func() {
-		cleanLogger()
 	}
 }
 
