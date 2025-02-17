@@ -33,7 +33,7 @@ lib:
     max_life_time: 8192
     max_open_conns: 100000
     max_idle_conns: 1000
-    name: go_maxms
+    name: go-maxms
     params: charset=utf8mb4&parseTime=True&loc=Local
     username: root
     password: 123456
