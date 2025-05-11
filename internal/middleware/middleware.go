@@ -26,8 +26,7 @@ var MwsSet = wire.NewSet(
 )
 
 type IMiddleware interface {
-	GenOkMsg(*gin.Context, string) any
-	GenErrMsg(*gin.Context, string, error) any
+	AbortWithError(*gin.Context, ...any)
 }
 
 var _ IMiddleware = (*auth.Auth)(nil)

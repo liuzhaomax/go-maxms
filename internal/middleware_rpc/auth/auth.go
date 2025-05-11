@@ -6,6 +6,7 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"strings"
@@ -14,53 +15,53 @@ import (
 var AuthRPCSet = wire.NewSet(wire.Struct(new(AuthRPC), "*"))
 
 type AuthRPC struct {
-	Logger core.ILogger
+	Logger *logrus.Logger
 	Redis  *redis.Client
 }
 
 func (auth *AuthRPC) ValidateToken(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		err = auth.GenErrMsg(ctx, "元数据解析错误", err)
+		auth.AbortWithError(ctx, errors.New("元数据解析错误"))
 		return
 	}
 	j := core.NewJWT()
 	// token in md
 	if len(md[core.Authorization]) == 0 {
-		err = auth.GenErrMsg(ctx, "权限验证失败", errors.New("没找到token"))
+		auth.AbortWithError(ctx, errors.New("没找到token"))
 		return
 	}
 	headerToken := md[core.Authorization][0]
 	if headerToken == core.EmptyString {
-		err = auth.GenErrMsg(ctx, "权限验证失败", errors.New("没找到token"))
+		auth.AbortWithError(ctx, errors.New("没找到token"))
 		return
 	}
 	headerDecryptedToken, err := core.RSADecrypt(core.GetPrivateKey(), headerToken)
 	if err != nil {
-		err = auth.GenErrMsg(ctx, "权限验证失败", err)
+		auth.AbortWithError(ctx, err)
 		return
 	}
 	headerDecryptedTokenRemoveBearer := (strings.Split(headerDecryptedToken, " "))[1]
 	userID, clientIP, err := j.ParseToken(headerDecryptedTokenRemoveBearer)
 	if err != nil {
 		if err.Error() != core.TokenExpired {
-			err = auth.GenErrMsg(ctx, "权限验证失败", err)
+			auth.AbortWithError(ctx, err)
 			return
 		}
 		refreshedToken, errNew := j.RefreshToken(headerDecryptedTokenRemoveBearer)
 		if errNew != nil {
-			err = auth.GenErrMsg(ctx, "权限验证失败", errNew)
+			auth.AbortWithError(ctx, errNew)
 			return
 		}
 		userID, clientIP, err = j.ParseToken(refreshedToken)
 		if err != nil {
-			err = auth.GenErrMsg(ctx, "权限验证失败", err)
+			auth.AbortWithError(ctx, err)
 			return
 		}
 		// 验证refreshedToken
 		result := auth.CompareCombination(md, userID, clientIP)
 		if !result {
-			err = auth.GenErrMsg(ctx, "权限验证失败", err)
+			auth.AbortWithError(ctx, err)
 			return
 		}
 		resp, err = handler(ctx, req)
@@ -69,7 +70,7 @@ func (auth *AuthRPC) ValidateToken(ctx context.Context, req interface{}, info *g
 	// 验证headerParsedToken
 	result := auth.CompareCombination(md, userID, clientIP)
 	if !result {
-		err = auth.GenErrMsg(ctx, "权限验证失败", err)
+		auth.AbortWithError(ctx, err)
 		return
 	}
 	resp, err = handler(ctx, req)
@@ -94,12 +95,26 @@ func (auth *AuthRPC) CompareCombination(md metadata.MD, userID string, clientIP 
 	return false
 }
 
-func (auth *AuthRPC) GenOkMsg(ctx context.Context, desc string) string {
-	auth.Logger.SucceedWithFieldForRPC(ctx, desc)
-	return core.FormatInfo(desc)
-}
-
-func (auth *AuthRPC) GenErrMsg(ctx context.Context, desc string, err error) error {
-	auth.Logger.FailWithFieldForRPC(ctx, core.Unauthorized, desc, err)
-	return core.FormatError(core.Unauthorized, desc, err)
+func (auth *AuthRPC) AbortWithError(ctx context.Context, args ...any) {
+	msg := &core.MiddlewareMessage{
+		StatusCode: 500,
+		Code:       core.InternalServerError,
+		Desc:       core.EmptyString,
+		Err:        nil,
+	}
+	switch len(args) {
+	case 1: // 简化调用：AbortWithError(c, err)
+		msg.Code = core.Unauthorized
+		msg.Desc = "Not authenticated"
+		msg.Err = args[0].(error)
+	case 3: // 复杂调用：AbortWithError(c, code, desc, err)
+		msg.Code = args[0].(core.Code)
+		msg.Desc = args[1].(string)
+		msg.Err = args[2].(error)
+	default:
+		auth.Logger.Error("invalid arguments for AbortWithError")
+	}
+	// 整理打印
+	formattedErr := core.FormatError(msg.Code, msg.Desc, msg.Err)
+	auth.Logger.Error(formattedErr)
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/opentracing/opentracing-go"
+	"github.com/sirupsen/logrus"
 	"github.com/uber/jaeger-client-go"
 	jConfig "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
@@ -16,18 +17,18 @@ import (
 var TracingRPCSet = wire.NewSet(wire.Struct(new(TracingRPC), "*"))
 
 type TracingRPC struct {
-	Logger       core.ILogger
+	Logger       *logrus.Logger
 	TracerConfig *jConfig.Configuration
 }
 
 func (t *TracingRPC) Trace(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		err = t.GenErrMsg(ctx, "元数据解析错误", err)
+		t.AbortWithError(ctx, core.ParseIssue, "元数据解析错误", err)
 		return
 	}
 	if len(md[core.ParentId]) == 0 || len(md[core.TraceId]) == 0 || len(md[core.RequestURI]) == 0 {
-		err = t.GenErrMsg(ctx, "元数据信息缺失", err)
+		t.AbortWithError(ctx, core.ParseIssue, "元数据信息缺失", err)
 		return
 	}
 	// 生成tracer
@@ -36,7 +37,7 @@ func (t *TracingRPC) Trace(ctx context.Context, req interface{}, info *grpc.Unar
 		_ = closer.Close()
 	}(closer)
 	if err != nil {
-		err = t.GenErrMsg(ctx, "tracer生成失败", err)
+		t.AbortWithError(ctx, core.MissingParameters, "tracer生成失败", err)
 		return
 	}
 	// 创建span
@@ -52,7 +53,7 @@ func (t *TracingRPC) Trace(ctx context.Context, req interface{}, info *grpc.Unar
 		// 测试单个服务需要手动加入，多个服务不会走这块代码
 		ctxTracer, errTracer := tracer.Extract(opentracing.TextMap, carrier)
 		if errTracer != nil {
-			err = t.GenErrMsg(ctx, "tracer提取失败", errTracer)
+			t.AbortWithError(ctx, core.MissingParameters, "tracer提取失败", err)
 			return
 		}
 		span = tracer.StartSpan(md[core.RequestURI][0], opentracing.ChildOf(ctxTracer))
@@ -73,7 +74,7 @@ func (t *TracingRPC) Trace(ctx context.Context, req interface{}, info *grpc.Unar
 	carrier := opentracing.HTTPHeadersCarrier(md)
 	err = tracer.Inject(span.Context(), opentracing.HTTPHeaders, carrier)
 	if err != nil {
-		err = t.GenErrMsg(ctx, "tracer注入失败", err)
+		t.AbortWithError(ctx, core.MissingParameters, "tracer注入失败", err)
 		return
 	}
 	md[core.UberTraceId] = md["Uber-Trace-Id"]
@@ -83,12 +84,26 @@ func (t *TracingRPC) Trace(ctx context.Context, req interface{}, info *grpc.Unar
 	return
 }
 
-func (t *TracingRPC) GenOkMsg(ctx context.Context, desc string) string {
-	t.Logger.SucceedWithFieldForRPC(ctx, desc)
-	return core.FormatInfo(desc)
-}
-
-func (t *TracingRPC) GenErrMsg(ctx context.Context, desc string, err error) error {
-	t.Logger.FailWithFieldForRPC(ctx, core.Unknown, desc, err)
-	return core.FormatError(core.Unknown, desc, err)
+func (t *TracingRPC) AbortWithError(ctx context.Context, args ...any) {
+	msg := &core.MiddlewareMessage{
+		StatusCode: 500,
+		Code:       core.InternalServerError,
+		Desc:       core.EmptyString,
+		Err:        nil,
+	}
+	switch len(args) {
+	case 1: // 简化调用：AbortWithError(c, err)
+		msg.Code = core.MissingParameters
+		msg.Desc = "tracing错误"
+		msg.Err = args[0].(error)
+	case 3: // 复杂调用：AbortWithError(c, code, desc, err)
+		msg.Code = args[0].(core.Code)
+		msg.Desc = args[1].(string)
+		msg.Err = args[2].(error)
+	default:
+		t.Logger.Error("invalid arguments for AbortWithError")
+	}
+	// 整理打印
+	formattedErr := core.FormatError(msg.Code, msg.Desc, msg.Err)
+	t.Logger.Error(formattedErr)
 }

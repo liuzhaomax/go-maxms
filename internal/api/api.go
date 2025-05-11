@@ -7,7 +7,7 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/cors"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
-	"github.com/liuzhaomax/go-maxms/src/router"
+	"github.com/liuzhaomax/go-maxms/src/api_user/router"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"

@@ -4,7 +4,7 @@ import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/liuzhaomax/go-maxms/internal/middleware_rpc"
-	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/business"
+	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/handler"
 	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/pb"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -23,7 +23,7 @@ type APIRPC interface {
 type HandlerRPC struct {
 	PrometheusRegistry *prometheus.Registry
 	MiddlewareRPC      *middleware_rpc.MiddlewareRPC
-	BusinessRPC        *business.BusinessUser
+	HandlerRPC         *handler.HandlerUser
 }
 
 func (h *HandlerRPC) Register() *grpc.Server {
@@ -43,7 +43,7 @@ func (h *HandlerRPC) Register() *grpc.Server {
 	// 创建gRPC服务
 	server := grpc.NewServer(serverOpts...)
 	// 注册接口
-	pb.RegisterUserServiceServer(server, h.BusinessRPC)
+	pb.RegisterUserServiceServer(server, h.HandlerRPC)
 
 	// 健康检查
 	healthCheck := health.NewServer()

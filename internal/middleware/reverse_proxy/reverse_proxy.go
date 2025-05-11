@@ -7,6 +7,7 @@ import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/redis/go-redis/v9"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -16,7 +17,7 @@ import (
 var ReverseProxySet = wire.NewSet(wire.Struct(new(ReverseProxy), "*"))
 
 type ReverseProxy struct {
-	Logger      core.ILogger
+	Logger      *logrus.Logger
 	RedisClient *redis.Client
 }
 
@@ -31,12 +32,12 @@ func (rp *ReverseProxy) DebounceMiddleware() gin.HandlerFunc {
 		// 检查上次请求时间
 		lastRequest, err := rp.RedisClient.Get(context.Background(), key).Int64()
 		if err != nil && err != redis.Nil {
-			c.AbortWithStatusJSON(http.StatusInternalServerError, rp.GenErrMsg(c, "接口防抖查询redis错误", err))
+			rp.AbortWithError(c, http.StatusInternalServerError, core.Forbidden, "接口防抖查询redis错误", err)
 			return
 		}
 		// 对比上次请求时间到现在的时间，小于防抖时间，则报错429
 		if err == nil && time.Since(time.Unix(lastRequest, 0)) < debounceDuration {
-			c.AbortWithStatusJSON(http.StatusTooManyRequests, rp.GenErrMsg(c, "请求过于频繁接口防抖生效", err))
+			rp.AbortWithError(c, http.StatusTooManyRequests, core.Forbidden, "请求过于频繁接口防抖生效", err)
 			return
 		}
 		// 记录当前请求时间
@@ -58,14 +59,14 @@ func (rp *ReverseProxy) Redirect(serviceName string) gin.HandlerFunc {
 		}
 		proxyUrl, err := url.Parse(addr)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusForbidden, rp.GenErrMsg(c, "反向代理URL解析错误", err))
+			rp.AbortWithError(c, http.StatusForbidden, core.Forbidden, "反向代理URL解析错误", err)
 			return
 		}
 		proxy := httputil.NewSingleHostReverseProxy(proxyUrl)
-		rp.GenOkMsg(c, fmt.Sprintf("反向代理到: %s, 地址: %s", serviceName, addr))
+		rp.Logger.Info(core.FormatInfo(fmt.Sprintf("反向代理到: %s, 地址: %s", serviceName, addr)))
 		err = core.SetHeadersForDownstream(c, cfg.Downstreams[0].Name)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusForbidden, rp.GenErrMsg(c, "反向代理请求头设置失败", err))
+			rp.AbortWithError(c, http.StatusForbidden, core.Forbidden, "反向代理请求头设置失败", err)
 			return
 		}
 		proxy.ServeHTTP(c.Writer, c.Request)
@@ -77,22 +78,25 @@ func (rp *ReverseProxy) Redirect(serviceName string) gin.HandlerFunc {
 // 使用
 // root.GET("/login", mw.ReverseProxy.Redirect("maxblog-user"))
 
-func (rp *ReverseProxy) GenOkMsg(c *gin.Context, desc string) any {
-	rp.Logger.SucceedWithField(c, desc)
-	return gin.H{
-		"status": gin.H{
-			"code": core.OK,
-			"desc": core.FormatInfo(desc),
-		},
+func (rp *ReverseProxy) AbortWithError(c *gin.Context, args ...any) {
+	msg := &core.MiddlewareMessage{
+		StatusCode: 500,
+		Code:       core.InternalServerError,
+		Desc:       core.EmptyString,
+		Err:        nil,
 	}
-}
-
-func (rp *ReverseProxy) GenErrMsg(c *gin.Context, desc string, err error) any {
-	rp.Logger.FailWithField(c, core.Forbidden, desc, err)
-	return gin.H{
-		"status": gin.H{
-			"code": core.OK,
-			"desc": core.FormatError(core.Forbidden, desc, err).Error(),
-		},
+	switch len(args) {
+	case 1: // 简化调用：AbortWithError(c, err)
+		msg.Err = args[0].(error)
+	case 3: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
+		msg.StatusCode = args[0].(int)
+		msg.Code = args[1].(core.Code)
+		msg.Desc = args[2].(string)
+		msg.Err = args[3].(error)
+	default:
+		rp.Logger.Error("invalid arguments for AbortWithError")
 	}
+	formattedErr := core.FormatError(msg.Code, msg.Desc, msg.Err)
+	rp.Logger.Error(formattedErr)
+	c.AbortWithStatusJSON(msg.StatusCode, core.GenErrMsg(formattedErr))
 }

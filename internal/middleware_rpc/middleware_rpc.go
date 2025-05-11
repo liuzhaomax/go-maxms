@@ -24,8 +24,7 @@ var MwsRPCSet = wire.NewSet(
 )
 
 type IMiddlewareRPC interface {
-	GenOkMsg(context.Context, string) string
-	GenErrMsg(context.Context, string, error) error
+	AbortWithError(context.Context, ...any)
 }
 
 var _ IMiddlewareRPC = (*auth.AuthRPC)(nil)

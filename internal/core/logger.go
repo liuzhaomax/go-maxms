@@ -233,3 +233,11 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 	}).Info("请求结束")
 	return res, err
 }
+
+func LogSuccess(desc string) {
+	cfg.App.Logger.Info(FormatInfo(desc))
+}
+
+func LogFailure(code Code, desc string, err error) {
+	cfg.App.Logger.Error(FormatError(code, desc, err))
+}

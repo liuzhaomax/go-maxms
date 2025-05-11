@@ -18,10 +18,9 @@ import (
 	auth2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/auth"
 	tracing2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/tracing"
 	validator2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/validator"
-	"github.com/liuzhaomax/go-maxms/src/api_user/business"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
 	"github.com/liuzhaomax/go-maxms/src/api_user/model"
-	business2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/business"
+	handler2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/handler"
 	model2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/model"
 )
 
@@ -30,28 +29,25 @@ import (
 func InitInjector() (*Injector, func(), error) {
 	engine := core.InitGinEngine()
 	logger := core.InitLogrus()
-	coreLogger := &core.Logger{
-		Logger: logger,
-	}
 	client, cleanup, err := core.InitRedis()
 	if err != nil {
 		return nil, nil, err
 	}
 	authAuth := &auth.Auth{
-		Logger: coreLogger,
+		Logger: logger,
 		Redis:  client,
 	}
 	validatorValidator := &validator.Validator{
-		Logger: coreLogger,
+		Logger: logger,
 		Redis:  client,
 	}
 	configuration := core.InitTracer()
 	tracingTracing := &tracing.Tracing{
-		Logger:       coreLogger,
+		Logger:       logger,
 		TracerConfig: configuration,
 	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
-		Logger:      coreLogger,
+		Logger:      logger,
 		RedisClient: client,
 	}
 	middlewareMiddleware := &middleware.Middleware{
@@ -68,23 +64,16 @@ func InitInjector() (*Injector, func(), error) {
 	modelUser := &model.ModelUser{
 		DB: db,
 	}
+	rocketMQ := &core.RocketMQ{}
 	trans := &core.Trans{
 		DB: db,
 	}
-	businessUser := &business.BusinessUser{
-		Model: modelUser,
-		Tx:    trans,
-		Redis: client,
-	}
-	response := &core.Response{
-		Logger: coreLogger,
-	}
-	rocketMQ := &core.RocketMQ{}
 	handlerUser := &handler.HandlerUser{
-		Business: businessUser,
-		Logger:   coreLogger,
-		Res:      response,
+		Model:    modelUser,
+		Logger:   logger,
 		RocketMQ: rocketMQ,
+		Tx:       trans,
+		Redis:    client,
 	}
 	registry := core.InitPrometheusRegistry()
 	apiHandler := &api.Handler{
@@ -99,15 +88,15 @@ func InitInjector() (*Injector, func(), error) {
 		Redis:   client,
 	}
 	authRPC := &auth2.AuthRPC{
-		Logger: coreLogger,
+		Logger: logger,
 		Redis:  client,
 	}
 	validatorRPC := &validator2.ValidatorRPC{
-		Logger: coreLogger,
+		Logger: logger,
 		Redis:  client,
 	}
 	tracingRPC := &tracing2.TracingRPC{
-		Logger:       coreLogger,
+		Logger:       logger,
 		TracerConfig: configuration,
 	}
 	middlewareRPC := &middleware_rpc.MiddlewareRPC{
@@ -118,17 +107,17 @@ func InitInjector() (*Injector, func(), error) {
 	modelModelUser := &model2.ModelUser{
 		DB: db,
 	}
-	businessBusinessUser := &business2.BusinessUser{
+	handlerHandlerUser := &handler2.HandlerUser{
 		Model:    modelModelUser,
 		Tx:       trans,
 		Redis:    client,
-		IRes:     response,
 		RocketMQ: rocketMQ,
+		Logger:   logger,
 	}
 	handlerRPC := &api.HandlerRPC{
 		PrometheusRegistry: registry,
 		MiddlewareRPC:      middlewareRPC,
-		BusinessRPC:        businessBusinessUser,
+		HandlerRPC:         handlerHandlerUser,
 	}
 	injectorRPC := InjectorRPC{
 		HandlerRPC: handlerRPC,

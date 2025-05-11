@@ -5,6 +5,7 @@ import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/opentracing/opentracing-go"
+	"github.com/sirupsen/logrus"
 	"github.com/uber/jaeger-client-go"
 	jConfig "github.com/uber/jaeger-client-go/config"
 	"io"
@@ -14,7 +15,7 @@ import (
 var TracingSet = wire.NewSet(wire.Struct(new(Tracing), "*"))
 
 type Tracing struct {
-	Logger       core.ILogger
+	Logger       *logrus.Logger
 	TracerConfig *jConfig.Configuration
 }
 
@@ -27,7 +28,7 @@ func (t *Tracing) Trace() gin.HandlerFunc {
 			_ = closer.Close()
 		}(closer)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, t.GenErrMsg(c, "tracer生成失败", err))
+			t.AbortWithError(c, err)
 			return
 		}
 		// 创建span
@@ -38,7 +39,7 @@ func (t *Tracing) Trace() gin.HandlerFunc {
 			carrier := opentracing.HTTPHeadersCarrier(c.Request.Header)
 			ctx, err := tracer.Extract(opentracing.HTTPHeaders, carrier)
 			if err != nil {
-				c.AbortWithStatusJSON(http.StatusUnauthorized, t.GenErrMsg(c, "tracer提取失败", err))
+				t.AbortWithError(c, err)
 				return
 			}
 			span = tracer.StartSpan(c.Request.URL.Path, opentracing.ChildOf(ctx))
@@ -59,29 +60,36 @@ func (t *Tracing) Trace() gin.HandlerFunc {
 		carrier := opentracing.HTTPHeadersCarrier(c.Request.Header)
 		err = tracer.Inject(span.Context(), opentracing.HTTPHeaders, carrier)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, t.GenErrMsg(c, "tracer注入失败", err))
+			t.AbortWithError(c, err)
 			return
 		}
 		c.Next()
 	}
 }
 
-func (t *Tracing) GenOkMsg(c *gin.Context, desc string) any {
-	t.Logger.SucceedWithField(c, desc)
-	return gin.H{
-		"status": gin.H{
-			"code": core.OK,
-			"desc": core.FormatInfo(desc),
-		},
+func (t *Tracing) AbortWithError(c *gin.Context, args ...any) {
+	msg := &core.MiddlewareMessage{
+		StatusCode: 500,
+		Code:       core.InternalServerError,
+		Desc:       core.EmptyString,
+		Err:        nil,
 	}
-}
-
-func (t *Tracing) GenErrMsg(c *gin.Context, desc string, err error) any {
-	t.Logger.FailWithField(c, core.Unknown, desc, err)
-	return gin.H{
-		"status": gin.H{
-			"code": core.OK,
-			"desc": core.FormatError(core.Unknown, desc, err).Error(),
-		},
+	switch len(args) {
+	case 1: // 简化调用：AbortWithError(c, err)
+		msg.StatusCode = http.StatusBadRequest
+		msg.Code = core.MissingParameters
+		msg.Desc = "tracing错误"
+		msg.Err = args[0].(error)
+	case 3: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
+		msg.StatusCode = args[0].(int)
+		msg.Code = args[1].(core.Code)
+		msg.Desc = args[2].(string)
+		msg.Err = args[3].(error)
+	default:
+		t.Logger.Error("invalid arguments for AbortWithError")
 	}
+	// 整理打印
+	formattedErr := core.FormatError(msg.Code, msg.Desc, msg.Err)
+	t.Logger.Error(formattedErr)
+	c.AbortWithStatusJSON(msg.StatusCode, core.GenErrMsg(formattedErr))
 }
