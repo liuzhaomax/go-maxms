@@ -3,12 +3,15 @@ app:
   version: 0.1
   domain: localhost:3001
   enabled:
-    rsa: false # rsa和vault有关联关系
+    rsa: true # rsa和vault有关联关系
     vault: false
     signature: false # signature默认依赖于redis
     header_params: false # check headers
     random_port: false
     service_discovery: false
+    health_check: false
+    prometheus: false
+    jaeger: false
 #  white_list:
 #    -
 #      name: sgw

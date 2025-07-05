@@ -32,11 +32,17 @@ func (h *Handler) Register(app *gin.Engine) {
 	// CORS
 	app.Use(cors.Cors())
 	// consul
-	app.GET("/health", h.HealthHandler)
+	if cfg.App.Enabled.HealthCheck {
+		app.GET("/health", h.HealthHandler)
+	}
 	// prometheus
-	app.GET("/metrics", h.MetricsHandler)
+	if cfg.App.Enabled.Prometheus {
+		app.GET("/metrics", h.MetricsHandler)
+	}
 	// jaeger
-	app.Use(h.Middleware.Tracing.Trace())
+	if cfg.App.Enabled.Jaeger {
+		app.Use(h.Middleware.Tracing.Trace())
+	}
 	// 日志
 	app.Use(core.LoggerForHTTP())
 	// root route

@@ -50,6 +50,9 @@ type Enabled struct {
 	HeaderParams     bool `mapstructure:"header_params"`
 	RandomPort       bool `mapstructure:"random_port"`
 	ServiceDiscovery bool `mapstructure:"service_discovery"`
+	HealthCheck      bool `mapstructure:"health_check"`
+	Prometheus       bool `mapstructure:"prometheus"`
+	Jaeger           bool `mapstructure:"jaeger"`
 }
 
 type WhiteList struct {

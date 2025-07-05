@@ -3,11 +3,15 @@ app:
   version: 0.1
   domain: liuzhaomax.cn
   enabled:
-    rsa: false # rsa和vault有关联关系
+    rsa: true # rsa和vault有关联关系
     vault: true
     signature: true # signature默认依赖于redis
+    header_params: false # check headers
     random_port: true
     service_discovery: true
+    health_check: false
+    prometheus: false
+    jaeger: false
 #  white_list:
 #    -
 #      name: sgw
