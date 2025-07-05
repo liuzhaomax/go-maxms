@@ -12,7 +12,7 @@ linters:
     - gocritic
     - gocyclo
 #    - godot # 注释结尾句号
-#    - gofmt # gofmt规范
+    - gofmt # gofmt规范
 #    - goimports # 引用未使用
     - gomodguard
     - goprintffuncname

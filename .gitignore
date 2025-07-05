@@ -6,6 +6,7 @@
 /log/
 /unit_test/
 /bin/
+/vendor/
 
 junit.xml
 
