@@ -14,6 +14,7 @@ spec:
 
 # 打包
 build:
+	go mod tidy
 	go build -o $(BUILT_FILE) main/main.go
 
 # 依赖注入
