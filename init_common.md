@@ -54,3 +54,18 @@
 ### 2.3 Prometheus
 
 修改prometheus.yml，增加job
+
+## 3 启动项目
+
+### 3.1 使用docker compose
+
+1. 新建`maxblog-sgw`文件夹
+2. 拷贝bin，environment，Dockerfile，docker-compose，注意修改docker-compose文件中的命名
+3. cd到`maxblog-sgw`，构建镜像
+```shell
+docker build -t maxblog-sgw .
+```
+4. 创建容器
+```shell
+docker compose up -d
+```

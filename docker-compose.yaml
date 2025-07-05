@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  nct:
+    image: go-maxms
+    container_name: go_maxms
+    privileged: true
+    restart: always
+    user: root
+    environment:
+      - ENV=prod
+    ports:
+      - '10001:10001'
+    volumes:
+      - /root/ssh:/var/ssh
+      - /root/logs/nct:/usr/src/app/log
+      - /root/static/go-maxms/www:/usr/src/app/www
