@@ -13,12 +13,7 @@ RUN go mod tidy
 
 RUN go build -o bin/main main/main.go
 
-FROM ubuntu:latest
-
-ENV GO111MODULE on
-ENV CGO_ENABLED 1
-ENV GOOS linux
-ENV GOARCH amd64
+FROM alpine:3.18
 
 WORKDIR /workspace
 
