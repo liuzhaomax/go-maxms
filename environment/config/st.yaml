@@ -69,13 +69,13 @@ lib:
     timeout: 3
     retry: 2
     endpoint:
-      host: 106.15.94.179
+      host: 172.16.96.98
       port: 9876
   mountebank:
     protocol: http
     server:
       endpoint:
-        host: 106.15.94.179
+        host: 172.16.96.98
         port: 2525
 
 server:
