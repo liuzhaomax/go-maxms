@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-type WrapperHandle = func(c *gin.Context) (any, error)
+type WrapperHandler = func(c *gin.Context) (any, error)
 
-func WrapperRes(handle WrapperHandle) gin.HandlerFunc {
+func WrapperRes(handle WrapperHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		data, err := handle(c)
 		if err != nil {
