@@ -94,3 +94,12 @@ func FormatCaller(ok bool, desc string) string {
 	}
 	return fmt.Sprintf("%s: Caller: %s", FAILURE, desc)
 }
+
+type ApiError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (code *ApiError) Error() string {
+	return code.Message
+}
