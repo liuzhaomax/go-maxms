@@ -89,11 +89,10 @@ func InitInjector() (*Injector, func(), error) {
 		PrometheusRegistry: registry,
 	}
 	injectorHTTP := InjectorHTTP{
-		Engine:     engine,
-		Handler:    apiHandler,
-		DB:         db,
-		Redis:      client,
-		WsUpgrader: upgrader,
+		Engine:  engine,
+		Handler: apiHandler,
+		DB:      db,
+		Redis:   client,
 	}
 	authRPC := &auth2.AuthRPC{
 		Logger: logger,
