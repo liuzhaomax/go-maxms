@@ -14,6 +14,7 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/tracing"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/validator"
+	"github.com/liuzhaomax/go-maxms/internal/middleware/ws_upgrader"
 	"github.com/liuzhaomax/go-maxms/internal/middleware_rpc"
 	auth2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/auth"
 	tracing2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/tracing"
@@ -51,12 +52,16 @@ func InitInjector() (*Injector, func(), error) {
 		RedisClient: client,
 	}
 	upgrader := core.InitWebSocket()
+	wsUpgrader := &ws_upgrader.WsUpgrader{
+		Logger:   logger,
+		Upgrader: upgrader,
+	}
 	middlewareMiddleware := &middleware.Middleware{
 		Auth:         authAuth,
 		Validator:    validatorValidator,
 		Tracing:      tracingTracing,
 		ReverseProxy: reverseProxy,
-		wsUpgrader:   upgrader,
+		wsUpgrader:   wsUpgrader,
 	}
 	db, cleanup2, err := core.InitDB()
 	if err != nil {

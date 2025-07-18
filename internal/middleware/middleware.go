@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
-	"github.com/gorilla/websocket"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/tracing"
@@ -18,7 +17,7 @@ type Middleware struct {
 	Validator    *validator.Validator
 	Tracing      *tracing.Tracing
 	ReverseProxy *reverse_proxy.ReverseProxy
-	wsUpgrader   *websocket.Upgrader
+	wsUpgrader   *ws_upgrader.WsUpgrader
 }
 
 var MwsSet = wire.NewSet(
