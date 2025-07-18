@@ -9,6 +9,8 @@ package app
 import (
 	"github.com/liuzhaomax/go-maxms/internal/api"
 	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/pool"
+	"github.com/liuzhaomax/go-maxms/internal/core/pool/ws"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
@@ -75,12 +77,14 @@ func InitInjector() (*Injector, func(), error) {
 	trans := &core.Trans{
 		DB: db,
 	}
+	wsPool := ws.InitWsPool()
 	handlerUser := &handler.HandlerUser{
 		Model:    modelUser,
 		Logger:   logger,
 		RocketMQ: rocketMQ,
 		Tx:       trans,
 		Redis:    client,
+		Pool:     wsPool,
 	}
 	registry := core.InitPrometheusRegistry()
 	apiHandler := &api.Handler{
@@ -88,11 +92,13 @@ func InitInjector() (*Injector, func(), error) {
 		HandlerUser:        handlerUser,
 		PrometheusRegistry: registry,
 	}
+	poolPool := pool.InitPool()
 	injectorHTTP := InjectorHTTP{
 		Engine:  engine,
 		Handler: apiHandler,
 		DB:      db,
 		Redis:   client,
+		Pool:    poolPool,
 	}
 	authRPC := &auth2.AuthRPC{
 		Logger: logger,

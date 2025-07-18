@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/pool/ws"
 	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
@@ -16,4 +17,5 @@ type HandlerUser struct {
 	RocketMQ core.IRocketMQ
 	Tx       *core.Trans
 	Redis    *redis.Client
+	Pool     *ws.WsPool
 }
