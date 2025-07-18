@@ -7,6 +7,7 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"time"
 )
 
 var WsUpgraderSet = wire.NewSet(wire.Struct(new(WsUpgrader), "*"))
@@ -23,6 +24,31 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 			wsUpgrader.AbortWithError(c, http.StatusInternalServerError, core.ProtocolUpgradeFailed, "http升级ws未能生成连接", err)
 			return
 		}
+
+		// 设置心跳处理
+		conn.SetPingHandler(func(appData string) error {
+			return conn.WriteControl(
+				websocket.PongMessage,
+				[]byte(appData),
+				time.Now().Add(time.Second),
+			)
+		})
+
+		// 设置读取超时（心跳超时检测）
+		err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
+		if err != nil {
+			wsUpgrader.AbortWithError(c, err)
+			return
+		}
+		conn.SetPongHandler(func(string) error {
+			err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
+			if err != nil {
+				wsUpgrader.AbortWithError(c, err)
+				return err
+			}
+			return nil
+		})
+
 		c.Set(core.MyWsConn, conn)
 		c.Next()
 	}
