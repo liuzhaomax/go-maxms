@@ -46,5 +46,5 @@ const (
 )
 
 const (
-	WsConn = "wsConn"
+	MyWsConn = "MyWsConn"
 )

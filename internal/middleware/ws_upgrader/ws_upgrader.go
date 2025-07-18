@@ -23,7 +23,7 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 			wsUpgrader.AbortWithError(c, http.StatusInternalServerError, core.ProtocolUpgradeFailed, "http升级ws未能生成连接", err)
 			return
 		}
-		c.Set(core.WsConn, conn)
+		c.Set(core.MyWsConn, conn)
 		c.Next()
 	}
 }
