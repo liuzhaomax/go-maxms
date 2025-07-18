@@ -67,9 +67,9 @@ func (cg *ConnGroup) Broadcast(info any) error {
 	var broadcastErr error
 	var errMux sync.Mutex
 
-	cg.Range(func(userId string, conn *websocket.Conn) bool {
+	cg.Range(func(key string, conn *websocket.Conn) bool {
 		wg.Add(1)
-		go func(conn *websocket.Conn, userId string) {
+		go func(conn *websocket.Conn, key string) {
 			defer wg.Done()
 
 			var msg []byte
@@ -86,7 +86,7 @@ func (cg *ConnGroup) Broadcast(info any) error {
 			// 发送消息
 			err := conn.WriteMessage(websocket.TextMessage, msg)
 			if err != nil {
-				cg.Delete(userId) // 发送失败则移除连接
+				cg.Delete(key) // 发送失败则移除连接
 				err = conn.Close()
 				if err != nil {
 					broadcastErr = err
@@ -98,7 +98,7 @@ func (cg *ConnGroup) Broadcast(info any) error {
 				}
 				errMux.Unlock()
 			}
-		}(conn, userId)
+		}(conn, key)
 		return true
 	})
 
