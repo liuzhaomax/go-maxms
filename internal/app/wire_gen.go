@@ -50,11 +50,13 @@ func InitInjector() (*Injector, func(), error) {
 		Logger:      logger,
 		RedisClient: client,
 	}
+	upgrader := core.InitWebSocket()
 	middlewareMiddleware := &middleware.Middleware{
 		Auth:         authAuth,
 		Validator:    validatorValidator,
 		Tracing:      tracingTracing,
 		ReverseProxy: reverseProxy,
+		wsUpgrader:   upgrader,
 	}
 	db, cleanup2, err := core.InitDB()
 	if err != nil {
@@ -82,10 +84,11 @@ func InitInjector() (*Injector, func(), error) {
 		PrometheusRegistry: registry,
 	}
 	injectorHTTP := InjectorHTTP{
-		Engine:  engine,
-		Handler: apiHandler,
-		DB:      db,
-		Redis:   client,
+		Engine:     engine,
+		Handler:    apiHandler,
+		DB:         db,
+		Redis:      client,
+		WsUpgrader: upgrader,
 	}
 	authRPC := &auth2.AuthRPC{
 		Logger: logger,

@@ -47,6 +47,14 @@ lib:
     endpoint:
       host: 172.16.96.98
       port: 6379
+  websocket:
+    read_buffer_size: 1024 # 1MB
+    write_buffer_size: 1024 # 1MB
+    handshake_timeout: 10 # 10s
+    subprotocols:
+      - mqtt
+      - wamp
+    enable_compression: false
   etcd:
     dial_timeout: 5
     dial_keep_alive_time: 5

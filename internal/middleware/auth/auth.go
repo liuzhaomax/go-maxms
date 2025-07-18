@@ -97,7 +97,7 @@ func (auth *Auth) AbortWithError(c *gin.Context, args ...any) {
 // 1. 当前请求IP或是header中的clientIP，与JWT中当初token签发IP相同
 // 2. header中的userID与JWT中userID相同
 func (auth *Auth) CompareCombination(c *gin.Context, userID string, clientIP string) bool {
-	userIdInHeaders := c.Request.Header.Get(core.UserId)
+	userIdInHeaders := c.GetHeader(core.UserId)
 	currentIP := core.GetClientIP(c)
 	if currentIP == clientIP && userIdInHeaders == userID {
 		return true

@@ -44,3 +44,7 @@ const (
 	// jaeger
 	UberTraceId = "uber-trace-id"
 )
+
+const (
+	WsConn = "wsConn"
+)

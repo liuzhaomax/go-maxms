@@ -66,6 +66,7 @@ type Lib struct {
 	Gin
 	DB
 	Redis
+	WebSocket
 	ETCD
 	Consul
 	Jaeger
