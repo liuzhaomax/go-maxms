@@ -17,7 +17,7 @@ type Middleware struct {
 	Validator    *validator.Validator
 	Tracing      *tracing.Tracing
 	ReverseProxy *reverse_proxy.ReverseProxy
-	wsUpgrader   *ws_upgrader.WsUpgrader
+	WsUpgrader   *ws_upgrader.WsUpgrader
 }
 
 var MwsSet = wire.NewSet(

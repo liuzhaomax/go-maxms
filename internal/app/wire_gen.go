@@ -61,7 +61,7 @@ func InitInjector() (*Injector, func(), error) {
 		Validator:    validatorValidator,
 		Tracing:      tracingTracing,
 		ReverseProxy: reverseProxy,
-		wsUpgrader:   wsUpgrader,
+		WsUpgrader:   wsUpgrader,
 	}
 	db, cleanup2, err := core.InitDB()
 	if err != nil {
