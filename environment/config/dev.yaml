@@ -1,7 +1,7 @@
 app:
   name: go-maxms
   version: 0.1
-  domain: localhost:3001
+  domain: localhost:10011
   enabled:
     rsa: true # rsa和vault有关联关系
     vault: false
