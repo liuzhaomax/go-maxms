@@ -4,9 +4,11 @@ import (
 	"crypto/rsa"
 	"flag"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/joho/godotenv"
 	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -25,6 +27,26 @@ func LoadEnv() string {
 	logrus.WithField("path", *configFile).Info(ext.FormatInfo("配置文件已识别"))
 
 	return *configFile
+}
+
+// 加载.env中的secret
+func LoadSecret() *Wechat {
+	err := godotenv.Load()
+	if err != nil {
+		logrus.WithField("path", ".env").
+			WithField(FAILURE, ext.GetFuncName()).
+			Panic(ext.FormatError(ext.ConfigError, "密钥文件读取失败", err))
+	}
+
+	appId := os.Getenv("APP_ID")
+	appSecret := os.Getenv("APP_SECRET")
+
+	logrus.WithField("path", ".env").Info(ext.FormatInfo("密钥文件已识别"))
+
+	return &Wechat{
+		AppId:     appId,
+		AppSecret: appSecret,
+	}
 }
 
 // 加载配置

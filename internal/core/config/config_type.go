@@ -44,6 +44,7 @@ type app struct {
 	Logger        *logrus.Logger
 	Enabled       enabled     `mapstructure:"enabled"`
 	WhiteList     []whiteList `mapstructure:"white_list"`
+	Wechat
 }
 
 type enabled struct {
@@ -61,6 +62,11 @@ type enabled struct {
 type whiteList struct {
 	Name   string `mapstructure:"name"`
 	Domain string `mapstructure:"domain"`
+}
+
+type Wechat struct {
+	AppId     string
+	AppSecret string
 }
 
 type lib struct {

@@ -13,6 +13,7 @@ require (
 	github.com/gorilla/websocket v0.0.0-20170926233335-4201258b820c
 	github.com/hashicorp/consul/api v1.27.0
 	github.com/hashicorp/vault/api v1.10.0
+	github.com/joho/godotenv v1.5.1
 	github.com/lithammer/shortuuid v3.0.0+incompatible
 	github.com/magiconair/properties v1.8.7
 	github.com/mattn/go-colorable v0.1.13

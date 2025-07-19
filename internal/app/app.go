@@ -21,12 +21,19 @@ type Option func(*options)
 
 type options struct {
 	ConfigFile string
+	Secret     *config.Wechat
 	WWWDir     string
 }
 
 func SetConfigFile(configFile string) Option {
 	return func(opts *options) {
 		opts.ConfigFile = configFile
+	}
+}
+
+func SetSecret(secret *config.Wechat) Option {
+	return func(opts *options) {
+		opts.Secret = secret
 	}
 }
 
