@@ -21,19 +21,12 @@ type Option func(*options)
 
 type options struct {
 	ConfigFile string
-	Secret     *config.Wechat
 	WWWDir     string
 }
 
 func SetConfigFile(configFile string) Option {
 	return func(opts *options) {
 		opts.ConfigFile = configFile
-	}
-}
-
-func SetSecret(secret *config.Wechat) Option {
-	return func(opts *options) {
-		opts.Secret = secret
 	}
 }
 
@@ -47,6 +40,8 @@ func InitConfig(opts *options) {
 	cfg := core.GetConfig()
 	cfg.LoadConfig(opts.ConfigFile)
 	cfg.App.Logger.WithField("path", opts.ConfigFile).Info(ext.FormatInfo("配置文件加载成功"))
+	cfg.LoadSecret()
+	cfg.App.Logger.WithField("path", ".env").Info(ext.FormatInfo("密钥文件加载成功"))
 	cfg.App.Logger.Info(ext.FormatInfo("系统启动"))
 
 	if cfg.App.Enabled.ServiceDiscovery {

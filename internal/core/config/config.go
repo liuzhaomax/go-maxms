@@ -30,7 +30,7 @@ func LoadEnv() string {
 }
 
 // 加载.env中的secret
-func LoadSecret() *Wechat {
+func (cfg *Config) LoadSecret() {
 	err := godotenv.Load()
 	if err != nil {
 		logrus.WithField("path", ".env").
@@ -38,15 +38,14 @@ func LoadSecret() *Wechat {
 			Panic(ext.FormatError(ext.ConfigError, "密钥文件读取失败", err))
 	}
 
-	appId := os.Getenv("APP_ID")
-	appSecret := os.Getenv("APP_SECRET")
-
 	logrus.WithField("path", ".env").Info(ext.FormatInfo("密钥文件已识别"))
 
-	return &Wechat{
-		AppId:     appId,
-		AppSecret: appSecret,
-	}
+	cfg.Secret.Wechat.AppId = os.Getenv("APP_ID")
+	cfg.Secret.Wechat.AppSecret = os.Getenv("APP_SECRET")
+
+	cfg.Secret.Mysql.Name = os.Getenv("MYSQL_DB_NAME")
+	cfg.Secret.Mysql.UserName = os.Getenv("MYSQL_USER_NAME")
+	cfg.Secret.Mysql.PassWord = os.Getenv("MYSQL_PASSWORD")
 }
 
 // 加载配置

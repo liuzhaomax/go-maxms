@@ -16,10 +16,7 @@ type dbConfig struct {
 	MaxLifeTime  int    `mapstructure:"max_life_time"`
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
-	Name         string `mapstructure:"name"`
 	Params       string `mapstructure:"params"`
-	Username     string `mapstructure:"username"`
-	Password     string `mapstructure:"password"`
 	Endpoint     endpoint
 }
 
@@ -80,10 +77,6 @@ func (d *dbConfig) LoadDB() (*gorm.DB, func(), error) {
 }
 
 func (d *dbConfig) DSN() string {
-	if d.Password == "" {
-		d.Password = "123456"
-	}
-
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?%s",
-		d.Username, d.Password, d.Endpoint.Host, d.Endpoint.Port, d.Name, d.Params)
+		cfg.Secret.Mysql.UserName, cfg.Secret.Mysql.PassWord, d.Endpoint.Host, d.Endpoint.Port, cfg.Secret.Mysql.Name, d.Params)
 }

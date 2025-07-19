@@ -38,8 +38,6 @@ lib:
     max_idle_conns: 1000
     name: go-maxms
     params: charset=utf8mb4&parseTime=True&loc=Local
-    username: root
-    password: 123456
     endpoint:
       host: 127.0.0.1
       port: 3306

@@ -34,7 +34,18 @@
 
 ### 1.4 数据库
 
-如果用到数据库模块，需要在数据库中添加对应名称的数据库
+1. 如果用到数据库模块，需要在数据库中添加对应名称的数据库
+2. 在根目录创建.env文件，内容格式如下，填写secret
+```shell
+# mysql
+MYSQL_DB_NAME=
+MYSQL_USER_NAME=
+MYSQL_PASSWORD=
+
+# wechat
+APP_ID=
+APP_SECRET=
+```
 
 ## 2. Jenkins
 

@@ -26,6 +26,7 @@ type Config struct {
 	App         app
 	Lib         lib
 	Server      server
+	Secret      secret
 	Downstreams []downstream
 }
 
@@ -44,7 +45,6 @@ type app struct {
 	Logger        *logrus.Logger
 	Enabled       enabled     `mapstructure:"enabled"`
 	WhiteList     []whiteList `mapstructure:"white_list"`
-	Wechat
 }
 
 type enabled struct {
@@ -62,11 +62,6 @@ type enabled struct {
 type whiteList struct {
 	Name   string `mapstructure:"name"`
 	Domain string `mapstructure:"domain"`
-}
-
-type Wechat struct {
-	AppId     string
-	AppSecret string
 }
 
 type lib struct {
@@ -92,6 +87,22 @@ type server struct {
 	WriteTimeout    int    `mapstructure:"write_timeout"`
 	IdleTimeout     int    `mapstructure:"idle_timeout"`
 	ShutdownTimeout int    `mapstructure:"shutdown_timeout"`
+}
+
+type secret struct {
+	Mysql  mysqlSecret
+	Wechat wechatSecret
+}
+
+type wechatSecret struct {
+	AppId     string
+	AppSecret string
+}
+
+type mysqlSecret struct {
+	Name     string
+	UserName string
+	PassWord string
 }
 
 type downstream struct {
