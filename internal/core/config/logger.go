@@ -154,7 +154,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 			"user_id":    c.Request.Header.Get(UserId),
 		}
 		// Incoming日志是来的什么就是什么，只有traceID应一致
-		logger.WithFields(LoggerFormat).Info("请求开始")
+		// logger.WithFields(LoggerFormat).Info("请求开始")
 
 		startTime := time.Now()
 
