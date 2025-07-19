@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -24,7 +25,8 @@ func InitWebSocket() *websocket.Upgrader {
 		Subprotocols:      cfg.Lib.WebSocket.Subprotocols,
 		EnableCompression: cfg.Lib.WebSocket.EnableCompression,
 		CheckOrigin: func(r *http.Request) bool {
-			return r.Header.Get("Origin") == cfg.App.Domain
+			return r.Header.Get("Origin") == fmt.Sprintf("%s://%s", cfg.Server.Ws.Protocol, cfg.App.Domain) ||
+				r.Header.Get("Origin") == fmt.Sprintf("%s://%s:%s", cfg.Server.Ws.Protocol, cfg.Server.Ws.Host, cfg.Server.Ws.Port)
 		},
 		Error: func(w http.ResponseWriter, r *http.Request, status int, err error) {
 			LogFailure(ext.ProtocolUpgradeFailed, "WebSocket upgrade failed", err)

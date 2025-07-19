@@ -86,7 +86,7 @@ lib:
 server:
   http:
     protocol: http
-    host: 192.168.1.14
+    host: localhost
     port: 10010
     base_url: /
     read_timeout: 5 # seconds
@@ -95,7 +95,7 @@ server:
     shutdown_timeout: 10
   ws:
     protocol: ws
-    host: 192.168.1.14
+    host: localhost
     port: 10011
     base_url: /ws
     read_timeout: 5 # seconds
@@ -104,7 +104,7 @@ server:
     shutdown_timeout: 10
   rpc:
     protocol: rpc
-    host: 192.168.1.14
+    host: localhost
     port: 10012
     base_url:
     read_timeout: 5 # seconds
