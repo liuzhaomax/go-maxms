@@ -79,6 +79,12 @@ type lib struct {
 }
 
 type server struct {
+	Http serverConfig
+	Ws   serverConfig
+	Rpc  serverConfig
+}
+
+type serverConfig struct {
 	Protocol        string `mapstructure:"protocol"`
 	Host            string `mapstructure:"host"`
 	Port            string `mapstructure:"port"`

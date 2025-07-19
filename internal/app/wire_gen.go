@@ -93,13 +93,24 @@ func InitInjector() (*Injector, func(), error) {
 		HandlerUser:        handlerUser,
 		PrometheusRegistry: registry,
 	}
-	poolPool := pool.InitPool()
 	injectorHTTP := InjectorHTTP{
 		Engine:  engine,
 		Handler: apiHandler,
 		DB:      db,
 		Redis:   client,
-		Pool:    poolPool,
+	}
+	handlerWs := &api.HandlerWs{
+		Middleware:         middlewareMiddleware,
+		Handler:            handlerUser,
+		PrometheusRegistry: registry,
+	}
+	poolPool := pool.InitPool()
+	injectorWS := InjectorWS{
+		Engine:    engine,
+		HandlerWs: handlerWs,
+		DB:        db,
+		Redis:     client,
+		Pool:      poolPool,
 	}
 	authRPC := &auth2.AuthRPC{
 		Logger: logger,
@@ -140,6 +151,7 @@ func InitInjector() (*Injector, func(), error) {
 	}
 	injector := &Injector{
 		InjectorHTTP: injectorHTTP,
+		InjectorWS:   injectorWS,
 		InjectorRPC:  injectorRPC,
 	}
 	return injector, func() {

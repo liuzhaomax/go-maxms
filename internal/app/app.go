@@ -71,13 +71,13 @@ func InitConfig(opts *options) {
 func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 	cfg := core.GetConfig()
 	cfg.App.Logger.Info(ext.FormatInfo("服务启动开始"))
-	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Port)
+	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Http.Port)
 	server := &http.Server{
 		Addr:         addr,
 		Handler:      handler,
-		ReadTimeout:  time.Duration(cfg.Server.ReadTimeout) * time.Second,
-		WriteTimeout: time.Duration(cfg.Server.WriteTimeout) * time.Second,
-		IdleTimeout:  time.Duration(cfg.Server.IdleTimeout) * time.Second,
+		ReadTimeout:  time.Duration(cfg.Server.Http.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(cfg.Server.Http.WriteTimeout) * time.Second,
+		IdleTimeout:  time.Duration(cfg.Server.Http.IdleTimeout) * time.Second,
 	}
 
 	go func() {
@@ -95,7 +95,7 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 
 		_ctx, cancel := context.WithTimeout(
 			ctx,
-			time.Second*time.Duration(cfg.Server.ShutdownTimeout),
+			time.Second*time.Duration(cfg.Server.Http.ShutdownTimeout),
 		)
 		defer cancel()
 
@@ -112,10 +112,61 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 	}
 }
 
+func InitWsServer(ctx context.Context, handler http.Handler) func() {
+	cfg := core.GetConfig()
+	cfg.App.Logger.Info(ext.FormatInfo("服务启动开始"))
+	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Ws.Port)
+	server := &http.Server{
+		Addr:         addr,
+		Handler:      handler,
+		ReadTimeout:  time.Duration(cfg.Server.Ws.ReadTimeout) * time.Second,
+		WriteTimeout: time.Duration(cfg.Server.Ws.WriteTimeout) * time.Second,
+		IdleTimeout:  time.Duration(cfg.Server.Ws.IdleTimeout) * time.Second,
+	}
+
+	go func() {
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s", cfg.App.Name, addr)
+
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			cfg.App.Logger.WithField(config.FAILURE, ext.GetFuncName()).
+				Fatal(ext.FormatError(ext.Unknown, "服务启动失败", err))
+		}
+
+		cfg.App.Logger.WithFields(logrus.Fields{
+			"app_name": cfg.App.Name,
+			"version":  cfg.App.Version,
+			"pid":      os.Getpid(),
+			"host":     cfg.Server.Ws.Host,
+			"port":     cfg.Server.Ws.Port,
+			"protocol": cfg.Server.Ws.Protocol,
+		}).Info(ext.FormatInfo("服务启动成功"))
+	}()
+
+	return func() {
+		cfg.App.Logger.Info(ext.FormatInfo("服务关闭开始"))
+
+		_ctx, cancel := context.WithTimeout(
+			ctx,
+			time.Second*time.Duration(cfg.Server.Ws.ShutdownTimeout),
+		)
+		defer cancel()
+
+		server.SetKeepAlivesEnabled(false)
+
+		if err := server.Shutdown(_ctx); err != nil {
+			cfg.App.Logger.WithContext(_ctx).
+				WithField(config.FAILURE, ext.GetFuncName()).
+				Error(ext.FormatError(ext.Unknown, "服务关闭异常", err))
+		}
+
+		cfg.App.Logger.Info(ext.FormatInfo("服务关闭成功"))
+	}
+}
+
 func InitRpcServer(ctx context.Context, handlerRPC *api.HandlerRPC) func() {
 	cfg := core.GetConfig()
 	cfg.App.Logger.Info(ext.FormatInfo("服务启动开始"))
-	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Port)
+	addr := fmt.Sprintf("%s:%s", "0.0.0.0", cfg.Server.Rpc.Port)
 	server := handlerRPC.Register()
 
 	go func() {
@@ -137,7 +188,7 @@ func InitRpcServer(ctx context.Context, handlerRPC *api.HandlerRPC) func() {
 	return func() {
 		cfg.App.Logger.Info(ext.FormatInfo("服务关闭开始"))
 
-		_, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.Server.ShutdownTimeout))
+		_, cancel := context.WithTimeout(ctx, time.Second*time.Duration(cfg.Server.Rpc.ShutdownTimeout))
 		defer cancel()
 
 		server.Stop()
@@ -146,6 +197,7 @@ func InitRpcServer(ctx context.Context, handlerRPC *api.HandlerRPC) func() {
 }
 
 func Init(ctx context.Context, optFuncs ...Option) func() {
+	cfg := core.GetConfig()
 	// initialising options
 	opts := options{}
 	for _, optFunc := range optFuncs {
@@ -154,33 +206,25 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	// init conf
 	InitConfig(&opts)
 
-	cfg := core.GetConfig()
 	// init injector
 	injector, cleanInjection, _ := InitInjector()
 	// init server by protocol
 	var cleanServer func()
 
-	switch cfg.Server.Protocol {
+	switch cfg.Server.Http.Protocol {
 	case "http":
 		// register apis
-		injector.Handler.RegisterStaticFS(injector.Engine, opts.WWWDir) // static
-		injector.Handler.Register(injector.Engine)                      // dynamic
+		injector.Handler.RegisterStaticFS(injector.InjectorHTTP.Engine, opts.WWWDir) // static
+		injector.Handler.Register(injector.InjectorHTTP.Engine)                      // dynamic
 		// init server
-		cleanServer = InitHttpServer(ctx, injector.Engine)
+		cleanServer = InitHttpServer(ctx, injector.InjectorHTTP.Engine)
 	case "rpc":
-		cleanServer = InitRpcServer(ctx, injector.HandlerRPC)
+		cleanServer = InitRpcServer(ctx, injector.InjectorRPC.HandlerRPC)
+	case "ws":
+		cleanServer = InitWsServer(ctx, injector.InjectorWS.Engine)
 	default:
 		cleanServer = InitRpcServer(ctx, injector.HandlerRPC)
 	}
-
-	cfg.App.Logger.WithFields(logrus.Fields{
-		"app_name": cfg.App.Name,
-		"version":  cfg.App.Version,
-		"pid":      os.Getpid(),
-		"host":     cfg.Server.Host,
-		"port":     cfg.Server.Port,
-		"protocol": cfg.Server.Protocol,
-	}).Info(ext.FormatInfo("服务启动成功"))
 
 	return func() {
 		cleanServer()

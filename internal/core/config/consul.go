@@ -30,21 +30,21 @@ func (c *consulConfig) ServiceRegister() error {
 	}
 
 	agentServiceRegistration := new(api.AgentServiceRegistration)
-	agentServiceRegistration.Address = cfg.Server.Host
+	agentServiceRegistration.Address = cfg.Server.Http.Host
 	agentServiceRegistration.Name = cfg.App.Name
 	agentServiceRegistration.ID = ext.ShortUUID()
-	intPort, _ := strconv.Atoi(cfg.Server.Port)
+	intPort, _ := strconv.Atoi(cfg.Server.Http.Port)
 	agentServiceRegistration.Port = intPort
-	agentServiceRegistration.Tags = []string{cfg.App.Name, cfg.Server.Protocol}
+	agentServiceRegistration.Tags = []string{cfg.App.Name, cfg.Server.Http.Protocol}
 	check := api.AgentServiceCheck{}
 	check.Timeout = fmt.Sprintf("%ds", cfg.Lib.Consul.Timeout)
 	check.Interval = fmt.Sprintf("%ds", cfg.Lib.Consul.Interval)
 	check.DeregisterCriticalServiceAfter = fmt.Sprintf("%ds", cfg.Lib.Consul.DeregisterAfter)
-	serverAddrHTTP := fmt.Sprintf("http://%s:%s/health", cfg.Server.Host, cfg.Server.Port)
+	serverAddrHTTP := fmt.Sprintf("http://%s:%s/health", cfg.Server.Http.Host, cfg.Server.Http.Port)
 
-	serverAddrRPC := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
+	serverAddrRPC := fmt.Sprintf("%s:%s", cfg.Server.Http.Host, cfg.Server.Http.Port)
 
-	switch cfg.Server.Protocol {
+	switch cfg.Server.Http.Protocol {
 	case "http":
 		check.HTTP = serverAddrHTTP
 	case "rpc":

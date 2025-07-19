@@ -13,6 +13,7 @@ var InjectorSet = wire.NewSet(wire.Struct(new(Injector), "*"))
 
 type Injector struct {
 	InjectorHTTP
+	InjectorWS
 	InjectorRPC
 }
 
@@ -23,7 +24,16 @@ type InjectorHTTP struct {
 	Handler *api.Handler
 	DB      *gorm.DB
 	Redis   *redis.Client
-	Pool    *pool.Pool
+}
+
+var InjectorWSSet = wire.NewSet(wire.Struct(new(InjectorWS), "*"))
+
+type InjectorWS struct {
+	Engine    *gin.Engine
+	HandlerWs *api.HandlerWs
+	DB        *gorm.DB
+	Redis     *redis.Client
+	Pool      *pool.Pool
 }
 
 var InjectorRPCSet = wire.NewSet(wire.Struct(new(InjectorRPC), "*"))

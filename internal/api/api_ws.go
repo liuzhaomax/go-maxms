@@ -1,8 +1,6 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
@@ -13,21 +11,22 @@ import (
 	"github.com/liuzhaomax/go-maxms/src/api_user/router"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"net/http"
 )
 
-var APISet = wire.NewSet(wire.Struct(new(Handler), "*"), wire.Bind(new(API), new(*Handler)))
+var APIWSSet = wire.NewSet(wire.Struct(new(HandlerWs), "*"), wire.Bind(new(APIWS), new(*HandlerWs)))
 
-type API interface {
+type APIWS interface {
 	Register(app *gin.Engine)
 }
 
-type Handler struct {
+type HandlerWs struct {
 	Middleware         *middleware.Middleware
-	HandlerUser        *handler.HandlerUser
+	Handler            *handler.HandlerUser
 	PrometheusRegistry *prometheus.Registry
 }
 
-func (h *Handler) Register(app *gin.Engine) {
+func (h *HandlerWs) Register(app *gin.Engine) {
 	cfg := core.GetConfig()
 	// 404
 	app.NoRoute(h.GetNoRoute)
@@ -48,7 +47,7 @@ func (h *Handler) Register(app *gin.Engine) {
 	// 日志
 	app.Use(config.LoggerForHTTP())
 	// root route
-	root := app.Group(cfg.Server.Http.BaseUrl)
+	root := app.Group(cfg.Server.Ws.BaseUrl)
 	{
 		// interceptor
 		if cfg.App.Enabled.HeaderParams {
@@ -59,23 +58,23 @@ func (h *Handler) Register(app *gin.Engine) {
 			root.Use(h.Middleware.Auth.ValidateSignature())
 		}
 		// dynamic api
-		router.Register(root, h.HandlerUser, h.Middleware)
+		router.Register(root, h.Handler, h.Middleware)
 	}
 }
 
-func (h *Handler) RegisterStaticFS(app *gin.Engine, path string) {
+func (h *HandlerWs) RegisterStaticFS(app *gin.Engine, path string) {
 	app.StaticFS("/"+path, http.Dir("./"+path))
 }
 
-func (h *Handler) GetNoRoute(c *gin.Context) {
+func (h *HandlerWs) GetNoRoute(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
 }
 
-func (h *Handler) HealthHandler(c *gin.Context) {
+func (h *HandlerWs) HealthHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"health": "ok"})
 }
 
-func (h *Handler) MetricsHandler(c *gin.Context) {
+func (h *HandlerWs) MetricsHandler(c *gin.Context) {
 	promhttp.HandlerFor(h.PrometheusRegistry, promhttp.HandlerOpts{
 		Registry: h.PrometheusRegistry,
 	}).ServeHTTP(c.Writer, c.Request)

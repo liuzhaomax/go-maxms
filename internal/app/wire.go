@@ -27,6 +27,7 @@ func InitInjector() (*Injector, func(), error) {
 		pool.InitPool,
 		ws.InitWsPool,
 		api.APISet,
+		api.APIWSSet,
 		api.APIRPCSet,
 		set.HandlerSet,
 		set.ModelSet,
@@ -37,6 +38,7 @@ func InitInjector() (*Injector, func(), error) {
 		middleware_rpc.MwsRPCSet,
 		middleware_rpc.MiddlewareRPCSet,
 		InjectorHTTPSet,
+		InjectorWSSet,
 		InjectorRPCSet,
 		InjectorSet,
 	)
