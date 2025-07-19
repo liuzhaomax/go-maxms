@@ -46,7 +46,7 @@ linters:
     #    - decorder
     - depguard # internal中不含外部依赖 go mod vendor
     #    - dogsled
-    #    - dupl
+    - dupl
     #    - dupword
     #    - durationcheck
     - embeddedstructfieldcheck # 结构体定义被包含的一方应该放前面，没必要
