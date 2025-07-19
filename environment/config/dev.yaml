@@ -36,7 +36,6 @@ lib:
     max_life_time: 8192
     max_open_conns: 100000
     max_idle_conns: 1000
-    name: go-maxms
     params: charset=utf8mb4&parseTime=True&loc=Local
     endpoint:
       host: 127.0.0.1
