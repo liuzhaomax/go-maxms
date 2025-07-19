@@ -6,9 +6,9 @@ require (
 	github.com/alibaba/sentinel-golang v1.0.4
 	github.com/anaskhan96/go-password-encoder v0.0.0-20201010210601-c765b799fd72
 	github.com/apache/rocketmq-client-go/v2 v2.1.2
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.7.0
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.2.3
 	github.com/google/wire v0.6.0
 	github.com/gorilla/websocket v0.0.0-20170926233335-4201258b820c
 	github.com/hashicorp/consul/api v1.27.0

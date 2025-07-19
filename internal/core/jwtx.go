@@ -2,8 +2,9 @@ package core
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 const (
@@ -14,7 +15,8 @@ const (
 )
 
 type CustomClaims struct {
-	jwt.StandardClaims
+	jwt.RegisteredClaims
+
 	UserID   string
 	ClientIP string
 }
@@ -24,64 +26,82 @@ type Jwt struct {
 }
 
 func NewJWT() *Jwt {
-	return &Jwt{SigningKey: []byte(cfg.App.JWTSecret)}
+	return &Jwt{SigningKey: []byte(cfg.JWTSecret)}
 }
 
-func (j *Jwt) GenerateToken(userID string, clientIP string, duration time.Duration) (string, error) {
+func (j *Jwt) GenerateToken(
+	userID string,
+	clientIP string,
+	duration time.Duration,
+) (string, error) {
 	now := time.Now()
 	claims := CustomClaims{
-		StandardClaims: jwt.StandardClaims{
-			NotBefore: now.Unix(),
-			ExpiresAt: now.Add(duration).Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)), // 过期时间
+			IssuedAt:  jwt.NewNumericDate(now),                     // 签发时间
+			NotBefore: jwt.NewNumericDate(now),                     // 生效时间
+			Issuer:    cfg.Name,
 		},
 		UserID:   userID,
 		ClientIP: clientIP,
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := at.SignedString([]byte(cfg.App.JWTSecret))
+
+	token, err := at.SignedString([]byte(cfg.JWTSecret))
 	if err != nil {
 		return "", err
 	}
+
 	return token, nil
 }
 
 func (j *Jwt) ParseToken(tokenStr string) (string, string, error) {
-	token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(tokenStr *jwt.Token) (interface{}, error) {
-		return j.SigningKey, nil
-	})
+	token, err := jwt.ParseWithClaims(
+		tokenStr,
+		&CustomClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return j.SigningKey, nil
+		},
+	)
 	if err != nil {
-		if result, ok := err.(jwt.ValidationError); ok {
-			switch {
-			case result.Errors&jwt.ValidationErrorMalformed != 0:
-				return EmptyString, EmptyString, errors.New(TokenMalformed)
-			case result.Errors&jwt.ValidationErrorExpired != 0:
-				return EmptyString, EmptyString, errors.New(TokenExpired)
-			case result.Errors&jwt.ValidationErrorNotValidYet != 0:
-				return EmptyString, EmptyString, errors.New(TokenNotValidYet)
-			default:
-				return EmptyString, EmptyString, errors.New(TokenInvalid)
-			}
+		if errors.Is(err, jwt.ErrTokenMalformed) {
+			return "", "", errors.New(TokenMalformed)
+		} else if errors.Is(err, jwt.ErrTokenExpired) {
+			return "", "", errors.New(TokenExpired)
+		} else if errors.Is(err, jwt.ErrTokenNotValidYet) {
+			return "", "", errors.New(TokenNotValidYet)
+		} else {
+			return "", "", errors.New(TokenInvalid)
 		}
-		return EmptyString, EmptyString, err
 	}
+
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims.UserID, claims.ClientIP, nil
 	}
-	return EmptyString, EmptyString, errors.New(TokenInvalid)
+
+	return "", "", errors.New(TokenInvalid)
 }
 
 func (j *Jwt) RefreshToken(tokenStr string) (string, error) {
 	duration := time.Hour * 24 * 7 // 一周
-	token, err := jwt.ParseWithClaims(tokenStr, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return j.SigningKey, nil
-	})
+
+	token, err := jwt.ParseWithClaims(
+		tokenStr,
+		&CustomClaims{},
+		func(token *jwt.Token) (interface{}, error) {
+			return j.SigningKey, nil
+		},
+		jwt.WithTimeFunc(time.Now), // 设置时间函数
+	)
 	if err != nil {
 		return "", err
 	}
+
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-		jwt.TimeFunc = time.Now
-		claims.StandardClaims.ExpiresAt = time.Now().Add(duration).Unix()
+		claims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(duration))
+
 		return j.GenerateToken(claims.UserID, claims.ClientIP, duration)
 	}
+
 	return "", errors.New(TokenInvalid)
 }
