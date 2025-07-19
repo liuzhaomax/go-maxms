@@ -46,6 +46,8 @@ func (cfg *Config) LoadSecret() {
 	cfg.Secret.Mysql.Name = os.Getenv("MYSQL_DB_NAME")
 	cfg.Secret.Mysql.UserName = os.Getenv("MYSQL_USER_NAME")
 	cfg.Secret.Mysql.PassWord = os.Getenv("MYSQL_PASSWORD")
+
+	cfg.Secret.Redis.Password = os.Getenv("REDIS_PASSWORD")
 }
 
 // 加载配置

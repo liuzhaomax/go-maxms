@@ -91,12 +91,17 @@ type server struct {
 
 type secret struct {
 	Mysql  mysqlSecret
+	Redis  redisSecret
 	Wechat wechatSecret
 }
 
 type wechatSecret struct {
 	AppId     string
 	AppSecret string
+}
+
+type redisSecret struct {
+	Password string
 }
 
 type mysqlSecret struct {

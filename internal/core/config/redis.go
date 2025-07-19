@@ -9,10 +9,6 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-const (
-	redisPassword = "123456"
-)
-
 type redisConfig struct {
 	Endpoint endpoint
 }
@@ -43,7 +39,7 @@ func (r *redisConfig) LoadRedis() (*redis.Client, func(), error) {
 		OnConnect:             nil,
 		Protocol:              0,
 		Username:              "",
-		Password:              redisPassword,
+		Password:              cfg.Secret.Redis.Password,
 		CredentialsProvider:   nil,
 		DB:                    0,
 		MaxRetries:            0,
