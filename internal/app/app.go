@@ -81,7 +81,7 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 	}
 
 	go func() {
-		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s", cfg.App.Name, addr)
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s via %s", cfg.App.Name, addr, cfg.Server.Http.Protocol)
 
 		err := server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
@@ -125,7 +125,7 @@ func InitWsServer(ctx context.Context, handler http.Handler) func() {
 	}
 
 	go func() {
-		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s", cfg.App.Name, addr)
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s via %s", cfg.App.Name, addr, cfg.Server.Ws.Protocol)
 
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			cfg.App.Logger.WithField(config.FAILURE, ext.GetFuncName()).
@@ -176,7 +176,7 @@ func InitRpcServer(ctx context.Context, handlerRPC *api.HandlerRPC) func() {
 				Fatal(ext.FormatError(ext.Unknown, "服务监听失败", err))
 		}
 
-		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s", cfg.App.Name, addr)
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s via %s", cfg.App.Name, addr, cfg.Server.Rpc.Protocol)
 
 		err = server.Serve(listen)
 		if err != nil {
@@ -221,7 +221,7 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	case "rpc":
 		cleanServer = InitRpcServer(ctx, injector.InjectorRPC.HandlerRPC)
 	case "ws":
-		injector.Handler.Register(injector.InjectorWS.Engine)
+		injector.HandlerWs.Register(injector.InjectorWS.Engine)
 		cleanServer = InitWsServer(ctx, injector.InjectorWS.Engine)
 	default:
 		cleanServer = InitRpcServer(ctx, injector.HandlerRPC)

@@ -78,7 +78,7 @@ func (wsUpgrader *WsUpgrader) AbortWithError(c *gin.Context, args ...any) {
 	switch len(args) {
 	case 1: // 简化调用：AbortWithError(c, err)
 		msg.Err = args[0].(error)
-	case 3: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
+	case 4: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
 		msg.StatusCode = args[0].(int)
 		msg.Code = args[1].(ext.Code)
 		msg.Desc = args[2].(string)

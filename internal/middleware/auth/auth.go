@@ -97,7 +97,7 @@ func (auth *Auth) AbortWithError(c *gin.Context, args ...any) {
 		msg.Code = ext.Unauthorized
 		msg.Desc = "Not authenticated"
 		msg.Err = args[0].(error)
-	case 3: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
+	case 4: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
 		msg.StatusCode = args[0].(int)
 		msg.Code = args[1].(ext.Code)
 		msg.Desc = args[2].(string)

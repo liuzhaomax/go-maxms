@@ -138,7 +138,7 @@ func (auth *AuthRPC) AbortWithError(ctx context.Context, args ...any) {
 		msg.Code = ext.Unauthorized
 		msg.Desc = "Not authenticated"
 		msg.Err = args[0].(error)
-	case 3: // 复杂调用：AbortWithError(c, code, desc, err)
+	case 4: // 复杂调用：AbortWithError(c, code, desc, err)
 		msg.Code = args[0].(ext.Code)
 		msg.Desc = args[1].(string)
 		msg.Err = args[2].(error)

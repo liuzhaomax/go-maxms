@@ -14,11 +14,7 @@ import (
 	"net/http"
 )
 
-var APIWSSet = wire.NewSet(wire.Struct(new(HandlerWs), "*"), wire.Bind(new(APIWS), new(*HandlerWs)))
-
-type APIWS interface {
-	Register(app *gin.Engine)
-}
+var APIWSSet = wire.NewSet(wire.Struct(new(HandlerWs), "*"), wire.Bind(new(API), new(*HandlerWs)))
 
 type HandlerWs struct {
 	Middleware         *middleware.Middleware
