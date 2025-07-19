@@ -1,14 +1,16 @@
-package core
+package config
 
 import (
 	"context"
 	"fmt"
-	vault "github.com/hashicorp/vault/api"
 	"net/http"
 	"time"
+
+	vault "github.com/hashicorp/vault/api"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
-type Vault struct {
+type vaultConfig struct {
 	Address  string `mapstructure:"address"`
 	Interval int    `mapstructure:"interval"`
 }
@@ -29,13 +31,15 @@ func InitVault() {
 	// 获取登录vault的token
 	token, err := userpassLogin()
 	if err != nil {
-		LogFailure(VaultDenied, "vault用户登录token获取失败", err)
+		LogFailure(ext.VaultDenied, "vault用户登录token获取失败", err)
 		panic(err)
 	}
 	// 创建vault连接客户端
-	client, err := vault.NewClient(&vault.Config{Address: cfg.Lib.Vault.Address, HttpClient: httpClient})
+	client, err := vault.NewClient(
+		&vault.Config{Address: cfg.Lib.Vault.Address, HttpClient: httpClient},
+	)
 	if err != nil {
-		LogFailure(Unknown, "创建vault连接失败", err)
+		LogFailure(ext.Unknown, "创建vault连接失败", err)
 		panic(err)
 	}
 	// 配置请求
@@ -46,7 +50,9 @@ func InitVault() {
 // userpassLogin 使用用户名密码登录vault，获取token
 func userpassLogin() (string, error) {
 	// 创建vault连接客户端
-	client, err := vault.NewClient(&vault.Config{Address: cfg.Lib.Vault.Address, HttpClient: httpClient})
+	client, err := vault.NewClient(
+		&vault.Config{Address: cfg.Lib.Vault.Address, HttpClient: httpClient},
+	)
 	if err != nil {
 		return "", err
 	}
@@ -54,36 +60,52 @@ func userpassLogin() (string, error) {
 	options := map[string]interface{}{
 		"password": Password,
 	}
-	path := fmt.Sprintf("auth/userpass/login/%s", Username)
+	path := "auth/userpass/login/" + Username
 	// PUT 登录vault，获取token
 	secret, err := client.Logical().Write(path, options)
 	if err != nil {
 		return "", err
 	}
+
 	token := secret.Auth.ClientToken
+
 	return token, nil
 }
 
-func getSecret(ctx context.Context, secretEngineName string, namespace string, key string) (string, error) {
+func getSecret(
+	ctx context.Context,
+	secretEngineName string,
+	namespace string,
+	key string,
+) (string, error) {
 	vaultClient.SetNamespace(namespace)
 	// 读取secret
 	secret, err := vaultClient.KVv2(secretEngineName).Get(ctx, vaultClient.Namespace())
 	if err != nil {
-		return EmptyString, err
+		return "", err
 	}
+
 	value, ok := secret.Data[key].(string)
 	if !ok {
-		return EmptyString, fmt.Errorf("获取的%s不是字符串", key)
+		return "", fmt.Errorf("获取的%s不是字符串", key)
 	}
+
 	return value, nil
 }
 
-func putSecret(ctx context.Context, secretEngineName string, namespace string, secretData map[string]interface{}) error {
+func putSecret(
+	ctx context.Context,
+	secretEngineName string,
+	namespace string,
+	secretData map[string]interface{},
+) error {
 	vaultClient.SetNamespace(namespace)
+
 	_, err := vaultClient.KVv2(secretEngineName).Put(ctx, vaultClient.Namespace(), secretData)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -93,40 +115,55 @@ func (cfg *Config) GetSecret() {
 	// 读取jwt_secret
 	jwtSecret, err := getSecret(ctx, KV, JWT, SECRET)
 	if err != nil {
-		LogFailure(VaultDenied, "Vault: jwt_secret获取失败", err)
+		LogFailure(ext.VaultDenied, "Vault: jwt_secret获取失败", err)
 		panic(err)
 	}
+
 	cfg.App.JWTSecret = jwtSecret
 	// 读取salt
 	salt, err := getSecret(ctx, KV, PWD, SALT)
 	if err != nil {
-		LogFailure(VaultDenied, "Vault: salt获取失败", err)
+		LogFailure(ext.VaultDenied, "Vault: salt获取失败", err)
 		panic(err)
 	}
+
 	cfg.App.Salt = salt
 	// 读取rsa string
 	puk, err := getSecret(ctx, KV, RSA, PUK)
 	if err != nil {
-		LogFailure(VaultDenied, "Vault: puk获取失败", err)
+		LogFailure(ext.VaultDenied, "Vault: puk获取失败", err)
 		panic(err)
 	}
+
 	prk, err := getSecret(ctx, KV, RSA, PRK)
 	if err != nil {
-		LogFailure(VaultDenied, "Vault: prk获取失败", err)
+		LogFailure(ext.VaultDenied, "Vault: prk获取失败", err)
 		panic(err)
 	}
+
 	cfg.App.PublicKeyStr = puk
 	cfg.App.PrivateKeyStr = prk
 	// 读取downstream app id 和 secret
 	for i, downstream := range cfg.Downstreams {
-		cfg.Downstreams[i].Id, err = getSecret(ctx, KV, fmt.Sprintf("%s/%s", APP, downstream.Name), ID)
+		cfg.Downstreams[i].Id, err = getSecret(
+			ctx,
+			KV,
+			fmt.Sprintf("%s/%s", APP, downstream.Name),
+			ID,
+		)
 		if err != nil {
-			LogFailure(VaultDenied, "Vault: downstream信息获取失败", err)
+			LogFailure(ext.VaultDenied, "Vault: downstream信息获取失败", err)
 			panic(err)
 		}
-		cfg.Downstreams[i].Secret, err = getSecret(ctx, KV, fmt.Sprintf("%s/%s", APP, downstream.Name), SECRET)
+
+		cfg.Downstreams[i].Secret, err = getSecret(
+			ctx,
+			KV,
+			fmt.Sprintf("%s/%s", APP, downstream.Name),
+			SECRET,
+		)
 		if err != nil {
-			LogFailure(VaultDenied, "Vault: downstream信息获取失败", err)
+			LogFailure(ext.VaultDenied, "Vault: downstream信息获取失败", err)
 			panic(err)
 		}
 	}
@@ -140,9 +177,10 @@ func (cfg *Config) PutRSA() {
 		PUK: cfg.App.PublicKeyStr,
 		PRK: cfg.App.PrivateKeyStr,
 	}
+
 	err := putSecret(ctx, KV, RSA, secretData)
 	if err != nil {
-		LogFailure(VaultDenied, fmt.Sprintf("Vault: %s写入失败", RSA), err)
+		LogFailure(ext.VaultDenied, fmt.Sprintf("Vault: %s写入失败", RSA), err)
 		panic(err)
 	}
 	// 打印日志
@@ -156,9 +194,10 @@ func (cfg *Config) PutSalt() {
 	secretData := map[string]interface{}{
 		SALT: cfg.App.Salt,
 	}
+
 	err := putSecret(ctx, KV, PWD, secretData)
 	if err != nil {
-		LogFailure(VaultDenied, fmt.Sprintf("Vault: %s写入失败", SALT), err)
+		LogFailure(ext.VaultDenied, fmt.Sprintf("Vault: %s写入失败", SALT), err)
 		panic(err)
 	}
 	// 打印日志
@@ -174,9 +213,10 @@ func (cfg *Config) PutAppSecret() {
 		SECRET: cfg.App.Secret,
 	}
 	namespace := fmt.Sprintf("%s/%s", APP, cfg.App.Name)
+
 	err := putSecret(ctx, KV, namespace, secretData)
 	if err != nil {
-		LogFailure(VaultDenied, fmt.Sprintf("Vault: %s写入失败", namespace), err)
+		LogFailure(ext.VaultDenied, fmt.Sprintf("Vault: %s写入失败", namespace), err)
 		panic(err)
 	}
 	// 打印日志

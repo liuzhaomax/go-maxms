@@ -1,13 +1,15 @@
 package ws_upgrader
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/gorilla/websocket"
-	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"time"
 )
 
 var WsUpgraderSet = wire.NewSet(wire.Struct(new(WsUpgrader), "*"))
@@ -21,7 +23,14 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		conn, err := wsUpgrader.Upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
-			wsUpgrader.AbortWithError(c, http.StatusInternalServerError, core.ProtocolUpgradeFailed, "http升级ws未能生成连接", err)
+			wsUpgrader.AbortWithError(
+				c,
+				http.StatusInternalServerError,
+				ext.ProtocolUpgradeFailed,
+				"http升级ws未能生成连接",
+				err,
+			)
+
 			return
 		}
 
@@ -38,41 +47,47 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 		err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
 		if err != nil {
 			wsUpgrader.AbortWithError(c, err)
+
 			return
 		}
+
 		conn.SetPongHandler(func(string) error {
 			err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
 			if err != nil {
 				wsUpgrader.AbortWithError(c, err)
+
 				return err
 			}
+
 			return nil
 		})
 
-		c.Set(core.MyWsConn, conn)
+		c.Set(config.MyWsConn, conn)
 		c.Next()
 	}
 }
 
 func (wsUpgrader *WsUpgrader) AbortWithError(c *gin.Context, args ...any) {
-	msg := &core.MiddlewareMessage{
+	msg := &ext.MiddlewareMessage{
 		StatusCode: 500,
-		Code:       core.InternalServerError,
-		Desc:       core.EmptyString,
+		Code:       ext.InternalServerError,
+		Desc:       "",
 		Err:        nil,
 	}
+
 	switch len(args) {
 	case 1: // 简化调用：AbortWithError(c, err)
 		msg.Err = args[0].(error)
 	case 3: // 复杂调用：AbortWithError(c, statusCode, code, desc, err)
 		msg.StatusCode = args[0].(int)
-		msg.Code = args[1].(core.Code)
+		msg.Code = args[1].(ext.Code)
 		msg.Desc = args[2].(string)
 		msg.Err = args[3].(error)
 	default:
 		wsUpgrader.Logger.Error("invalid arguments for AbortWithError")
 	}
-	formattedErr := core.FormatError(msg.Code, msg.Desc, msg.Err)
+
+	formattedErr := ext.FormatError(msg.Code, msg.Desc, msg.Err)
 	wsUpgrader.Logger.Error(formattedErr)
-	c.AbortWithStatusJSON(msg.StatusCode, core.GenErrMsg(formattedErr))
+	c.AbortWithStatusJSON(msg.StatusCode, ext.GenErrMsg(formattedErr))
 }

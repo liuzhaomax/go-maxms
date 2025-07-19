@@ -6,7 +6,8 @@ package app
 import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/api"
-	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 	"github.com/liuzhaomax/go-maxms/internal/core/pool"
 	"github.com/liuzhaomax/go-maxms/internal/core/pool/ws"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
@@ -16,21 +17,21 @@ import (
 
 func InitInjector() (*Injector, func(), error) {
 	wire.Build(
-		core.InitLogrus,
-		core.InitGinEngine,
-		core.InitDB,
-		core.InitRedis,
-		core.InitWebSocket,
-		core.InitTracer,
-		core.InitPrometheusRegistry,
+		config.InitLogrus,
+		config.InitGinEngine,
+		config.InitDB,
+		config.InitRedis,
+		config.InitWebSocket,
+		config.InitTracer,
+		config.InitPrometheusRegistry,
 		pool.InitPool,
 		ws.InitWsPool,
 		api.APISet,
 		api.APIRPCSet,
 		set.HandlerSet,
 		set.ModelSet,
-		core.TransactionSet,
-		core.RocketMQSet,
+		ext.TransactionSet,
+		config.RocketMQSet,
 		middleware.MwsSet,
 		middleware.MiddlewareSet,
 		middleware_rpc.MwsRPCSet,

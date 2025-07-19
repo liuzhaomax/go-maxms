@@ -1,7 +1,6 @@
 package schema
 
 import (
-	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/liuzhaomax/go-maxms/src/api_user/model"
 )
 
@@ -17,10 +16,11 @@ type UserRes struct {
 }
 
 func MapUser2UserRes(user *model.User) *UserRes {
-	deletedAt := core.EmptyString
+	deletedAt := ""
 	if user.DeletedAt.Valid {
 		deletedAt = user.DeletedAt.Time.String()
 	}
+
 	return &UserRes{
 		UserID:        user.UserID,
 		Username:      user.Username,

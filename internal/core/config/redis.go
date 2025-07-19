@@ -1,32 +1,38 @@
-package core
+package config
 
 import (
 	"context"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"time"
+
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
+	"github.com/redis/go-redis/v9"
 )
 
 const (
 	redisPassword = "123456"
 )
 
-type Redis struct {
-	Endpoint
+type redisConfig struct {
+	Endpoint endpoint
 }
 
 func InitRedis() (*redis.Client, func(), error) {
 	LogSuccess("Redis连接启动")
+
 	client, clean, err := cfg.Lib.Redis.LoadRedis()
 	if err != nil {
-		LogFailure(ConnectionFailed, "Redis连接失败", err)
+		LogFailure(ext.ConnectionFailed, "Redis连接失败", err)
+
 		return nil, clean, err
 	}
+
 	LogSuccess("Redis连接成功")
+
 	return client, clean, nil
 }
 
-func (r *Redis) LoadRedis() (*redis.Client, func(), error) {
+func (r *redisConfig) LoadRedis() (*redis.Client, func(), error) {
 	ctx := context.Background()
 	addr := fmt.Sprintf("%s:%s", r.Endpoint.Host, r.Endpoint.Port)
 	opts := &redis.Options{
@@ -60,6 +66,7 @@ func (r *Redis) LoadRedis() (*redis.Client, func(), error) {
 		DisableIndentity:      false,
 	}
 	client := redis.NewClient(opts)
+
 	err := client.Ping(ctx).Err()
 	if err != nil {
 		return nil, nil, err
@@ -67,15 +74,18 @@ func (r *Redis) LoadRedis() (*redis.Client, func(), error) {
 	// 设置必备键的过期时间
 	err = client.Expire(ctx, Signature, 24*time.Hour).Err()
 	if err != nil {
-		LogFailure(CacheDenied, "过期时间设置失败", err)
+		LogFailure(ext.CacheDenied, "过期时间设置失败", err)
+
 		return nil, nil, err
 	}
+
 	clean := func() {
 		err := client.Close()
 		if err != nil {
-			LogFailure(Unknown, "Redis断开连接失败", err)
+			LogFailure(ext.Unknown, "Redis断开连接失败", err)
 		}
 	}
+
 	return client, clean, nil
 }
 

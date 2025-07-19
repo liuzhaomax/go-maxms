@@ -38,11 +38,11 @@ linters:
     #    - asciicheck
     #    - bidichk
     #    - bodyclose
-    #    - canonicalheader
+    - canonicalheader # http header 首字母大小写
     #    - containedctx
-    #    - contextcheck
+    - contextcheck # 函数嵌套层数多，需要context
     #    - copyloopvar
-    #    - cyclop
+    - cyclop
     #    - decorder
     - depguard # internal中不含外部依赖 go mod vendor
     #    - dogsled
@@ -55,17 +55,17 @@ linters:
     #    - errchkjson
     #    - errname
     #    - errorlint
-    #    - exhaustive
+    - exhaustive
     - exhaustruct
     #    - exptostd
     #    - fatcontext
-    #    - forbidigo
-    #    - forcetypeassert
+    - forbidigo # 禁止使用fmt.Println
+    - forcetypeassert
     #    - funcorder
-    #    - funlen
+    - funlen # 参数过多
     #    - ginkgolinter
     #    - gocheckcompilerdirectives
-    #    - gochecknoglobals
+    - gochecknoglobals # 全局变量检查
     - gochecknoinits # 不适用init
     #    - gochecksumtype
     #    - gocognit
@@ -73,7 +73,7 @@ linters:
     - gocritic
     #    - gocyclo
     - godot # 注释结尾句号
-    #    - godox
+    - godox # 有TODO/BUG/FIXME注释
     #    - goheader
     #    - gomoddirectives
     #    - gomodguard
@@ -84,12 +84,12 @@ linters:
     #    - grouper
     #    - iface
     #    - importas
-    #    - inamedparam
+    - inamedparam
     #    - ineffassign
     #    - interfacebloat
-    #    - intrange
-    #    - ireturn
-    #    - lll
+    - intrange
+    - ireturn # 返回接口类型
+    - lll # 一行太长
     #    - loggercheck
     #    - maintidx
     #    - makezero
@@ -101,14 +101,14 @@ linters:
     #    - nestif
     #    - nilerr
     #    - nilnesserr
-    #    - nilnil
+    - nilnil
     #    - nlreturn
-    #    - noctx
-    #    - noinlineerr
+    - noctx
+    - noinlineerr
     #    - nolintlint
-    #    - nonamedreturns
-    #    - nosprintfhostport
-    #    - paralleltest
+    - nonamedreturns
+    - nosprintfhostport
+    - paralleltest
     #    - perfsprint
     #    - prealloc
     #    - predeclared
@@ -121,7 +121,7 @@ linters:
     #    - sloglint
     #    - spancheck
     #    - sqlclosecheck
-    #    - staticcheck
+    - staticcheck
     #    - tagalign
     #    - tagliatelle
     #    - testableexamples
@@ -134,7 +134,7 @@ linters:
     #    - unused
     #    - usestdlibvars
     #    - usetesting
-    #    - varnamelen
+    - varnamelen # 变量名太短
     #    - wastedassign
     #    - whitespace
     - wrapcheck

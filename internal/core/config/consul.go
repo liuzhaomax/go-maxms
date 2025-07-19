@@ -1,30 +1,38 @@
-package core
+package config
 
 import (
 	"fmt"
-	"github.com/hashicorp/consul/api"
 	"strconv"
+
+	"github.com/hashicorp/consul/api"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
-type Consul struct {
+type consulConfig struct {
 	Timeout         int `mapstructure:"timeout"`
 	Interval        int `mapstructure:"interval"`
 	DeregisterAfter int `mapstructure:"deregister_after"`
-	Endpoint
+	Endpoint        endpoint
 }
 
 // ServiceRegister 服务注册
-func (c *Consul) ServiceRegister() error {
+func (c *consulConfig) ServiceRegister() error {
 	defaultConfig := api.DefaultConfig()
-	defaultConfig.Address = fmt.Sprintf("%s:%s", cfg.Lib.Consul.Endpoint.Host, cfg.Lib.Consul.Endpoint.Port)
+	defaultConfig.Address = fmt.Sprintf(
+		"%s:%s",
+		cfg.Lib.Consul.Endpoint.Host,
+		cfg.Lib.Consul.Endpoint.Port,
+	)
+
 	client, err := api.NewClient(defaultConfig)
 	if err != nil {
 		return err
 	}
+
 	agentServiceRegistration := new(api.AgentServiceRegistration)
 	agentServiceRegistration.Address = cfg.Server.Host
 	agentServiceRegistration.Name = cfg.App.Name
-	agentServiceRegistration.ID = ShortUUID()
+	agentServiceRegistration.ID = ext.ShortUUID()
 	intPort, _ := strconv.Atoi(cfg.Server.Port)
 	agentServiceRegistration.Port = intPort
 	agentServiceRegistration.Tags = []string{cfg.App.Name, cfg.Server.Protocol}
@@ -33,7 +41,9 @@ func (c *Consul) ServiceRegister() error {
 	check.Interval = fmt.Sprintf("%ds", cfg.Lib.Consul.Interval)
 	check.DeregisterCriticalServiceAfter = fmt.Sprintf("%ds", cfg.Lib.Consul.DeregisterAfter)
 	serverAddrHTTP := fmt.Sprintf("http://%s:%s/health", cfg.Server.Host, cfg.Server.Port)
+
 	serverAddrRPC := fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port)
+
 	switch cfg.Server.Protocol {
 	case "http":
 		check.HTTP = serverAddrHTTP
@@ -42,29 +52,45 @@ func (c *Consul) ServiceRegister() error {
 	default:
 		check.HTTP = serverAddrHTTP
 	}
+
 	agentServiceRegistration.Check = &check
+
 	return client.Agent().ServiceRegister(agentServiceRegistration)
 }
 
 // ServiceDiscover 服务发现
-func (c *Consul) ServiceDiscover() error {
-	if cfg.Downstreams == nil || len(cfg.Downstreams) == 0 {
+func (c *consulConfig) ServiceDiscover() error {
+	if len(cfg.Downstreams) == 0 || cfg.Downstreams == nil {
 		return nil
 	}
+
 	defaultConfig := api.DefaultConfig()
-	defaultConfig.Address = fmt.Sprintf("%s:%s", cfg.Lib.Consul.Endpoint.Host, cfg.Lib.Consul.Endpoint.Port)
+	defaultConfig.Address = fmt.Sprintf(
+		"%s:%s",
+		cfg.Lib.Consul.Endpoint.Host,
+		cfg.Lib.Consul.Endpoint.Port,
+	)
+
 	client, err := api.NewClient(defaultConfig)
 	if err != nil {
 		return err
 	}
+
 	for i, downstream := range cfg.Downstreams {
-		services, _, err := client.Catalog().Service(downstream.Name, EmptyString, nil)
+		services, _, err := client.Catalog().Service(downstream.Name, "", nil)
 		if err != nil {
 			return err
 		}
+
 		if len(services) == 0 {
-			return fmt.Errorf("未发现可用服务: %s: %s:%s", downstream.Name, downstream.Host, downstream.Port)
+			return fmt.Errorf(
+				"未发现可用服务: %s: %s:%s",
+				downstream.Name,
+				downstream.Endpoint.Host,
+				downstream.Endpoint.Port,
+			)
 		}
+
 		for _, service := range services {
 			if downstream.Name == service.ServiceName {
 				cfg.Downstreams[i].Endpoint.Host = service.ServiceAddress
@@ -72,5 +98,6 @@ func (c *Consul) ServiceDiscover() error {
 			}
 		}
 	}
+
 	return nil
 }

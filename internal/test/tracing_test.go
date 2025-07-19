@@ -1,12 +1,13 @@
-package test
+package test_test
 
 import (
 	"fmt"
-	"github.com/liuzhaomax/go-maxms/internal/core"
 	"testing"
+
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
 func TestTraceID(t *testing.T) {
-	fmt.Println(core.TraceID())
-	fmt.Println(core.SpanID())
+	fmt.Println(ext.TraceID())
+	fmt.Println(ext.SpanID())
 }

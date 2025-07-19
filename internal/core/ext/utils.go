@@ -1,4 +1,4 @@
-package core
+package ext
 
 import (
 	"fmt"
@@ -15,16 +15,19 @@ import (
 // In 判断某数据结构中，有没有给出的值(needle)
 func In(haystack interface{}, needle interface{}) bool {
 	sVal := reflect.ValueOf(haystack)
+
 	kind := sVal.Kind()
 	if kind != reflect.Slice && kind != reflect.Array {
 		return false
 	}
+
 	for i := 0; i < sVal.Len(); i++ {
 		elem := sVal.Index(i)
 		if searchElement(elem, needle) {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -52,6 +55,7 @@ func searchElement(elem reflect.Value, needle interface{}) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -59,16 +63,19 @@ func GetFuncName() string {
 	pc := make([]uintptr, 1)
 	runtime.Callers(2, pc)
 	function := runtime.FuncForPC(pc[0])
+
 	return function.Name()
 }
 
 func GetCallerName(level int) string {
 	_, funcName, _ := GetCallerInfo(level)
+
 	return funcName
 }
 
 func GetCallerFileAndLine(level int) string {
 	file, _, line := GetCallerInfo(level)
+
 	return fmt.Sprintf("\033[1;34m%s:%d\033[0m\n", file, line)
 }
 
@@ -79,6 +86,7 @@ func GetCallerInfo(level int) (string, string, int) {
 	}
 	// 通过函数的PC获取函数名
 	functionName := runtime.FuncForPC(pc).Name()
+
 	return file, functionName, line
 }
 
@@ -87,6 +95,7 @@ func GetProjectPath() string {
 	path, _ := filepath.Abs(file)
 	indexWithoutFileName := strings.LastIndex(path, string(os.PathSeparator))
 	indexWithoutLastPath := strings.LastIndex(path[:indexWithoutFileName], string(os.PathSeparator))
+
 	return strings.ReplaceAll(path[:indexWithoutLastPath], "\\", "/")
 }
 
@@ -95,11 +104,15 @@ func GetRandomIdlePort() string {
 	if err != nil {
 		panic(err)
 	}
+
 	listener, err := net.ListenTCP("tcp", addr)
 	if err != nil {
 		panic(err)
 	}
+
 	defer listener.Close()
+
 	port := listener.Addr().(*net.TCPAddr).Port
+
 	return strconv.Itoa(port)
 }

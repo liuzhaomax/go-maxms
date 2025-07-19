@@ -1,4 +1,4 @@
-package core
+package config
 
 import (
 	"github.com/gin-gonic/gin"
@@ -10,7 +10,7 @@ func init() {
 	gin.ForceConsoleColor()
 }
 
-type Gin struct {
+type ginConfig struct {
 	RunMode            string `mapstructure:"run_mode"`
 	MaxMultipartMemory int64  `mapstructure:"max_multipart_memory"`
 }
@@ -20,5 +20,6 @@ func InitGinEngine() *gin.Engine {
 	gin.SetMode(cfg.Lib.Gin.RunMode) // debug, test, release
 	app := gin.Default()
 	app.MaxMultipartMemory = cfg.Lib.Gin.MaxMultipartMemory << 20
+
 	return app
 }

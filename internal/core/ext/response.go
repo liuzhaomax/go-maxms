@@ -1,9 +1,10 @@
-package core
+package ext
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type WrapperHandler = func(c *gin.Context) (any, error)
@@ -13,6 +14,7 @@ func WrapperRes(handle WrapperHandler) gin.HandlerFunc {
 		data, err := handle(c)
 		if err != nil {
 			var apiError *ApiError
+
 			errors.As(err, &apiError)
 			statusCode := selectStatusCode(apiError.Code)
 			c.JSON(statusCode, gin.H{
@@ -22,6 +24,7 @@ func WrapperRes(handle WrapperHandler) gin.HandlerFunc {
 				},
 				"data": data,
 			})
+
 			return
 		}
 
@@ -39,18 +42,23 @@ func selectStatusCode(customizedCode int) int {
 	if customizedCode >= 1000 && customizedCode < 2000 {
 		return http.StatusInternalServerError
 	}
+
 	if customizedCode >= 2000 && customizedCode < 3000 {
 		return http.StatusBadRequest
 	}
+
 	if customizedCode >= 10000 {
 		return http.StatusFailedDependency
 	}
+
 	return http.StatusInternalServerError
 }
 
 func GenErrMsg(err error) any {
 	var apiError *Error
+
 	errors.As(err, &apiError)
+
 	return gin.H{
 		"status": gin.H{
 			"code": apiError.Code,

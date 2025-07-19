@@ -1,12 +1,14 @@
-package core
+package config
 
 import (
-	"github.com/gorilla/websocket"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/websocket"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
-type WebSocket struct {
+type webSocketConfig struct {
 	ReadBufferSize    int      `mapstructure:"read_buffer_size"`
 	WriteBufferSize   int      `mapstructure:"write_buffer_size"`
 	HandshakeTimeout  int      `mapstructure:"handshake_timeout"`
@@ -25,7 +27,7 @@ func InitWebSocket() *websocket.Upgrader {
 			return r.Header.Get("Origin") == cfg.App.Domain
 		},
 		Error: func(w http.ResponseWriter, r *http.Request, status int, err error) {
-			LogFailure(ProtocolUpgradeFailed, "WebSocket upgrade failed", err)
+			LogFailure(ext.ProtocolUpgradeFailed, "WebSocket upgrade failed", err)
 			http.Error(w, "WebSocket upgrade failed", status)
 		},
 	}

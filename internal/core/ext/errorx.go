@@ -1,4 +1,4 @@
-package core
+package ext
 
 import (
 	"fmt"
@@ -91,14 +91,16 @@ func FormatError(code Code, desc string, err error) error {
 	errObj := new(Error)
 	errObj.Code = code
 	errObj.Desc = fmt.Sprintf("%s: %s", desc, err.Error())
+
 	return errObj
 }
 
 func FormatCaller(ok bool, desc string) string {
 	if ok {
-		return fmt.Sprintf("%s: Caller: %s", SUCCESS, desc)
+		return "成功: Caller: " + desc
 	}
-	return fmt.Sprintf("%s: Caller: %s", FAILURE, desc)
+
+	return "失败: Caller: " + desc
 }
 
 type ApiError struct {

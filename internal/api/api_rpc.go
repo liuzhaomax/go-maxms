@@ -1,8 +1,10 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/google/wire"
-	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
 	"github.com/liuzhaomax/go-maxms/internal/middleware_rpc"
 	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/handler"
 	"github.com/liuzhaomax/go-maxms/src/api_user_rpc/pb"
@@ -11,10 +13,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	"net/http"
 )
 
-var APIRPCSet = wire.NewSet(wire.Struct(new(HandlerRPC), "*"), wire.Bind(new(APIRPC), new(*HandlerRPC)))
+var APIRPCSet = wire.NewSet(
+	wire.Struct(new(HandlerRPC), "*"),
+	wire.Bind(new(APIRPC), new(*HandlerRPC)),
+)
 
 type APIRPC interface {
 	Register() *grpc.Server
@@ -29,7 +33,7 @@ type HandlerRPC struct {
 func (h *HandlerRPC) Register() *grpc.Server {
 	interceptorsBasicChoice := []grpc.UnaryServerInterceptor{
 		h.MiddlewareRPC.TracingRPC.Trace,
-		core.LoggerForRPC,
+		config.LoggerForRPC,
 		h.MiddlewareRPC.ValidatorRPC.ValidateMetadata,
 		h.MiddlewareRPC.AuthRPC.ValidateSignature,
 	}
@@ -39,7 +43,10 @@ func (h *HandlerRPC) Register() *grpc.Server {
 
 	// 连接多个中间件
 	serverOpts := []grpc.ServerOption{}
-	serverOpts = append(serverOpts, grpc.UnaryInterceptor(middleware_rpc.ChainUnaryInterceptors(interceptorMap)))
+	serverOpts = append(
+		serverOpts,
+		grpc.UnaryInterceptor(middleware_rpc.ChainUnaryInterceptors(interceptorMap)),
+	)
 	// 创建gRPC服务
 	server := grpc.NewServer(serverOpts...)
 	// 注册接口

@@ -1,14 +1,17 @@
-package db_auto_migrate_user
+package db_auto_migrate_user_test
 
 import (
-	"github.com/liuzhaomax/go-maxms/internal/core"
 	"testing"
+
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
 func TestAutoMigrate(t *testing.T) {
 	err := AutoMigrate()
 	if err != nil {
-		core.LogFailure(core.Unknown, "数据库表创建失败", err)
+		config.LogFailure(ext.Unknown, "数据库表创建失败", err)
+
 		return
 	}
 }

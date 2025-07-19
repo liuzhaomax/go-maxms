@@ -1,11 +1,10 @@
-package core
-
-// config dir
-const configDir = "environment/config"
+package config
 
 // logger
-const SUCCESS = "成功"
-const FAILURE = "失败"
+const (
+	SUCCESS = "成功"
+	FAILURE = "失败"
+)
 
 // vault
 const (
@@ -22,9 +21,8 @@ const (
 )
 
 const (
-	EmptyString = ""
-	Bearer      = "Bearer "
-	UserID      = "userID"
+	Bearer = "Bearer "
+	UserID = "userID"
 	// headers params
 	Method        = "method"
 	URI           = "uri"
@@ -39,12 +37,10 @@ const (
 	UserId        = "user_id"
 	RequestURI    = "request_uri"
 	Signature     = "signature"
-	// redis
-	Nonce = "nonce"
 	// jaeger
 	UberTraceId = "uber-trace-id"
-)
-
-const (
+	// redis
+	Nonce = "nonce"
+	// pool
 	MyWsConn = "MyWsConn"
 )

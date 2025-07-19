@@ -1,11 +1,12 @@
-package test
+package test_test
 
 import (
 	"fmt"
-	"github.com/liuzhaomax/go-maxms/internal/core"
-	"github.com/magiconair/properties/assert"
 	"strings"
 	"testing"
+
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
+	"github.com/magiconair/properties/assert"
 )
 
 func TestIn(t *testing.T) {
@@ -13,6 +14,7 @@ func TestIn(t *testing.T) {
 		slice   []int
 		element int
 	}
+
 	cases := []struct {
 		name string
 		have input
@@ -36,9 +38,14 @@ func TestIn(t *testing.T) {
 		},
 	}
 	for _, tc := range cases {
-		got := core.In(tc.have.slice, tc.have.element)
+		got := ext.In(tc.have.slice, tc.have.element)
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
+			assert.Equal(
+				t,
+				got,
+				tc.want,
+				fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got),
+			)
 		})
 	}
 }
@@ -53,12 +60,18 @@ func TestGetFuncName(t *testing.T) {
 			want: "core.TestGetFuncName",
 		},
 	}
-	funcName := core.GetFuncName()
+	funcName := ext.GetFuncName()
 	gotSlice := strings.Split(funcName, "/")
 	got := gotSlice[len(gotSlice)-1]
+
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
+			assert.Equal(
+				t,
+				got,
+				tc.want,
+				fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got),
+			)
 		})
 	}
 }
@@ -70,13 +83,22 @@ func TestGetCallerFileAndLine(t *testing.T) {
 	}{
 		{
 			name: "测试返回函数位置",
-			want: fmt.Sprintf("\033[1;34m%s\033[0m\n", "D:/workspace/Github/go-maxms/internal/core/utils_test.go:75"),
+			want: fmt.Sprintf(
+				"\033[1;34m%s\033[0m\n",
+				"D:/workspace/Github/go-maxms/internal/core/utils_test.go:75",
+			),
 		},
 	}
-	got := core.GetCallerFileAndLine(2)
+	got := ext.GetCallerFileAndLine(2)
+
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Equal(t, got, tc.want, fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got))
+			assert.Equal(
+				t,
+				got,
+				tc.want,
+				fmt.Sprintf("\n*** Expected: \n %#v \n*** Got: \n %#v", tc.want, got),
+			)
 		})
 	}
 }

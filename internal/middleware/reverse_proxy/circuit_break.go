@@ -1,32 +1,43 @@
 package reverse_proxy
 
 import (
+	"net/http"
+	"net/http/httputil"
+
 	sentinel "github.com/alibaba/sentinel-golang/api"
 	"github.com/alibaba/sentinel-golang/core/base"
 	"github.com/alibaba/sentinel-golang/core/circuitbreaker"
 	"github.com/gin-gonic/gin"
-	"github.com/liuzhaomax/go-maxms/internal/core"
-	"net/http"
-	"net/http/httputil"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
-type stateChangeTestListener struct {
-}
+type stateChangeTestListener struct{}
 
-func (s *stateChangeTestListener) OnTransformToClosed(prev circuitbreaker.State, rule circuitbreaker.Rule) {
+func (s *stateChangeTestListener) OnTransformToClosed(
+	prev circuitbreaker.State,
+	rule circuitbreaker.Rule,
+) {
 	// fmt.Printf("rule.steategy: %+v, From %s to Closed, time: %d\n", rule.Strategy, prev.String(), util.CurrentTimeMillis())
 }
 
-func (s *stateChangeTestListener) OnTransformToOpen(prev circuitbreaker.State, rule circuitbreaker.Rule, snapshot interface{}) {
+func (s *stateChangeTestListener) OnTransformToOpen(
+	prev circuitbreaker.State,
+	rule circuitbreaker.Rule,
+	snapshot interface{},
+) {
 	// fmt.Printf("rule.steategy: %+v, From %s to Open, snapshot: %d, time: %d\n", rule.Strategy, prev.String(), snapshot, util.CurrentTimeMillis())
 }
 
-func (s *stateChangeTestListener) OnTransformToHalfOpen(prev circuitbreaker.State, rule circuitbreaker.Rule) {
+func (s *stateChangeTestListener) OnTransformToHalfOpen(
+	prev circuitbreaker.State,
+	rule circuitbreaker.Rule,
+) {
 	// fmt.Printf("rule.steategy: %+v, From %s to Half-Open, time: %d\n", rule.Strategy, prev.String(), util.CurrentTimeMillis())
 }
 
 func (rp *ReverseProxy) Break(target string, c *gin.Context, proxy *httputil.ReverseProxy) {
 	circuitbreaker.RegisterStateChangeListeners(&stateChangeTestListener{})
+
 	_, err := circuitbreaker.LoadRules([]*circuitbreaker.Rule{
 		{
 			Resource:                     target,
@@ -58,9 +69,12 @@ func (rp *ReverseProxy) Break(target string, c *gin.Context, proxy *httputil.Rev
 	if entry != nil {
 		defer entry.Exit()
 	}
+
 	if blockError != nil {
-		rp.AbortWithError(c, http.StatusForbidden, core.Forbidden, "服务被熔断", blockError)
+		rp.AbortWithError(c, http.StatusForbidden, ext.Forbidden, "服务被熔断", blockError)
+
 		return
 	}
+
 	proxy.ServeHTTP(c.Writer, c.Request)
 }

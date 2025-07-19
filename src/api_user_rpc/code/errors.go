@@ -16,6 +16,4 @@ func (code ApiError) Error() string {
 	return code.Message
 }
 
-var (
-	InternalErr = Error(5001, "internal error")
-)
+var ErrInternal = Error(5001, "internal error")

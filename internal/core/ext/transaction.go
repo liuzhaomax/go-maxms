@@ -1,7 +1,8 @@
-package core
+package ext
 
 import (
 	"context"
+
 	"github.com/google/wire"
 	"gorm.io/gorm"
 )
@@ -18,6 +19,7 @@ func (t *Trans) NewTrans(ctx context.Context, tx interface{}) context.Context {
 
 func (t *Trans) GetTrans(ctx context.Context) (interface{}, bool) {
 	v := ctx.Value(Trans{})
+
 	return v, v != nil
 }
 

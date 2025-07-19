@@ -3,15 +3,19 @@ package ws
 import (
 	"context"
 	"fmt"
-	"github.com/gorilla/websocket"
-	"github.com/liuzhaomax/go-maxms/internal/core"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/gorilla/websocket"
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 )
 
-var once sync.Once
-var wsPool *WsPool
+var (
+	once   sync.Once
+	wsPool *WsPool
+)
 
 func init() {
 	once.Do(func() {
@@ -49,12 +53,14 @@ func (wp *WsPool) GetGroupByName(name string) *ConnGroup {
 			return group
 		}
 	}
+
 	return nil
 }
 
 func (wp *WsPool) Push(connGroup *ConnGroup) {
 	wp.mux.Lock()
 	defer wp.mux.Unlock()
+
 	wp.groups = append(wp.groups, connGroup)
 }
 
@@ -81,13 +87,20 @@ func (wp *WsPool) Remove(name string) bool {
 						return false // 超时停止处理新连接
 					default:
 						wg.Add(1)
+
 						go func(k interface{}, conn *websocket.Conn) {
 							defer wg.Done()
 
 							// 优雅关闭流程
-							if err := CloseConn(ctx, conn); err != nil {
-								core.LogFailure(core.CloseException, fmt.Sprintf("关闭连接 %v 失败", k), err)
+							err := CloseConn(ctx, conn)
+							if err != nil {
+								config.LogFailure(
+									ext.CloseException,
+									fmt.Sprintf("关闭连接 %v 失败", k),
+									err,
+								)
 								atomic.AddInt32(&(failed), 1)
+
 								return
 							}
 
@@ -95,21 +108,24 @@ func (wp *WsPool) Remove(name string) bool {
 							g.Conns.m.Delete(k)
 							atomic.AddInt32(&success, 1)
 						}(key, value.(*websocket.Conn))
+
 						return true
 					}
 				})
 
 				wg.Wait()
-				core.LogSuccess(fmt.Sprintf("房间 %s 关闭完成: 成功%d个, 失败%d个",
+				config.LogSuccess(fmt.Sprintf("房间 %s 关闭完成: 成功%d个, 失败%d个",
 					g.Name, success, failed))
 			}(ctx, group)
 
 			// 从组列表中移除
 			wp.groups[i] = wp.groups[len(wp.groups)-1]
 			wp.groups = wp.groups[:len(wp.groups)-1]
+
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -157,11 +173,13 @@ func (wp *WsPool) Filter(filterFn func(group *ConnGroup) bool) []*ConnGroup {
 	defer wp.mux.RUnlock()
 
 	var result []*ConnGroup
+
 	for _, group := range wp.groups {
 		if filterFn(group) {
 			result = append(result, group)
 		}
 	}
+
 	return result
 }
 
@@ -179,7 +197,7 @@ func (wp *WsPool) HandleInactiveConnGroups(timeout time.Duration) {
 		// 移除这些房间
 		for _, group := range inactiveGroups {
 			wp.Remove(group.Name)
-			core.LogSuccess(fmt.Sprintf(
+			config.LogSuccess(fmt.Sprintf(
 				"移除闲置房间: %s (最后活动时间: %s, 已闲置: %s)",
 				group.Name,
 				group.updatedAt.Format("2006-01-02T15:04:05"),

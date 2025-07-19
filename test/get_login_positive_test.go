@@ -6,7 +6,6 @@ package test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/liuzhaomax/go-maxms/test/common"
 	. "github.com/onsi/ginkgo/v2"
 	"net/http"
@@ -26,7 +25,7 @@ var _ = Describe("GET /login 获取公钥", func() {
 				appURL,
 				common.GetPukEndpoint,
 				common.Get,
-				core.EmptyString,
+				"",
 				headers,
 				expectedStatusCode,
 				expectedRespJson,

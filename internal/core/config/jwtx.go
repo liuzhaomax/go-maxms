@@ -1,4 +1,4 @@
-package core
+package config
 
 import (
 	"errors"
@@ -16,6 +16,7 @@ const (
 
 type CustomClaims struct {
 	jwt.RegisteredClaims
+
 	UserID   string
 	ClientIP string
 }
@@ -25,7 +26,7 @@ type Jwt struct {
 }
 
 func NewJWT() *Jwt {
-	return &Jwt{SigningKey: []byte(cfg.JWTSecret)}
+	return &Jwt{SigningKey: []byte(cfg.App.JWTSecret)}
 }
 
 func (j *Jwt) GenerateToken(
@@ -39,14 +40,14 @@ func (j *Jwt) GenerateToken(
 			ExpiresAt: jwt.NewNumericDate(now.Add(duration)), // 过期时间
 			IssuedAt:  jwt.NewNumericDate(now),               // 签发时间
 			NotBefore: jwt.NewNumericDate(now),               // 生效时间
-			Issuer:    cfg.Name,
+			Issuer:    cfg.App.Name,
 		},
 		UserID:   userID,
 		ClientIP: clientIP,
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	token, err := at.SignedString([]byte(cfg.JWTSecret))
+	token, err := at.SignedString([]byte(cfg.App.JWTSecret))
 	if err != nil {
 		return "", err
 	}

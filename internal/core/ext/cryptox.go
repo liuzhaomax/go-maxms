@@ -1,4 +1,4 @@
-package core
+package ext
 
 import (
 	"crypto/hmac"
@@ -11,14 +11,16 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/pem"
-	"fmt"
+	"errors"
+
 	"github.com/anaskhan96/go-password-encoder"
 )
 
 func MD5(byt []byte) string {
 	hash := md5.New()
 	_, _ = hash.Write(byt)
-	return fmt.Sprintf("%x", hash.Sum(nil))
+
+	return hex.EncodeToString(hash.Sum(nil))
 }
 
 func MD5Str(str string) string {
@@ -28,7 +30,8 @@ func MD5Str(str string) string {
 func SHA1(byt []byte) string {
 	hash := sha1.New()
 	_, _ = hash.Write(byt)
-	return fmt.Sprintf("%x", hash.Sum(nil))
+
+	return hex.EncodeToString(hash.Sum(nil))
 }
 
 func SHA1Str(str string) string {
@@ -42,7 +45,8 @@ func SHA1MD5Str(str string) string {
 func SHA256(byt []byte) string {
 	hash := sha256.New()
 	hash.Write(byt)
-	return fmt.Sprintf("%x", hash.Sum(nil))
+
+	return hex.EncodeToString(hash.Sum(nil))
 }
 
 func SHA256Str(str string) string {
@@ -56,6 +60,7 @@ func SHA256MD5Str(str string) string {
 func HmacSHA256(byt []byte, secret string) string {
 	h := hmac.New(sha256.New, []byte(secret))
 	h.Write(byt)
+
 	return hex.EncodeToString(h.Sum(nil))
 }
 
@@ -65,16 +70,19 @@ func HmacSHA256Str(str string, secret string) string {
 
 func BASE64Encode(byt []byte) string {
 	encoded := base64.StdEncoding.EncodeToString(byt)
+
 	return encoded
 }
 
 func BASE64EncodeStr(str string) string {
 	encoded := BASE64Encode([]byte(str))
+
 	return encoded
 }
 
 func BASE64Decode(str string) ([]byte, error) {
 	decoded, err := base64.StdEncoding.DecodeString(str)
+
 	return decoded, err
 }
 
@@ -82,8 +90,10 @@ func BASE64DecodeStr(str string) (string, error) {
 	decoded, err := BASE64Decode(str)
 	if err == nil {
 		decodedStr := string(decoded)
+
 		return decodedStr, nil
 	}
+
 	return "", err
 }
 
@@ -94,7 +104,9 @@ func GenRSAKeyPair(bits int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+
 	publicKey := &privateKey.PublicKey
+
 	return privateKey, publicKey, err
 }
 
@@ -103,11 +115,13 @@ func PublicKeyToString(publicKey *rsa.PublicKey) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	publicKeyPem := pem.EncodeToMemory(&pem.Block{
 		Type:  "PUBLIC KEY",
 		Bytes: publicKeyBytes,
 	})
 	publicKeyStr := base64.StdEncoding.EncodeToString(publicKeyPem)
+
 	return publicKeyStr, err
 }
 
@@ -118,38 +132,49 @@ func PrivateKeyToString(privateKey *rsa.PrivateKey) (string, error) {
 		Bytes: privateKeyBytes,
 	})
 	privateKeyStr := base64.StdEncoding.EncodeToString(privateKeyPem)
+
 	return privateKeyStr, nil
 }
 
 func PublicKeyB64StrToStruct(publicKeyStr string) (*rsa.PublicKey, error) {
 	publicKeyPem, err := base64.StdEncoding.DecodeString(publicKeyStr)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode PEM block in base64 format containing the private key")
+		return nil, errors.New(
+			"failed to decode PEM block in base64 format containing the private key",
+		)
 	}
+
 	block, _ := pem.Decode(publicKeyPem)
 	if block == nil {
-		return nil, fmt.Errorf("failed to parse PEM block containing the public key")
+		return nil, errors.New("failed to parse PEM block containing the public key")
 	}
+
 	key, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		return nil, err
 	}
+
 	rsaPublicKey, ok := key.(*rsa.PublicKey)
 	if !ok {
-		return nil, fmt.Errorf("parsed key is not an RSA public key")
+		return nil, errors.New("parsed key is not an RSA public key")
 	}
+
 	return rsaPublicKey, nil
 }
 
 func PrivateKeyB64StrToStruct(privateKeyStr string) (*rsa.PrivateKey, error) {
 	privateKeyPem, err := base64.StdEncoding.DecodeString(privateKeyStr)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decode PEM block in base64 format containing the private key")
+		return nil, errors.New(
+			"failed to decode PEM block in base64 format containing the private key",
+		)
 	}
+
 	block, _ := pem.Decode(privateKeyPem)
 	if block == nil {
-		return nil, fmt.Errorf("failed to parse PEM block containing the private key")
+		return nil, errors.New("failed to parse PEM block containing the private key")
 	}
+
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, err
@@ -165,10 +190,12 @@ func RSADecrypt(privateKey *rsa.PrivateKey, encryptedStr string) (string, error)
 	if err != nil {
 		return "", err
 	}
+
 	decryptedBytes, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, cipherTextB64)
 	if err != nil {
 		return "", err
 	}
+
 	return string(decryptedBytes), nil
 }
 
@@ -177,20 +204,10 @@ func RSAEncrypt(publicKey *rsa.PublicKey, str string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	encryptedStr := base64.StdEncoding.EncodeToString(encryptedBytes)
+
 	return encryptedStr, nil
-}
-
-func GetPrivateKey() *rsa.PrivateKey {
-	return GetConfig().App.PrivateKey
-}
-
-func GetPublicKey() *rsa.PublicKey {
-	return GetConfig().App.PublicKey
-}
-
-func GetPublicKeyStr() string {
-	return GetConfig().App.PublicKeyStr
 }
 
 // password加密
@@ -206,6 +223,7 @@ func GetPwdEncodingOpts() *password.Options {
 
 func GetEncodedPwd(pwd string) (string, string) {
 	salt, encodedPwd := password.Encode(pwd, GetPwdEncodingOpts())
+
 	return salt, encodedPwd
 }
 

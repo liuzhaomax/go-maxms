@@ -1,16 +1,18 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/cors"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
 	"github.com/liuzhaomax/go-maxms/src/api_user/router"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"net/http"
 )
 
 var APISet = wire.NewSet(wire.Struct(new(Handler), "*"), wire.Bind(new(API), new(*Handler)))
@@ -44,7 +46,7 @@ func (h *Handler) Register(app *gin.Engine) {
 		app.Use(h.Middleware.Tracing.Trace())
 	}
 	// 日志
-	app.Use(core.LoggerForHTTP())
+	app.Use(config.LoggerForHTTP())
 	// root route
 	root := app.Group("")
 	{
@@ -52,6 +54,7 @@ func (h *Handler) Register(app *gin.Engine) {
 		if cfg.App.Enabled.HeaderParams {
 			root.Use(h.Middleware.Validator.ValidateHeaders())
 		}
+
 		if cfg.App.Enabled.Signature {
 			root.Use(h.Middleware.Auth.ValidateSignature())
 		}

@@ -1,13 +1,16 @@
-package core
+package config
 
 import (
 	"crypto/rsa"
-	"github.com/sirupsen/logrus"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 )
 
-var cfg *Config
-var once sync.Once
+var (
+	cfg  *Config
+	once sync.Once
+)
 
 func init() {
 	once.Do(func() {
@@ -20,13 +23,13 @@ func GetConfig() *Config {
 }
 
 type Config struct {
-	App
-	Lib
-	Server
-	Downstreams []Downstream
+	App         app
+	Lib         lib
+	Server      server
+	Downstreams []downstream
 }
 
-type App struct {
+type app struct {
 	Id            string
 	Secret        string
 	Name          string `mapstructure:"name"`
@@ -39,11 +42,11 @@ type App struct {
 	Salt          string
 	JWTSecret     string
 	Logger        *logrus.Logger
-	Enabled       Enabled     `mapstructure:"enabled"`
-	WhiteList     []WhiteList `mapstructure:"white_list"`
+	Enabled       enabled     `mapstructure:"enabled"`
+	WhiteList     []whiteList `mapstructure:"white_list"`
 }
 
-type Enabled struct {
+type enabled struct {
 	Vault            bool `mapstructure:"vault"`
 	RSA              bool `mapstructure:"rsa"`
 	Signature        bool `mapstructure:"signature"`
@@ -55,38 +58,26 @@ type Enabled struct {
 	Jaeger           bool `mapstructure:"jaeger"`
 }
 
-type WhiteList struct {
+type whiteList struct {
 	Name   string `mapstructure:"name"`
 	Domain string `mapstructure:"domain"`
 }
 
-type Lib struct {
-	Log
-	Vault
-	Gin
-	DB
-	Redis
-	WebSocket
-	ETCD
-	Consul
-	Jaeger
-	Rocketmq
-	Mountebank
+type lib struct {
+	Log        logConfig
+	Vault      vaultConfig
+	Gin        ginConfig
+	DB         dbConfig
+	Redis      redisConfig
+	WebSocket  webSocketConfig
+	ETCD       etcdConfig
+	Consul     consulConfig
+	Jaeger     jaegerConfig
+	Rocketmq   rocketmqConfig
+	Mountebank mountebankConfig
 }
 
-type ETCD struct {
-	DialTimeout          int `mapstructure:"dial_timeout"`
-	DialKeepAliveTime    int `mapstructure:"dial_keep_alive_time"`
-	DialKeepAliveTimeout int `mapstructure:"dial_keep_alive_timeout"`
-	Endpoint
-}
-
-type Endpoint struct {
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
-}
-
-type Server struct {
+type server struct {
 	Protocol        string `mapstructure:"protocol"`
 	Host            string `mapstructure:"host"`
 	Port            string `mapstructure:"port"`
@@ -97,9 +88,14 @@ type Server struct {
 	ShutdownTimeout int    `mapstructure:"shutdown_timeout"`
 }
 
-type Downstream struct {
-	Id     string
-	Secret string
-	Name   string `mapstructure:"name"`
-	Endpoint
+type downstream struct {
+	Id       string
+	Secret   string
+	Name     string `mapstructure:"name"`
+	Endpoint endpoint
+}
+
+type endpoint struct {
+	Host string `mapstructure:"host"`
+	Port string `mapstructure:"port"`
 }

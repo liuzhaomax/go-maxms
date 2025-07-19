@@ -1,4 +1,4 @@
-package core
+package config
 
 import (
 	"github.com/prometheus/client_golang/prometheus"
@@ -13,5 +13,6 @@ func InitPrometheusRegistry() *prometheus.Registry {
 		// 用于收集与进程相关的指标数据，例如进程的 CPU 使用情况、内存使用情况等
 		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
 	)
+
 	return registry
 }

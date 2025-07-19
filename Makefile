@@ -17,6 +17,11 @@ build:
 	go mod tidy
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o $(BUILT_FILE) main/main.go
 
+# 本地vendor
+ven:
+	go mod tidy
+	go mod vendor
+
 # 依赖注入
 wire:
 	wire ./internal/app
@@ -27,11 +32,10 @@ run:
 
 # 语法检查
 # vendor确保lint不会启用下载，不然在ci过程中会timeout
+# golangci-lint run -v -c ./.golangci.yml ./...
 lint:
-	go mod tidy
-	go mod vendor
 	gofmt -w -s .
-	golangci-lint run -v -c ./.golangci.yml ./...
+	golangci-lint run -c ./.golangci.yml ./...
 
 # 单元测试
 unit:

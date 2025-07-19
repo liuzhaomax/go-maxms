@@ -8,7 +8,8 @@ package app
 
 import (
 	"github.com/liuzhaomax/go-maxms/internal/api"
-	"github.com/liuzhaomax/go-maxms/internal/core"
+	"github.com/liuzhaomax/go-maxms/internal/core/config"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 	"github.com/liuzhaomax/go-maxms/internal/core/pool"
 	"github.com/liuzhaomax/go-maxms/internal/core/pool/ws"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
@@ -30,9 +31,9 @@ import (
 // Injectors from wire.go:
 
 func InitInjector() (*Injector, func(), error) {
-	engine := core.InitGinEngine()
-	logger := core.InitLogrus()
-	client, cleanup, err := core.InitRedis()
+	engine := config.InitGinEngine()
+	logger := config.InitLogrus()
+	client, cleanup, err := config.InitRedis()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -44,7 +45,7 @@ func InitInjector() (*Injector, func(), error) {
 		Logger: logger,
 		Redis:  client,
 	}
-	configuration := core.InitTracer()
+	configuration := config.InitTracer()
 	tracingTracing := &tracing.Tracing{
 		Logger:       logger,
 		TracerConfig: configuration,
@@ -53,7 +54,7 @@ func InitInjector() (*Injector, func(), error) {
 		Logger:      logger,
 		RedisClient: client,
 	}
-	upgrader := core.InitWebSocket()
+	upgrader := config.InitWebSocket()
 	wsUpgrader := &ws_upgrader.WsUpgrader{
 		Logger:   logger,
 		Upgrader: upgrader,
@@ -65,7 +66,7 @@ func InitInjector() (*Injector, func(), error) {
 		ReverseProxy: reverseProxy,
 		WsUpgrader:   wsUpgrader,
 	}
-	db, cleanup2, err := core.InitDB()
+	db, cleanup2, err := config.InitDB()
 	if err != nil {
 		cleanup()
 		return nil, nil, err
@@ -73,8 +74,8 @@ func InitInjector() (*Injector, func(), error) {
 	modelUser := &model.ModelUser{
 		DB: db,
 	}
-	rocketMQ := &core.RocketMQ{}
-	trans := &core.Trans{
+	rocketMQ := &config.RocketMQ{}
+	trans := &ext.Trans{
 		DB: db,
 	}
 	wsPool := ws.InitWsPool()
@@ -86,7 +87,7 @@ func InitInjector() (*Injector, func(), error) {
 		Redis:    client,
 		Pool:     wsPool,
 	}
-	registry := core.InitPrometheusRegistry()
+	registry := config.InitPrometheusRegistry()
 	apiHandler := &api.Handler{
 		Middleware:         middlewareMiddleware,
 		HandlerUser:        handlerUser,

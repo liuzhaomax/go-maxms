@@ -1,17 +1,19 @@
-package core
+package config
 
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
-	"github.com/snowzach/rotatefilehook"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/metadata"
 	"os"
 	"path/filepath"
 	"runtime"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
+	"github.com/sirupsen/logrus"
+	"github.com/snowzach/rotatefilehook"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 // 初始化logrus，让在初始化日志前的log也在console中打印，但不记录在日志文件中
@@ -20,7 +22,7 @@ func init() {
 	logrus.SetFormatter(selectFormatter("text"))
 }
 
-type Log struct {
+type logConfig struct {
 	Level    string `mapstructure:"level"`
 	Format   string `mapstructure:"format"`
 	Color    bool   `mapstructure:"color"`
@@ -36,14 +38,17 @@ func InitLogrus() *logrus.Logger {
 // 初始化系统日志
 func InitLogger() *logrus.Logger {
 	log := GetConfig().Lib.Log
-	if err := os.MkdirAll(log.FilePath, 0666); err != nil {
-		logrus.WithField(FAILURE, GetFuncName()).Panic(FormatError(IOException, "日志目录创建失败", err))
+	if err := os.MkdirAll(log.FilePath, 0o666); err != nil {
+		logrus.WithField(FAILURE, ext.GetFuncName()).
+			Panic(ext.FormatError(ext.IOException, "日志目录创建失败", err))
 	}
+
 	fileName := filepath.Join(log.FilePath, log.FileName)
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
 	logger.SetFormatter(selectFormatter(log.Format))
 	logger.SetReportCaller(true) // 输出caller
+
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   fileName,
 		MaxSize:    2,               // megabytes
@@ -54,23 +59,29 @@ func InitLogger() *logrus.Logger {
 		Formatter:  selectFormatter(),
 	})
 	if err != nil {
-		logger.WithField(FAILURE, GetFuncName()).Panic(FormatError(Unknown, "日志hook生成失败", err))
+		logger.WithField(FAILURE, ext.GetFuncName()).
+			Panic(ext.FormatError(ext.Unknown, "日志hook生成失败", err))
 		panic(err)
 	}
+
 	logger.AddHook(rotateFileHook)
 	cfg.App.Logger = logger
+
 	return logger
 }
 
 func selectFormatter(forceFormatter ...string) logrus.Formatter {
 	log := cfg.Lib.Log
+
 	format := log.Format
 	if len(forceFormatter) != 0 {
 		format = forceFormatter[0]
 	}
+
 	if forceFormatter == nil {
 		format = "json"
 	}
+
 	switch format {
 	case "text":
 		return &logrus.TextFormatter{
@@ -80,6 +91,7 @@ func selectFormatter(forceFormatter ...string) logrus.Formatter {
 			TimestampFormat: time.DateTime,
 			CallerPrettyfier: func(f *runtime.Frame) (string, string) {
 				file := fmt.Sprintf("%s:%d", f.File, f.Line)
+
 				return "", fmt.Sprintf("\033[1;34m%s\033[0m", file)
 			},
 		}
@@ -124,6 +136,7 @@ func selectLogLevel() logrus.Level {
 // HTTP 日志中间件
 func LoggerForHTTP() gin.HandlerFunc {
 	logger := cfg.App.Logger
+
 	return func(c *gin.Context) {
 		clientIP := GetClientIP(c)
 		userAgent := GetUserAgent(c)
@@ -142,8 +155,11 @@ func LoggerForHTTP() gin.HandlerFunc {
 		}
 		// Incoming日志是来的什么就是什么，只有traceID应一致
 		logger.WithFields(LoggerFormat).Info("请求开始")
+
 		startTime := time.Now()
+
 		c.Next()
+
 		endTime := time.Now()
 		took := endTime.Sub(startTime).Milliseconds()
 		statusCode := c.Writer.Status()
@@ -153,34 +169,36 @@ func LoggerForHTTP() gin.HandlerFunc {
 			"took":   took,
 			"status": statusCode,
 		}).Info("请求结束")
-
 		// concatenated json 写法
-		// format := &LoggerFormat{
-		//    StatusCode: statusCode,
-		//    Took:       took,
-		//    Method:     c.Request.Method,
-		//    URI:        c.Request.RequestURI,
-		//    ClientIP:   clientIP,
-		//    UserAgent:  userAgent,
-		//    Token:      c.Request.Header.Get(Authorization),
-		//    TraceId:    c.Request.Header.Get(TraceId),
-		//    SpanID:     c.Request.Header.Get(SpanId),
-		//    ParentID:   c.Request.Header.Get(ParentId),
-		//    AppID:      c.Request.Header.Get(AppId),
-		//    RequestID:  c.Request.Header.Get(RequestId),
-		//    UserID:     c.Request.Header.Get(UserId),
-		// }
+		//
+		//	format := &LoggerFormat{
+		//	   StatusCode: statusCode,
+		//	   Took:       took,
+		//	   Method:     c.Request.Method,
+		//	   URI:        c.Request.RequestURI,
+		//	   ClientIP:   clientIP,
+		//	   UserAgent:  userAgent,
+		//	   Token:      c.Request.Header.Get(Authorization),
+		//	   TraceId:    c.Request.Header.Get(TraceId),
+		//	   SpanID:     c.Request.Header.Get(SpanId),
+		//	   ParentID:   c.Request.Header.Get(ParentId),
+		//	   AppID:      c.Request.Header.Get(AppId),
+		//	   RequestID:  c.Request.Header.Get(RequestId),
+		//	   UserID:     c.Request.Header.Get(UserId),
+		//	}
+		//
 		// formatBytes, _ := json.Marshal(format)
 		// logger.Info(string(formatBytes))
-
 		// 竖线分割写法
 		// logger.Infof("| %3d | %13v | %15s | %8s | %s | %20s",
-		//    statusCode,
-		//    took,
-		//    clientIP,
-		//    method,
-		//    uri,
-		//    userAgent,
+		//
+		//	statusCode,
+		//	took,
+		//	clientIP,
+		//	method,
+		//	uri,
+		//	userAgent,
+		//
 		// )
 	}
 }
@@ -203,12 +221,19 @@ func LoggerForHTTP() gin.HandlerFunc {
 // }
 
 // RPC 日志中间件
-func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+func LoggerForRPC(
+	ctx context.Context,
+	req interface{},
+	_ *grpc.UnaryServerInfo,
+	handler grpc.UnaryHandler,
+) (interface{}, error) {
 	logger := cfg.App.Logger
+
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		LogFailure(NotFound, "缺少metadata", nil)
+		LogFailure(ext.NotFound, "缺少metadata", nil)
 	}
+
 	LoggerFormat := logrus.Fields{
 		"method":     SelectFromMetadata(md, Method),
 		"uri":        SelectFromMetadata(md, RequestURI),
@@ -223,6 +248,7 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 		"user_id":    SelectFromMetadata(md, UserId),
 	}
 	logger.WithFields(LoggerFormat).Info("请求开始")
+
 	startTime := time.Now()
 	res, err := handler(ctx, req)
 	endTime := time.Now()
@@ -231,13 +257,14 @@ func LoggerForRPC(ctx context.Context, req interface{}, _ *grpc.UnaryServerInfo,
 	logger.WithFields(LoggerFormat).WithFields(logrus.Fields{
 		"took": took,
 	}).Info("请求结束")
+
 	return res, err
 }
 
 func LogSuccess(desc string) {
-	cfg.App.Logger.Info(FormatInfo(desc))
+	cfg.App.Logger.Info(ext.FormatInfo(desc))
 }
 
-func LogFailure(code Code, desc string, err error) {
-	cfg.App.Logger.Error(FormatError(code, desc, err))
+func LogFailure(code ext.Code, desc string, err error) {
+	cfg.App.Logger.Error(ext.FormatError(code, desc, err))
 }

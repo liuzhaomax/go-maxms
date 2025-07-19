@@ -1,13 +1,14 @@
-package core
+package config
 
 import (
 	"fmt"
+
 	"github.com/uber/jaeger-client-go"
 	jConfig "github.com/uber/jaeger-client-go/config"
 )
 
-type Jaeger struct {
-	Endpoint
+type jaegerConfig struct {
+	Endpoint endpoint
 }
 
 func InitTracer() *jConfig.Configuration {
@@ -17,8 +18,12 @@ func InitTracer() *jConfig.Configuration {
 			Param: 1,
 		},
 		Reporter: &jConfig.ReporterConfig{
-			LogSpans:           false,
-			LocalAgentHostPort: fmt.Sprintf("%s:%s", cfg.Jaeger.Endpoint.Host, cfg.Jaeger.Endpoint.Port),
+			LogSpans: false,
+			LocalAgentHostPort: fmt.Sprintf(
+				"%s:%s",
+				cfg.Lib.Jaeger.Endpoint.Host,
+				cfg.Lib.Jaeger.Endpoint.Port,
+			),
 		},
 		ServiceName: cfg.App.Name,
 	}
