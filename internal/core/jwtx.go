@@ -16,7 +16,6 @@ const (
 
 type CustomClaims struct {
 	jwt.RegisteredClaims
-
 	UserID   string
 	ClientIP string
 }
@@ -37,9 +36,9 @@ func (j *Jwt) GenerateToken(
 	now := time.Now()
 	claims := CustomClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(now.Add(24 * time.Hour)), // 过期时间
-			IssuedAt:  jwt.NewNumericDate(now),                     // 签发时间
-			NotBefore: jwt.NewNumericDate(now),                     // 生效时间
+			ExpiresAt: jwt.NewNumericDate(now.Add(duration)), // 过期时间
+			IssuedAt:  jwt.NewNumericDate(now),               // 签发时间
+			NotBefore: jwt.NewNumericDate(now),               // 生效时间
 			Issuer:    cfg.Name,
 		},
 		UserID:   userID,
