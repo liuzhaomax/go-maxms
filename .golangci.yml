@@ -13,17 +13,12 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    #    - depguard # internal中不含外部依赖 go mod vendor
     - dogsled
     - errcheck
-    #    - gochecknoinits # 不适用init
     - gocognit
     - goconst
     - gocritic
     - gocyclo
-    #    - godot # 注释结尾句号
-    #    - gofmt # gofmt规范
-    #    - goimports # 引用未使用
     - gomodguard
     - goprintffuncname
     - govet
@@ -35,115 +30,114 @@ linters:
     - rowserrcheck
     - staticcheck
     - unconvert
-    #    - unparam # 传入永远是一样的，无需使用变量
     - whitespace
   # Disable specific linters.
-  #  disable:
-  #    - arangolint
-  #    - asasalint
-  #    - asciicheck
-  #    - bidichk
-  #    - bodyclose
-  #    - canonicalheader
-  #    - containedctx
-  #    - contextcheck
-  #    - copyloopvar
-  #    - cyclop
-  #    - decorder
-  #    - depguard
-  #    - dogsled
-  #    - dupl
-  #    - dupword
-  #    - durationcheck
-  #    - embeddedstructfieldcheck
-  #    - err113
-  #    - errcheck
-  #    - errchkjson
-  #    - errname
-  #    - errorlint
-  #    - exhaustive
-  #    - exhaustruct
-  #    - exptostd
-  #    - fatcontext
-  #    - forbidigo
-  #    - forcetypeassert
-  #    - funcorder
-  #    - funlen
-  #    - ginkgolinter
-  #    - gocheckcompilerdirectives
-  #    - gochecknoglobals
-  #    - gochecknoinits
-  #    - gochecksumtype
-  #    - gocognit
-  #    - goconst
-  #    - gocritic
-  #    - gocyclo
-  #    - godot
-  #    - godox
-  #    - goheader
-  #    - gomoddirectives
-  #    - gomodguard
-  #    - goprintffuncname
-  #    - gosec
-  #    - gosmopolitan
-  #    - govet
-  #    - grouper
-  #    - iface
-  #    - importas
-  #    - inamedparam
-  #    - ineffassign
-  #    - interfacebloat
-  #    - intrange
-  #    - ireturn
-  #    - lll
-  #    - loggercheck
-  #    - maintidx
-  #    - makezero
-  #    - mirror
-  #    - misspell
-  #    - mnd
-  #    - musttag
-  #    - nakedret
-  #    - nestif
-  #    - nilerr
-  #    - nilnesserr
-  #    - nilnil
-  #    - nlreturn
-  #    - noctx
-  #    - noinlineerr
-  #    - nolintlint
-  #    - nonamedreturns
-  #    - nosprintfhostport
-  #    - paralleltest
-  #    - perfsprint
-  #    - prealloc
-  #    - predeclared
-  #    - promlinter
-  #    - protogetter
-  #    - reassign
-  #    - recvcheck
-  #    - revive
-  #    - rowserrcheck
-  #    - sloglint
-  #    - spancheck
-  #    - sqlclosecheck
-  #    - staticcheck
-  #    - tagalign
-  #    - tagliatelle
-  #    - testableexamples
-  #    - testifylint
-  #    - testpackage
-  #    - thelper
-  #    - tparallel
-  #    - unconvert
-  #    - unparam
-  #    - unused
-  #    - usestdlibvars
-  #    - usetesting
-  #    - varnamelen
-  #    - wastedassign
-  #    - whitespace
-  #    - wrapcheck
+  disable:
+    #    - arangolint
+    #    - asasalint
+    #    - asciicheck
+    #    - bidichk
+    #    - bodyclose
+    #    - canonicalheader
+    #    - containedctx
+    #    - contextcheck
+    #    - copyloopvar
+    #    - cyclop
+    #    - decorder
+    - depguard # internal中不含外部依赖 go mod vendor
+    #    - dogsled
+    #    - dupl
+    #    - dupword
+    #    - durationcheck
+    #    - embeddedstructfieldcheck
+    - err113
+    #    - errcheck
+    #    - errchkjson
+    #    - errname
+    #    - errorlint
+    #    - exhaustive
+    - exhaustruct
+    #    - exptostd
+    #    - fatcontext
+    #    - forbidigo
+    #    - forcetypeassert
+    #    - funcorder
+    #    - funlen
+    #    - ginkgolinter
+    #    - gocheckcompilerdirectives
+    #    - gochecknoglobals
+    - gochecknoinits # 不适用init
+    #    - gochecksumtype
+    #    - gocognit
+    #    - goconst
+    - gocritic
+    #    - gocyclo
+    - godot # 注释结尾句号
+    #    - godox
+    #    - goheader
+    #    - gomoddirectives
+    #    - gomodguard
+    #    - goprintffuncname
+    - gosec
+    - gosmopolitan
+    #    - govet
+    #    - grouper
+    #    - iface
+    #    - importas
+    #    - inamedparam
+    #    - ineffassign
+    #    - interfacebloat
+    #    - intrange
+    #    - ireturn
+    #    - lll
+    #    - loggercheck
+    #    - maintidx
+    #    - makezero
+    #    - mirror
+    #    - misspell
+    - mnd
+    #    - musttag
+    #    - nakedret
+    #    - nestif
+    #    - nilerr
+    #    - nilnesserr
+    #    - nilnil
+    #    - nlreturn
+    #    - noctx
+    #    - noinlineerr
+    #    - nolintlint
+    #    - nonamedreturns
+    #    - nosprintfhostport
+    #    - paralleltest
+    #    - perfsprint
+    #    - prealloc
+    #    - predeclared
+    #    - promlinter
+    #    - protogetter
+    #    - reassign
+    #    - recvcheck
+    - revive
+    #    - rowserrcheck
+    #    - sloglint
+    #    - spancheck
+    #    - sqlclosecheck
+    #    - staticcheck
+    #    - tagalign
+    #    - tagliatelle
+    #    - testableexamples
+    #    - testifylint
+    #    - testpackage
+    #    - thelper
+    #    - tparallel
+    #    - unconvert
+    - unparam # 传入永远是一样的，无需使用变量
+    #    - unused
+    #    - usestdlibvars
+    #    - usetesting
+    #    - varnamelen
+    #    - wastedassign
+    #    - whitespace
+    - wrapcheck
   #    - wsl
   #    - wsl_v5
   #    - zerologlint
@@ -292,7 +286,7 @@ run:
   # Timeout for total work, e.g. 30s, 5m, 5m30s.
   # If the value is lower or equal to 0, the timeout is disabled.
   # Default: 0 (disabled)
-  timeout: 2m
+  timeout: 5m
   # The mode used to evaluate relative paths.
   # It's used by exclusions, Go plugins, and some linters.
   # The value can be:
