@@ -49,7 +49,7 @@ linters:
     #    - dupl
     #    - dupword
     #    - durationcheck
-    #    - embeddedstructfieldcheck
+    - embeddedstructfieldcheck # 结构体定义被包含的一方应该放前面，没必要
     - err113
     #    - errcheck
     #    - errchkjson
@@ -98,7 +98,7 @@ linters:
     - mnd
     #    - musttag
     #    - nakedret
-    #    - nestif
+    - nestif
     #    - nilerr
     #    - nilnesserr
     - nilnil
@@ -131,7 +131,7 @@ linters:
     #    - tparallel
     #    - unconvert
     - unparam # 传入永远是一样的，无需使用变量
-    #    - unused
+    - unused # 未使用
     #    - usestdlibvars
     #    - usetesting
     - varnamelen # 变量名太短
