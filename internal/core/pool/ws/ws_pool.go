@@ -1,10 +1,12 @@
 package ws
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -62,30 +64,45 @@ func (wp *WsPool) Remove(name string) bool {
 
 	for i, group := range wp.groups {
 		if group.Name == name {
-			// 同步关闭所有连接
-			group.Conns.m.Range(func(key, value interface{}) bool {
-				conn := value.(*websocket.Conn)
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			defer cancel()
 
-				// 发送关闭帧
-				err := conn.WriteControl(
-					websocket.CloseMessage,
-					websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""),
-					time.Now().Add(5*time.Second),
+			// 异步关闭所有连接
+			go func(ctx context.Context, g *ConnGroup) {
+				var (
+					wg      *sync.WaitGroup
+					success int32
+					failed  int32
 				)
-				if err != nil {
-					return false
-				}
 
-				// 关闭连接
-				err = conn.Close()
-				if err != nil {
-					return false
-				}
+				g.Conns.m.Range(func(key, value interface{}) bool {
+					select {
+					case <-ctx.Done():
+						return false // 超时停止处理新连接
+					default:
+						wg.Add(1)
+						go func(k interface{}, conn *websocket.Conn) {
+							defer wg.Done()
 
-				// 从连接映射中删除
-				group.Conns.m.Delete(key)
-				return true
-			})
+							// 优雅关闭流程
+							if err := CloseConn(ctx, conn); err != nil {
+								core.LogFailure(core.CloseException, fmt.Sprintf("关闭连接 %v 失败", k), err)
+								atomic.AddInt32(&(failed), 1)
+								return
+							}
+
+							// 从连接池移除
+							g.Conns.m.Delete(k)
+							atomic.AddInt32(&success, 1)
+						}(key, value.(*websocket.Conn))
+						return true
+					}
+				})
+
+				wg.Wait()
+				core.LogSuccess(fmt.Sprintf("房间 %s 关闭完成: 成功%d个, 失败%d个",
+					g.Name, success, failed))
+			}(ctx, group)
 
 			// 从组列表中移除
 			wp.groups[i] = wp.groups[len(wp.groups)-1]
@@ -94,6 +111,34 @@ func (wp *WsPool) Remove(name string) bool {
 		}
 	}
 	return false
+}
+
+// CloseConn 优雅关闭单个连接
+func CloseConn(ctx context.Context, conn *websocket.Conn) error {
+	// 1. 发送关闭帧
+	err := conn.WriteControl(
+		websocket.CloseMessage,
+		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "conn_group_close"),
+		time.Now().Add(3*time.Second),
+	)
+	if err != nil {
+		return fmt.Errorf("发送关闭帧失败: %w", err)
+	}
+
+	// 2. 等待关闭确认或超时
+	select {
+	case <-time.After(1 * time.Second): // 给客户端响应时间
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+
+	// 3. 最终关闭
+	err = conn.Close()
+	if err != nil {
+		return fmt.Errorf("最终关闭失败: %w", err)
+	}
+
+	return nil
 }
 
 func (wp *WsPool) Range(fn func(group *ConnGroup) bool) {
