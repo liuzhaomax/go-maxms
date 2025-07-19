@@ -221,6 +221,7 @@ func Init(ctx context.Context, optFuncs ...Option) func() {
 	case "rpc":
 		cleanServer = InitRpcServer(ctx, injector.InjectorRPC.HandlerRPC)
 	case "ws":
+		injector.Handler.Register(injector.InjectorWS.Engine)
 		cleanServer = InitWsServer(ctx, injector.InjectorWS.Engine)
 	default:
 		cleanServer = InitRpcServer(ctx, injector.HandlerRPC)

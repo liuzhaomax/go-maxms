@@ -58,7 +58,7 @@ func (h *HandlerWs) Register(app *gin.Engine) {
 			root.Use(h.Middleware.Auth.ValidateSignature())
 		}
 		// dynamic api
-		router.Register(root, h.Handler, h.Middleware)
+		router.RegisterWs(root, h.Handler, h.Middleware)
 	}
 }
 
