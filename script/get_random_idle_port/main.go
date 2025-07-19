@@ -50,12 +50,12 @@ func UpdateYamlConfig() string {
 	}
 	// 修改port
 	if cfg.App.Enabled.RandomPort {
-		cfg.Server.Port = GetRandomIdlePort()
+		cfg.Server.Http.Port = GetRandomIdlePort()
 	}
 	// 修改yaml文件
-	v.Set("server.port", cfg.Server.Port)
+	v.Set("server.port", cfg.Server.Http.Port)
 	if err = v.WriteConfig(); err != nil {
 		log.Fatalf("写入配置文件时出错: %v", err)
 	}
-	return cfg.Server.Port
+	return cfg.Server.Http.Port
 }
