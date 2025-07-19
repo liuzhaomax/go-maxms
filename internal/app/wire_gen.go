@@ -7,142 +7,142 @@
 package app
 
 import (
-	"github.com/liuzhaomax/go-maxms/internal/api"
-	"github.com/liuzhaomax/go-maxms/internal/core"
-	"github.com/liuzhaomax/go-maxms/internal/core/pool"
-	"github.com/liuzhaomax/go-maxms/internal/core/pool/ws"
-	"github.com/liuzhaomax/go-maxms/internal/middleware"
-	"github.com/liuzhaomax/go-maxms/internal/middleware/auth"
-	"github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
-	"github.com/liuzhaomax/go-maxms/internal/middleware/tracing"
-	"github.com/liuzhaomax/go-maxms/internal/middleware/validator"
-	"github.com/liuzhaomax/go-maxms/internal/middleware/ws_upgrader"
-	"github.com/liuzhaomax/go-maxms/internal/middleware_rpc"
-	auth2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/auth"
-	tracing2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/tracing"
-	validator2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/validator"
-	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
-	"github.com/liuzhaomax/go-maxms/src/api_user/model"
-	handler2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/handler"
-	model2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/model"
+    "github.com/liuzhaomax/go-maxms/internal/api"
+    "github.com/liuzhaomax/go-maxms/internal/core"
+    "github.com/liuzhaomax/go-maxms/internal/core/pool"
+    "github.com/liuzhaomax/go-maxms/internal/core/pool/ws"
+    "github.com/liuzhaomax/go-maxms/internal/middleware"
+    "github.com/liuzhaomax/go-maxms/internal/middleware/auth"
+    "github.com/liuzhaomax/go-maxms/internal/middleware/reverse_proxy"
+    "github.com/liuzhaomax/go-maxms/internal/middleware/tracing"
+    "github.com/liuzhaomax/go-maxms/internal/middleware/validator"
+    "github.com/liuzhaomax/go-maxms/internal/middleware/ws_upgrader"
+    "github.com/liuzhaomax/go-maxms/internal/middleware_rpc"
+    auth2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/auth"
+    tracing2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/tracing"
+    validator2 "github.com/liuzhaomax/go-maxms/internal/middleware_rpc/validator"
+    "github.com/liuzhaomax/go-maxms/src/api_user/handler"
+    "github.com/liuzhaomax/go-maxms/src/api_user/model"
+    handler2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/handler"
+    model2 "github.com/liuzhaomax/go-maxms/src/api_user_rpc/model"
 )
 
 // Injectors from wire.go:
 
 func InitInjector() (*Injector, func(), error) {
-	engine := core.InitGinEngine()
-	logger := core.InitLogrus()
-	client, cleanup, err := core.InitRedis()
-	if err != nil {
-		return nil, nil, err
-	}
-	authAuth := &auth.Auth{
-		Logger: logger,
-		Redis:  client,
-	}
-	validatorValidator := &validator.Validator{
-		Logger: logger,
-		Redis:  client,
-	}
-	configuration := core.InitTracer()
-	tracingTracing := &tracing.Tracing{
-		Logger:       logger,
-		TracerConfig: configuration,
-	}
-	reverseProxy := &reverse_proxy.ReverseProxy{
-		Logger:      logger,
-		RedisClient: client,
-	}
-	upgrader := core.InitWebSocket()
-	wsUpgrader := &ws_upgrader.WsUpgrader{
-		Logger:   logger,
-		Upgrader: upgrader,
-	}
-	middlewareMiddleware := &middleware.Middleware{
-		Auth:         authAuth,
-		Validator:    validatorValidator,
-		Tracing:      tracingTracing,
-		ReverseProxy: reverseProxy,
-		WsUpgrader:   wsUpgrader,
-	}
-	db, cleanup2, err := core.InitDB()
-	if err != nil {
-		cleanup()
-		return nil, nil, err
-	}
-	modelUser := &model.ModelUser{
-		DB: db,
-	}
-	rocketMQ := &core.RocketMQ{}
-	trans := &core.Trans{
-		DB: db,
-	}
-	wsPool := ws.InitWsPool()
-	handlerUser := &handler.HandlerUser{
-		Model:    modelUser,
-		Logger:   logger,
-		RocketMQ: rocketMQ,
-		Tx:       trans,
-		Redis:    client,
-		Pool:     wsPool,
-	}
-	registry := core.InitPrometheusRegistry()
-	apiHandler := &api.Handler{
-		Middleware:         middlewareMiddleware,
-		HandlerUser:        handlerUser,
-		PrometheusRegistry: registry,
-	}
-	poolPool := pool.InitPool()
-	injectorHTTP := InjectorHTTP{
-		Engine:  engine,
-		Handler: apiHandler,
-		DB:      db,
-		Redis:   client,
-		Pool:    poolPool,
-	}
-	authRPC := &auth2.AuthRPC{
-		Logger: logger,
-		Redis:  client,
-	}
-	validatorRPC := &validator2.ValidatorRPC{
-		Logger: logger,
-		Redis:  client,
-	}
-	tracingRPC := &tracing2.TracingRPC{
-		Logger:       logger,
-		TracerConfig: configuration,
-	}
-	middlewareRPC := &middleware_rpc.MiddlewareRPC{
-		AuthRPC:      authRPC,
-		ValidatorRPC: validatorRPC,
-		TracingRPC:   tracingRPC,
-	}
-	modelModelUser := &model2.ModelUser{
-		DB: db,
-	}
-	handlerHandlerUser := &handler2.HandlerUser{
-		Model:    modelModelUser,
-		Tx:       trans,
-		Redis:    client,
-		RocketMQ: rocketMQ,
-		Logger:   logger,
-	}
-	handlerRPC := &api.HandlerRPC{
-		PrometheusRegistry: registry,
-		MiddlewareRPC:      middlewareRPC,
-		HandlerRPC:         handlerHandlerUser,
-	}
-	injectorRPC := InjectorRPC{
-		HandlerRPC: handlerRPC,
-		DB:         db,
-		Redis:      client,
-	}
-	injector := &Injector{
-		InjectorHTTP: injectorHTTP,
-		InjectorRPC:  injectorRPC,
-	}
-	return injector, func() {
-		cleanup2()
-		cleanup()
-	}, nil
+    engine := core.InitGinEngine()
+    logger := core.InitLogrus()
+    client, cleanup, err := core.InitRedis()
+    if err != nil {
+        return nil, nil, err
+    }
+    authAuth := &auth.Auth{
+        Logger: logger,
+        Redis:  client,
+    }
+    validatorValidator := &validator.Validator{
+        Logger: logger,
+        Redis:  client,
+    }
+    configuration := core.InitTracer()
+    tracingTracing := &tracing.Tracing{
+        Logger:       logger,
+        TracerConfig: configuration,
+    }
+    reverseProxy := &reverse_proxy.ReverseProxy{
+        Logger:      logger,
+        RedisClient: client,
+    }
+    upgrader := core.InitWebSocket()
+    wsUpgrader := &ws_upgrader.WsUpgrader{
+        Logger:   logger,
+        Upgrader: upgrader,
+    }
+    middlewareMiddleware := &middleware.Middleware{
+        Auth:         authAuth,
+        Validator:    validatorValidator,
+        Tracing:      tracingTracing,
+        ReverseProxy: reverseProxy,
+        WsUpgrader:   wsUpgrader,
+    }
+    db, cleanup2, err := core.InitDB()
+    if err != nil {
+        cleanup()
+        return nil, nil, err
+    }
+    modelUser := &model.ModelUser{
+        DB: db,
+    }
+    rocketMQ := &core.RocketMQ{}
+    trans := &core.Trans{
+        DB: db,
+    }
+    wsPool := ws.InitWsPool()
+    handlerUser := &handler.HandlerUser{
+        Model:    modelUser,
+        Logger:   logger,
+        RocketMQ: rocketMQ,
+        Tx:       trans,
+        Redis:    client,
+        Pool:     wsPool,
+    }
+    registry := core.InitPrometheusRegistry()
+    apiHandler := &api.Handler{
+        Middleware:         middlewareMiddleware,
+        HandlerUser:        handlerUser,
+        PrometheusRegistry: registry,
+    }
+    poolPool := pool.InitPool()
+    injectorHTTP := InjectorHTTP{
+        Engine:  engine,
+        Handler: apiHandler,
+        DB:      db,
+        Redis:   client,
+        Pool:    poolPool,
+    }
+    authRPC := &auth2.AuthRPC{
+        Logger: logger,
+        Redis:  client,
+    }
+    validatorRPC := &validator2.ValidatorRPC{
+        Logger: logger,
+        Redis:  client,
+    }
+    tracingRPC := &tracing2.TracingRPC{
+        Logger:       logger,
+        TracerConfig: configuration,
+    }
+    middlewareRPC := &middleware_rpc.MiddlewareRPC{
+        AuthRPC:      authRPC,
+        ValidatorRPC: validatorRPC,
+        TracingRPC:   tracingRPC,
+    }
+    modelModelUser := &model2.ModelUser{
+        DB: db,
+    }
+    handlerHandlerUser := &handler2.HandlerUser{
+        Model:    modelModelUser,
+        Tx:       trans,
+        Redis:    client,
+        RocketMQ: rocketMQ,
+        Logger:   logger,
+    }
+    handlerRPC := &api.HandlerRPC{
+        PrometheusRegistry: registry,
+        MiddlewareRPC:      middlewareRPC,
+        HandlerRPC:         handlerHandlerUser,
+    }
+    injectorRPC := InjectorRPC{
+        HandlerRPC: handlerRPC,
+        DB:         db,
+        Redis:      client,
+    }
+    injector := &Injector{
+        InjectorHTTP: injectorHTTP,
+        InjectorRPC:  injectorRPC,
+    }
+    return injector, func() {
+        cleanup2()
+        cleanup()
+    }, nil
 }
