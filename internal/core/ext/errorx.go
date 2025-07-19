@@ -29,6 +29,7 @@ const (
 	VaultDenied           Code = 10
 	ProtocolUpgradeFailed Code = 11
 	CloseException        Code = 12
+	CommunicationFailed   Code = 13
 )
 
 func (c Code) String() string {
@@ -69,6 +70,8 @@ func (c Code) String() string {
 		return "协议升级失败"
 	case CloseException:
 		return "关闭异常"
+	case CommunicationFailed:
+		return "通信异常"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}
