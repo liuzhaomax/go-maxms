@@ -81,6 +81,15 @@ func InitHttpServer(ctx context.Context, handler http.Handler) func() {
 	}
 
 	go func() {
+		cfg.App.Logger.WithFields(logrus.Fields{
+			"app_name": cfg.App.Name,
+			"version":  cfg.App.Version,
+			"pid":      os.Getpid(),
+			"host":     cfg.Server.Ws.Host,
+			"port":     cfg.Server.Ws.Port,
+			"protocol": cfg.Server.Ws.Protocol,
+		}).Info(ext.FormatInfo("服务启动成功"))
+
 		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s via %s", cfg.App.Name, addr, cfg.Server.Http.Protocol)
 
 		err := server.ListenAndServe()
@@ -125,13 +134,6 @@ func InitWsServer(ctx context.Context, handler http.Handler) func() {
 	}
 
 	go func() {
-		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s via %s", cfg.App.Name, addr, cfg.Server.Ws.Protocol)
-
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			cfg.App.Logger.WithField(config.FAILURE, ext.GetFuncName()).
-				Fatal(ext.FormatError(ext.Unknown, "服务启动失败", err))
-		}
-
 		cfg.App.Logger.WithFields(logrus.Fields{
 			"app_name": cfg.App.Name,
 			"version":  cfg.App.Version,
@@ -140,6 +142,13 @@ func InitWsServer(ctx context.Context, handler http.Handler) func() {
 			"port":     cfg.Server.Ws.Port,
 			"protocol": cfg.Server.Ws.Protocol,
 		}).Info(ext.FormatInfo("服务启动成功"))
+
+		cfg.App.Logger.WithContext(ctx).Infof("Service %s is running at %s via %s", cfg.App.Name, addr, cfg.Server.Ws.Protocol)
+
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			cfg.App.Logger.WithField(config.FAILURE, ext.GetFuncName()).
+				Fatal(ext.FormatError(ext.Unknown, "服务启动失败", err))
+		}
 	}()
 
 	return func() {
@@ -256,8 +265,8 @@ EXIT:
 		}
 	}
 
-	defer time.Sleep(time.Second)
 	defer os.Exit(state)
-	defer clean()
 	defer cfg.App.Logger.WithContext(ctx).Infof("%s", ext.FormatInfo("系统停止"))
+	defer time.Sleep(time.Second)
+	defer clean()
 }
