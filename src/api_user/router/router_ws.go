@@ -9,7 +9,7 @@ import (
 func RegisterWs(root *gin.RouterGroup, handler *handler.HandlerUser, mw *middleware.Middleware) {
 	root.Use(mw.Auth.ValidateToken())
 	root.Use(mw.WsUpgrader.Upgrade())
-	root.GET("/login", wrapHandler(handler, func(c *gin.Context) (any, error) {
+	root.GET("/login", wrapHandlerWS(handler, func(c *gin.Context) (any, error) {
 		return handler.GetPuk(c)
 	}))
 }
