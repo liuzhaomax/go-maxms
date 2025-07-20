@@ -142,20 +142,18 @@ func LoggerForHTTP() gin.HandlerFunc {
 	logger := cfg.App.Logger
 
 	return func(c *gin.Context) {
-		clientIP := GetClientIP(c)
-		userAgent := GetUserAgent(c)
 		LoggerFormat := logrus.Fields{
 			"method":     c.Request.Method,
 			"uri":        c.Request.RequestURI,
-			"client_ip":  clientIP,
-			"user_agent": userAgent,
-			"token":      c.Request.Header.Get(Authorization),
-			"trace_id":   c.Request.Header.Get(TraceId),
-			"span_id":    c.Request.Header.Get(SpanId),
-			"parent_id":  c.Request.Header.Get(ParentId),
-			"app_id":     c.Request.Header.Get(AppId),
-			"request_id": c.Request.Header.Get(RequestId),
-			"user_id":    c.Request.Header.Get(UserId),
+			"client_ip":  GetClientIP(c),
+			"user_agent": GetUserAgent(c),
+			"token":      c.GetHeader(Authorization),
+			"trace_id":   c.GetHeader(TraceId),
+			"span_id":    c.GetHeader(SpanId),
+			"parent_id":  c.GetHeader(ParentId),
+			"app_id":     c.GetHeader(AppId),
+			"request_id": c.GetHeader(RequestId),
+			"user_id":    c.GetHeader(UserId),
 		}
 		// Incoming日志是来的什么就是什么，只有traceID应一致
 		// logger.WithFields(LoggerFormat).Info("请求开始")

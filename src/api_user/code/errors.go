@@ -2,6 +2,7 @@ package code
 
 import (
 	"github.com/liuzhaomax/go-maxms/internal/core/ext"
+	"net/http"
 )
 
 func Error(code int, msg string) *ext.ApiError {
@@ -9,6 +10,19 @@ func Error(code int, msg string) *ext.ApiError {
 		Code:    code,
 		Message: msg,
 	}
+}
+
+func SelectStatusCode(customizedCode int) int {
+	if customizedCode >= 1000 && customizedCode < 2000 {
+		return http.StatusInternalServerError
+	}
+	if customizedCode >= 2000 && customizedCode < 3000 {
+		return http.StatusBadRequest
+	}
+	if customizedCode >= 10000 {
+		return http.StatusFailedDependency
+	}
+	return http.StatusInternalServerError
 }
 
 var (

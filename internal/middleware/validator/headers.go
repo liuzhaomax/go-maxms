@@ -32,6 +32,20 @@ func (v *Validator) ValidateHeaders() gin.HandlerFunc {
 }
 
 func (v *Validator) AbortWithError(c *gin.Context, args ...any) {
+	v.Logger = v.Logger.WithFields(logrus.Fields{
+		"method":     c.Request.Method,
+		"uri":        c.Request.RequestURI,
+		"client_ip":  config.GetClientIP(c),
+		"user_agent": config.GetUserAgent(c),
+		"token":      c.GetHeader(config.Authorization),
+		"trace_id":   c.GetHeader(config.TraceId),
+		"span_id":    c.GetHeader(config.SpanId),
+		"parent_id":  c.GetHeader(config.ParentId),
+		"app_id":     c.GetHeader(config.AppId),
+		"request_id": c.GetHeader(config.RequestId),
+		"user_id":    c.GetHeader(config.UserId),
+	})
+
 	msg := &ext.MiddlewareMessage{
 		StatusCode: 500,
 		Code:       ext.InternalServerError,

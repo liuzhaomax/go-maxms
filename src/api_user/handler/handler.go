@@ -14,7 +14,7 @@ var HandlerUserSet = wire.NewSet(wire.Struct(new(HandlerUser), "*"))
 
 type HandlerUser struct {
 	Model    *model.ModelUser
-	Logger   *logrus.Logger
+	Logger   *logrus.Entry
 	RocketMQ config.IRocketMQ
 	Tx       *ext.Trans
 	Redis    *redis.Client
