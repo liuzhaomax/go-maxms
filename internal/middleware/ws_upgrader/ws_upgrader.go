@@ -30,7 +30,6 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 				"http升级ws未能生成连接",
 				err,
 			)
-
 			return
 		}
 
@@ -44,21 +43,17 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 		})
 
 		// 设置读取超时（心跳超时检测）
-		err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
+		err = conn.SetReadDeadline(time.Now().Add(2 * time.Hour))
 		if err != nil {
 			wsUpgrader.AbortWithError(c, err)
-
 			return
 		}
-
 		conn.SetPongHandler(func(string) error {
-			err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
+			err = conn.SetReadDeadline(time.Now().Add(2 * time.Hour))
 			if err != nil {
 				wsUpgrader.AbortWithError(c, err)
-
 				return err
 			}
-
 			return nil
 		})
 
