@@ -31,9 +31,9 @@ func InitWsPool() *WsPool {
 }
 
 type IWsPool interface {
-	GetGroupByName(string) *ConnGroup
+	GetGroupByID(uint) *ConnGroup
 	Push(*ConnGroup)
-	Remove(string) bool
+	Remove(uint) bool
 	Range(func(*ConnGroup) bool)
 	Filter(func(*ConnGroup) bool) []*ConnGroup
 	HandleInactiveConnGroups(time.Duration)
@@ -41,15 +41,15 @@ type IWsPool interface {
 
 type WsPool struct {
 	mux    *sync.RWMutex
-	groups []*ConnGroup // [{ Name: roomName, Conns: [{userId: conn}] }]
+	groups []*ConnGroup // [{ ID: roomID, Conns: [{userId: conn}] }]
 }
 
-func (wp *WsPool) GetGroupByName(name string) *ConnGroup {
+func (wp *WsPool) GetGroupByID(ID uint) *ConnGroup {
 	wp.mux.RLock()
 	defer wp.mux.RUnlock()
 
 	for _, group := range wp.groups {
-		if group.Name == name {
+		if group.ID == ID {
 			return group
 		}
 	}
@@ -64,12 +64,12 @@ func (wp *WsPool) Push(connGroup *ConnGroup) {
 	wp.groups = append(wp.groups, connGroup)
 }
 
-func (wp *WsPool) Remove(name string) bool {
+func (wp *WsPool) Remove(ID uint) bool {
 	wp.mux.Lock()
 	defer wp.mux.Unlock()
 
 	for i, group := range wp.groups {
-		if group.Name == name {
+		if group.ID == ID {
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 
@@ -115,7 +115,7 @@ func (wp *WsPool) Remove(name string) bool {
 
 				wg.Wait()
 				config.LogSuccess(fmt.Sprintf("房间 %s 关闭完成: 成功%d个, 失败%d个",
-					g.Name, success, failed))
+					g.ID, success, failed))
 			}(ctx, group)
 
 			// 从组列表中移除
@@ -196,10 +196,10 @@ func (wp *WsPool) HandleInactiveConnGroups(timeout time.Duration) {
 
 		// 移除这些房间
 		for _, group := range inactiveGroups {
-			wp.Remove(group.Name)
+			wp.Remove(group.ID)
 			config.LogSuccess(fmt.Sprintf(
 				"移除闲置房间: %s (最后活动时间: %s, 已闲置: %s)",
-				group.Name,
+				group.ID,
 				group.updatedAt.Format("2006-01-02T15:04:05"),
 				time.Since(group.updatedAt).Truncate(time.Second), // 去除纳秒精度
 			))

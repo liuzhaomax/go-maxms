@@ -19,7 +19,7 @@ type ConnGroup struct {
 	mux       *sync.RWMutex
 	createdAt time.Time
 	updatedAt time.Time     // 广播时更新，如果n个小时没有结算，则直接判定为闲置房间，直接移除，见HandleInactiveConnGroups
-	Name      string        // roomName
+	ID        uint          // roomID
 	Conns     *connsSyncMap // userId: conn
 }
 
@@ -27,12 +27,12 @@ type connsSyncMap struct {
 	m *sync.Map
 }
 
-func NewConnGroup(name string) *ConnGroup {
+func NewConnGroup(ID uint) *ConnGroup {
 	return &ConnGroup{
 		mux:       new(sync.RWMutex),
 		createdAt: time.Now(),
 		updatedAt: time.Now(),
-		Name:      name,
+		ID:        ID,
 		Conns: &connsSyncMap{
 			m: new(sync.Map),
 		},
