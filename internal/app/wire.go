@@ -18,6 +18,7 @@ import (
 func InitInjector() (*Injector, func(), error) {
 	wire.Build(
 		config.InitLogrus,
+		config.InitLogrusEntry,
 		config.InitGinEngine,
 		config.InitDB,
 		config.InitRedis,

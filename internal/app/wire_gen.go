@@ -32,31 +32,31 @@ import (
 
 func InitInjector() (*Injector, func(), error) {
 	engine := config.InitGinEngine()
-	logger := config.InitLogrus()
+	entry := config.InitLogrusEntry()
 	client, cleanup, err := config.InitRedis()
 	if err != nil {
 		return nil, nil, err
 	}
 	authAuth := &auth.Auth{
-		Logger: logger,
+		Logger: entry,
 		Redis:  client,
 	}
 	validatorValidator := &validator.Validator{
-		Logger: logger,
+		Logger: entry,
 		Redis:  client,
 	}
 	configuration := config.InitTracer()
 	tracingTracing := &tracing.Tracing{
-		Logger:       logger,
+		Logger:       entry,
 		TracerConfig: configuration,
 	}
 	reverseProxy := &reverse_proxy.ReverseProxy{
-		Logger:      logger,
+		Logger:      entry,
 		RedisClient: client,
 	}
 	upgrader := config.InitWebSocket()
 	wsUpgrader := &ws_upgrader.WsUpgrader{
-		Logger:   logger,
+		Logger:   entry,
 		Upgrader: upgrader,
 	}
 	middlewareMiddleware := &middleware.Middleware{
@@ -74,6 +74,7 @@ func InitInjector() (*Injector, func(), error) {
 	modelUser := &model.ModelUser{
 		DB: db,
 	}
+	logger := config.InitLogrus()
 	rocketMQ := &config.RocketMQ{}
 	trans := &ext.Trans{
 		DB: db,

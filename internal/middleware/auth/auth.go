@@ -16,7 +16,7 @@ import (
 var AuthSet = wire.NewSet(wire.Struct(new(Auth), "*"))
 
 type Auth struct {
-	Logger *logrus.Logger
+	Logger *logrus.Entry
 	Redis  *redis.Client
 }
 

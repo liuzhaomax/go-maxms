@@ -15,7 +15,7 @@ import (
 var WsUpgraderSet = wire.NewSet(wire.Struct(new(WsUpgrader), "*"))
 
 type WsUpgrader struct {
-	Logger   *logrus.Logger
+	Logger   *logrus.Entry
 	Upgrader *websocket.Upgrader
 }
 

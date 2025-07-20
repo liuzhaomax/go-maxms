@@ -21,7 +21,7 @@ import (
 var ReverseProxySet = wire.NewSet(wire.Struct(new(ReverseProxy), "*"))
 
 type ReverseProxy struct {
-	Logger      *logrus.Logger
+	Logger      *logrus.Entry
 	RedisClient *redis.Client
 }
 

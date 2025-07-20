@@ -92,7 +92,7 @@ func (wp *WsPool) Remove(name string) bool {
 							defer wg.Done()
 
 							// 优雅关闭流程
-							err := CloseConn(ctx, conn)
+							err := wp.CloseConn(ctx, conn)
 							if err != nil {
 								config.LogFailure(
 									ext.CloseException,
@@ -130,7 +130,7 @@ func (wp *WsPool) Remove(name string) bool {
 }
 
 // CloseConn 优雅关闭单个连接
-func CloseConn(ctx context.Context, conn *websocket.Conn) error {
+func (wp *WsPool) CloseConn(ctx context.Context, conn *websocket.Conn) error {
 	// 1. 发送关闭帧
 	err := conn.WriteControl(
 		websocket.CloseMessage,

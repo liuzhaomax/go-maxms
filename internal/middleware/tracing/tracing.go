@@ -17,7 +17,7 @@ import (
 var TracingSet = wire.NewSet(wire.Struct(new(Tracing), "*"))
 
 type Tracing struct {
-	Logger       *logrus.Logger
+	Logger       *logrus.Entry
 	TracerConfig *jConfig.Configuration
 }
 

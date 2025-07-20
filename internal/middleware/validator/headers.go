@@ -14,7 +14,7 @@ import (
 var ValidatorSet = wire.NewSet(wire.Struct(new(Validator), "*"))
 
 type Validator struct {
-	Logger *logrus.Logger
+	Logger *logrus.Entry
 	Redis  *redis.Client
 }
 

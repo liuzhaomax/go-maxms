@@ -35,6 +35,10 @@ func InitLogrus() *logrus.Logger {
 	return cfg.App.Logger
 }
 
+func InitLogrusEntry() *logrus.Entry {
+	return cfg.App.Logger.WithFields(logrus.Fields{})
+}
+
 // 初始化系统日志
 func InitLogger() *logrus.Logger {
 	log := GetConfig().Lib.Log
