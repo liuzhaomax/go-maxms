@@ -74,7 +74,6 @@ func InitInjector() (*Injector, func(), error) {
 	modelUser := &model.ModelUser{
 		DB: db,
 	}
-	logger := config.InitLogrus()
 	rocketMQ := &config.RocketMQ{}
 	trans := &ext.Trans{
 		DB: db,
@@ -82,7 +81,7 @@ func InitInjector() (*Injector, func(), error) {
 	wsPool := ws.InitWsPool()
 	handlerUser := &handler.HandlerUser{
 		Model:    modelUser,
-		Logger:   logger,
+		Logger:   entry,
 		RocketMQ: rocketMQ,
 		Tx:       trans,
 		Redis:    client,
@@ -113,6 +112,7 @@ func InitInjector() (*Injector, func(), error) {
 		Redis:     client,
 		Pool:      poolPool,
 	}
+	logger := config.InitLogrus()
 	authRPC := &auth2.AuthRPC{
 		Logger: logger,
 		Redis:  client,
