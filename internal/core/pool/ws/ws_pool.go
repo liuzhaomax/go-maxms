@@ -134,7 +134,7 @@ func CloseConn(ctx context.Context, conn *websocket.Conn) error {
 	// 1. 发送关闭帧
 	err := conn.WriteControl(
 		websocket.CloseMessage,
-		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "conn_group_close"),
+		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "conn_close"),
 		time.Now().Add(3*time.Second),
 	)
 	if err != nil {
