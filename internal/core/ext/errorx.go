@@ -93,8 +93,9 @@ func FormatInfo(desc string) string {
 func FormatError(code Code, desc string, err error) error {
 	errObj := new(Error)
 	errObj.Code = code
-	errObj.Desc = fmt.Sprintf("%s: %s", desc, err.Error())
-
+	if err != nil {
+		errObj.Desc = fmt.Sprintf("%s: %s", desc, err.Error())
+	}
 	return errObj
 }
 
