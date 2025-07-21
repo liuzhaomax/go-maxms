@@ -28,27 +28,27 @@ type HandlerWs struct {
 
 func (h *HandlerWs) Register(app *gin.Engine) {
 	cfg := core.GetConfig()
-	// 404
-	app.NoRoute(h.GetNoRoute)
-	// CORS
-	app.Use(cors.Cors())
-	// consul
-	if cfg.App.Enabled.HealthCheck {
-		app.GET("/health", h.HealthHandler)
-	}
-	// prometheus
-	if cfg.App.Enabled.Prometheus {
-		app.GET("/metrics", h.MetricsHandler)
-	}
-	// jaeger
-	if cfg.App.Enabled.Jaeger {
-		app.Use(h.Middleware.Tracing.Trace())
-	}
-	// 日志
-	app.Use(config.LoggerForHTTP())
 	// root route
 	root := app.Group(cfg.Server.Ws.BaseUrl)
 	{
+		// 404
+		app.NoRoute(h.GetNoRoute)
+		// CORS
+		app.Use(cors.Cors())
+		// consul
+		if cfg.App.Enabled.HealthCheck {
+			app.GET("/health", h.HealthHandler)
+		}
+		// prometheus
+		if cfg.App.Enabled.Prometheus {
+			app.GET("/metrics", h.MetricsHandler)
+		}
+		// jaeger
+		if cfg.App.Enabled.Jaeger {
+			app.Use(h.Middleware.Tracing.Trace())
+		}
+		// 日志
+		app.Use(config.LoggerForHTTP())
 		// interceptor
 		if cfg.App.Enabled.HeaderParams {
 			root.Use(h.Middleware.Validator.ValidateHeaders())
