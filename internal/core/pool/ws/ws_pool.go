@@ -131,15 +131,12 @@ func (wp *WsPool) Remove(ID uint) bool {
 
 // CloseConn 优雅关闭单个连接
 func (wp *WsPool) CloseConn(ctx context.Context, conn *websocket.Conn) error {
-	// 1. 发送关闭帧
-	err := conn.WriteControl(
+	// 1. 发送关闭帧: 关闭帧发送失败不返回错误，不然会导致conn不能关闭，造成内存泄漏，除非传递err，但没必要
+	_ = conn.WriteControl(
 		websocket.CloseMessage,
 		websocket.FormatCloseMessage(websocket.CloseNormalClosure, "conn_close"),
 		time.Now().Add(3*time.Second),
 	)
-	if err != nil {
-		return fmt.Errorf("发送关闭帧失败: %w", err)
-	}
 
 	// 2. 等待关闭确认或超时
 	select {
@@ -149,7 +146,7 @@ func (wp *WsPool) CloseConn(ctx context.Context, conn *websocket.Conn) error {
 	}
 
 	// 3. 最终关闭
-	err = conn.Close()
+	err := conn.Close()
 	if err != nil {
 		return fmt.Errorf("最终关闭失败: %w", err)
 	}
