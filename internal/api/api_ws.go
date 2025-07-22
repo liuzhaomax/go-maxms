@@ -5,12 +5,14 @@ import (
 	"github.com/google/wire"
 	"github.com/liuzhaomax/go-maxms/internal/core"
 	"github.com/liuzhaomax/go-maxms/internal/core/config"
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 	"github.com/liuzhaomax/go-maxms/internal/middleware"
 	"github.com/liuzhaomax/go-maxms/internal/middleware/cors"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
 	"github.com/liuzhaomax/go-maxms/src/api_user/router"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -28,27 +30,27 @@ type HandlerWs struct {
 
 func (h *HandlerWs) Register(app *gin.Engine) {
 	cfg := core.GetConfig()
+	// 404
+	// app.NoRoute(h.GetNoRoute) // gin.Engine被注册一次NoRoute就行，如果http没注册，这里去掉注释
 	// root route
 	root := app.Group(cfg.Server.Ws.BaseUrl)
 	{
-		// 404
-		app.NoRoute(h.GetNoRoute)
 		// CORS
-		app.Use(cors.Cors())
+		root.Use(cors.Cors())
 		// consul
 		if cfg.App.Enabled.HealthCheck {
-			app.GET("/health", h.HealthHandler)
+			root.GET("/health", h.HealthHandler)
 		}
 		// prometheus
 		if cfg.App.Enabled.Prometheus {
-			app.GET("/metrics", h.MetricsHandler)
+			root.GET("/metrics", h.MetricsHandler)
 		}
 		// jaeger
 		if cfg.App.Enabled.Jaeger {
-			app.Use(h.Middleware.Tracing.Trace())
+			root.Use(h.Middleware.Tracing.Trace())
 		}
 		// 日志
-		app.Use(config.LoggerForHTTP())
+		root.Use(config.LoggerForHTTP())
 		// interceptor
 		if cfg.App.Enabled.HeaderParams {
 			root.Use(h.Middleware.Validator.ValidateHeaders())
@@ -67,6 +69,21 @@ func (h *HandlerWs) RegisterStaticFS(app *gin.Engine, path string) {
 }
 
 func (h *HandlerWs) GetNoRoute(c *gin.Context) {
+	cfg := core.GetConfig()
+	LoggerFormat := logrus.Fields{
+		"method":     c.Request.Method,
+		"uri":        c.Request.RequestURI,
+		"client_ip":  config.GetClientIP(c),
+		"user_agent": config.GetUserAgent(c),
+		"token":      c.GetHeader(config.Authorization),
+		"trace_id":   c.GetHeader(config.TraceId),
+		"span_id":    c.GetHeader(config.SpanId),
+		"parent_id":  c.GetHeader(config.ParentId),
+		"app_id":     c.GetHeader(config.AppId),
+		"request_id": c.GetHeader(config.RequestId),
+		"user_id":    c.GetHeader(config.UserId),
+	}
+	cfg.App.Logger.WithFields(LoggerFormat).Error(ext.FormatError(ext.NotFound, "错误路径", nil))
 	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
 }
 

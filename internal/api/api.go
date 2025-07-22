@@ -1,6 +1,8 @@
 package api
 
 import (
+	"github.com/liuzhaomax/go-maxms/internal/core/ext"
+	"github.com/sirupsen/logrus"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -29,27 +31,27 @@ type Handler struct {
 
 func (h *Handler) Register(app *gin.Engine) {
 	cfg := core.GetConfig()
+	// 404
+	app.NoRoute(h.GetNoRoute)
 	// root route
 	root := app.Group(cfg.Server.Http.BaseUrl)
 	{
-		// 404
-		app.NoRoute(h.GetNoRoute)
 		// CORS
-		app.Use(cors.Cors())
+		root.Use(cors.Cors())
 		// consul
 		if cfg.App.Enabled.HealthCheck {
-			app.GET("/health", h.HealthHandler)
+			root.GET("/health", h.HealthHandler)
 		}
 		// prometheus
 		if cfg.App.Enabled.Prometheus {
-			app.GET("/metrics", h.MetricsHandler)
+			root.GET("/metrics", h.MetricsHandler)
 		}
 		// jaeger
 		if cfg.App.Enabled.Jaeger {
-			app.Use(h.Middleware.Tracing.Trace())
+			root.Use(h.Middleware.Tracing.Trace())
 		}
 		// 日志
-		app.Use(config.LoggerForHTTP())
+		root.Use(config.LoggerForHTTP())
 		// interceptor
 		if cfg.App.Enabled.HeaderParams {
 			root.Use(h.Middleware.Validator.ValidateHeaders())
@@ -68,6 +70,21 @@ func (h *Handler) RegisterStaticFS(app *gin.Engine, path string) {
 }
 
 func (h *Handler) GetNoRoute(c *gin.Context) {
+	cfg := core.GetConfig()
+	LoggerFormat := logrus.Fields{
+		"method":     c.Request.Method,
+		"uri":        c.Request.RequestURI,
+		"client_ip":  config.GetClientIP(c),
+		"user_agent": config.GetUserAgent(c),
+		"token":      c.GetHeader(config.Authorization),
+		"trace_id":   c.GetHeader(config.TraceId),
+		"span_id":    c.GetHeader(config.SpanId),
+		"parent_id":  c.GetHeader(config.ParentId),
+		"app_id":     c.GetHeader(config.AppId),
+		"request_id": c.GetHeader(config.RequestId),
+		"user_id":    c.GetHeader(config.UserId),
+	}
+	cfg.App.Logger.WithFields(LoggerFormat).Error(ext.FormatError(ext.NotFound, "错误路径", nil))
 	c.JSON(http.StatusNotFound, gin.H{"res": "404"})
 }
 
