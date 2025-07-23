@@ -30,6 +30,7 @@ const (
 	ProtocolUpgradeFailed Code = 11
 	CloseException        Code = 12
 	CommunicationFailed   Code = 13
+	TypeError             Code = 14
 )
 
 func (c Code) String() string {
@@ -72,6 +73,8 @@ func (c Code) String() string {
 		return "关闭异常"
 	case CommunicationFailed:
 		return "通信异常"
+	case TypeError:
+		return "类型错误"
 	default:
 		return "Code(" + strconv.FormatInt(int64(c), 10) + ")"
 	}
