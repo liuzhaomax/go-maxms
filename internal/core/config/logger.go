@@ -1,11 +1,15 @@
 package config
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -142,6 +146,11 @@ func LoggerForHTTP() gin.HandlerFunc {
 	logger := cfg.App.Logger
 
 	return func(c *gin.Context) {
+		// 过滤ws心跳
+		// if shouldSkipHeartbeatLogging(c) {
+		// 	c.Next()
+		// 	return
+		// }
 		LoggerFormat := logrus.Fields{
 			"method":     c.Request.Method,
 			"uri":        c.Request.RequestURI,
@@ -264,4 +273,26 @@ func LogSuccess(desc string) {
 
 func LogFailure(code ext.Code, desc string, err error) {
 	cfg.App.Logger.Error(ext.FormatError(code, desc, err))
+}
+
+// shouldSkipHeartbeatLogging 过滤ws心跳
+func shouldSkipHeartbeatLogging(c *gin.Context) bool {
+	if !strings.Contains(c.Request.RequestURI, "/ws") {
+		return false
+	}
+	bodyBytes, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		return false
+	}
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	var msg struct {
+		Action string `json:"action"`
+		Body   string `json:"body"`
+	}
+	if json.Unmarshal(bodyBytes, &msg) != nil {
+		return false
+	}
+
+	return msg.Action == "ping"
 }
