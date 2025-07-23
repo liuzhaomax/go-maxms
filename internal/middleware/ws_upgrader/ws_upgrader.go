@@ -33,7 +33,7 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 			return
 		}
 
-		// 设置心跳处理
+		// 设置心跳处理 传输层通信控制
 		conn.SetPingHandler(func(appData string) error {
 			return conn.WriteControl(
 				websocket.PongMessage,
