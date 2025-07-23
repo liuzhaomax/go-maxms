@@ -43,13 +43,13 @@ func (wsUpgrader *WsUpgrader) Upgrade() gin.HandlerFunc {
 		})
 
 		// 设置读取超时（心跳超时检测）
-		err = conn.SetReadDeadline(time.Now().Add(2 * time.Hour))
+		err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
 		if err != nil {
 			wsUpgrader.AbortWithError(c, err)
 			return
 		}
 		conn.SetPongHandler(func(string) error {
-			err = conn.SetReadDeadline(time.Now().Add(2 * time.Hour))
+			err = conn.SetReadDeadline(time.Now().Add(2 * time.Minute))
 			if err != nil {
 				wsUpgrader.AbortWithError(c, err)
 				return err
