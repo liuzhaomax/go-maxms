@@ -1,7 +1,7 @@
 package ws
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/gorilla/websocket"
 	"sync"
 	"time"
@@ -79,8 +79,12 @@ func (cg *ConnGroup) Broadcast(info any) error {
 			case string:
 				msg = []byte(v)
 			default:
-				// 可以添加更复杂的序列化逻辑
-				msg = []byte(fmt.Sprintf("%v", v))
+				marshal, err := json.Marshal(info)
+				if err != nil {
+					broadcastErr = err
+					return
+				}
+				msg = marshal
 			}
 
 			// 发送消息
