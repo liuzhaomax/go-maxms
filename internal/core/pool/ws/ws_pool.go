@@ -195,7 +195,7 @@ func (wp *WsPool) HandleInactiveConnGroups(timeout time.Duration) {
 		for _, group := range inactiveGroups {
 			wp.Remove(group.ID)
 			config.LogSuccess(fmt.Sprintf(
-				"移除闲置房间: %s (最后活动时间: %s, 已闲置: %s)",
+				"移除闲置房间: %d (最后活动时间: %s, 已闲置: %s)",
 				group.ID,
 				group.updatedAt.Format("2006-01-02T15:04:05"),
 				time.Since(group.updatedAt).Truncate(time.Second), // 去除纳秒精度
