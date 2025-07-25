@@ -45,7 +45,8 @@ func (cg *ConnGroup) Store(key string, value *websocket.Conn) {
 
 func (cg *ConnGroup) Load(key string) (value *websocket.Conn, ok bool) {
 	v, ok := cg.Conns.m.Load(key)
-	return v.(*websocket.Conn), ok
+	conn, ok := v.(*websocket.Conn)
+	return conn, ok
 }
 
 func (cg *ConnGroup) Delete(key string) {
