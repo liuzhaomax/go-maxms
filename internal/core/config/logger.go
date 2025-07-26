@@ -27,11 +27,12 @@ func init() {
 }
 
 type logConfig struct {
-	Level    string `mapstructure:"level"`
-	Format   string `mapstructure:"format"`
-	Color    bool   `mapstructure:"color"`
-	FilePath string `mapstructure:"file_path"`
-	FileName string `mapstructure:"file_name"`
+	Level        string `mapstructure:"level"`
+	Format       string `mapstructure:"format"`
+	Color        bool   `mapstructure:"color"`
+	ReportCaller bool   `mapstructure:"report_caller"`
+	FilePath     string `mapstructure:"file_path"`
+	FileName     string `mapstructure:"file_name"`
 }
 
 // 日志扩展loggerx的Provider
@@ -55,7 +56,7 @@ func InitLogger() *logrus.Logger {
 	logger := logrus.New()
 	logger.SetLevel(selectLogLevel())
 	logger.SetFormatter(selectFormatter(log.Format))
-	logger.SetReportCaller(true) // 输出caller
+	logger.SetReportCaller(log.ReportCaller)
 
 	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
 		Filename:   fileName,
