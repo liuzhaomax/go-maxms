@@ -8,7 +8,6 @@ import (
 	"github.com/liuzhaomax/go-maxms/internal/core/ext"
 	"github.com/liuzhaomax/go-maxms/src/api_user/code"
 	"github.com/liuzhaomax/go-maxms/src/api_user/handler"
-	"github.com/sirupsen/logrus"
 	"net/http"
 )
 
@@ -16,19 +15,8 @@ type wrapperHandler = func(c *gin.Context) (any, error)
 
 func wrapHandler(handler *handler.HandlerUser, handle wrapperHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		handler.Logger = handler.Logger.WithFields(logrus.Fields{
-			"method":     c.Request.Method,
-			"uri":        c.Request.RequestURI,
-			"client_ip":  config.GetClientIP(c),
-			"user_agent": config.GetUserAgent(c),
-			"token":      c.GetHeader(config.Authorization),
-			"trace_id":   c.GetHeader(config.TraceId),
-			"span_id":    c.GetHeader(config.SpanId),
-			"parent_id":  c.GetHeader(config.ParentId),
-			"app_id":     c.GetHeader(config.AppId),
-			"request_id": c.GetHeader(config.RequestId),
-			"user_id":    c.GetHeader(config.UserId),
-		})
+		loggerFormat := config.GenGinLoggerFields(c)
+		handler.Logger = handler.Logger.WithFields(loggerFormat)
 		data, err := handle(c)
 		if err != nil {
 			var apiError *ext.ApiError
@@ -56,19 +44,8 @@ func wrapHandler(handler *handler.HandlerUser, handle wrapperHandler) gin.Handle
 
 func wrapHandlerWS(handler *handler.HandlerUser, handle wrapperHandler) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		handler.Logger = handler.Logger.WithFields(logrus.Fields{
-			"method":     c.Request.Method,
-			"uri":        c.Request.RequestURI,
-			"client_ip":  config.GetClientIP(c),
-			"user_agent": config.GetUserAgent(c),
-			"token":      c.GetHeader(config.Authorization),
-			"trace_id":   c.GetHeader(config.TraceId),
-			"span_id":    c.GetHeader(config.SpanId),
-			"parent_id":  c.GetHeader(config.ParentId),
-			"app_id":     c.GetHeader(config.AppId),
-			"request_id": c.GetHeader(config.RequestId),
-			"user_id":    c.GetHeader(config.UserId),
-		})
+		loggerFormat := config.GenGinLoggerFields(c)
+		handler.Logger = handler.Logger.WithFields(loggerFormat)
 
 		data, err := handle(c)
 
