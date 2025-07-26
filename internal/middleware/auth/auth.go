@@ -84,19 +84,8 @@ func (auth *Auth) ValidateToken() gin.HandlerFunc {
 }
 
 func (auth *Auth) AbortWithError(c *gin.Context, args ...any) {
-	auth.Logger = auth.Logger.WithFields(logrus.Fields{
-		"method":     c.Request.Method,
-		"uri":        c.Request.RequestURI,
-		"client_ip":  config.GetClientIP(c),
-		"user_agent": config.GetUserAgent(c),
-		"token":      c.GetHeader(config.Authorization),
-		"trace_id":   c.GetHeader(config.TraceId),
-		"span_id":    c.GetHeader(config.SpanId),
-		"parent_id":  c.GetHeader(config.ParentId),
-		"app_id":     c.GetHeader(config.AppId),
-		"request_id": c.GetHeader(config.RequestId),
-		"user_id":    c.GetHeader(config.UserId),
-	})
+	loggerFormat := config.GenGinLoggerFields(c)
+	auth.Logger = auth.Logger.WithFields(loggerFormat)
 
 	msg := &ext.MiddlewareMessage{
 		StatusCode: 500,

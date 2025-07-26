@@ -141,6 +141,22 @@ func selectLogLevel() logrus.Level {
 	}
 }
 
+func GenGinLoggerFields(c *gin.Context) logrus.Fields {
+	return logrus.Fields{
+		"method":     c.Request.Method,
+		"uri":        c.Request.RequestURI,
+		"client_ip":  GetClientIP(c),
+		"user_agent": GetUserAgent(c),
+		"token":      c.GetHeader(Authorization),
+		"trace_id":   c.GetHeader(TraceId),
+		"span_id":    c.GetHeader(SpanId),
+		"parent_id":  c.GetHeader(ParentId),
+		"app_id":     c.GetHeader(AppId),
+		"request_id": c.GetHeader(RequestId),
+		"user_id":    c.GetHeader(UserId),
+	}
+}
+
 // HTTP 日志中间件
 func LoggerForHTTP() gin.HandlerFunc {
 	logger := cfg.App.Logger
@@ -151,19 +167,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 		// 	c.Next()
 		// 	return
 		// }
-		LoggerFormat := logrus.Fields{
-			"method":     c.Request.Method,
-			"uri":        c.Request.RequestURI,
-			"client_ip":  GetClientIP(c),
-			"user_agent": GetUserAgent(c),
-			"token":      c.GetHeader(Authorization),
-			"trace_id":   c.GetHeader(TraceId),
-			"span_id":    c.GetHeader(SpanId),
-			"parent_id":  c.GetHeader(ParentId),
-			"app_id":     c.GetHeader(AppId),
-			"request_id": c.GetHeader(RequestId),
-			"user_id":    c.GetHeader(UserId),
-		}
+		loggerFormat := GenGinLoggerFields(c)
 		// Incoming日志是来的什么就是什么，只有traceID应一致
 		startTime := time.Now()
 		c.Next()
@@ -171,7 +175,7 @@ func LoggerForHTTP() gin.HandlerFunc {
 		took := endTime.Sub(startTime).Milliseconds()
 		statusCode := c.Writer.Status()
 		// json标准写法
-		logger.WithFields(LoggerFormat).WithFields(logrus.Fields{
+		logger.WithFields(loggerFormat).WithFields(logrus.Fields{
 			"took":   took,
 			"status": statusCode,
 		}).Info("请求结束")
