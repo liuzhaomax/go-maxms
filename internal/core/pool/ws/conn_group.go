@@ -50,6 +50,10 @@ func (cg *ConnGroup) Load(key string) (value *websocket.Conn, ok bool) {
 }
 
 func (cg *ConnGroup) Delete(key string) {
+	conn, _ := cg.Load(key)
+	if conn != nil {
+		_ = conn.Close()
+	}
 	cg.Conns.m.Delete(key)
 }
 
